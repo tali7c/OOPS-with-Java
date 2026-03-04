@@ -1,0 +1,170 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 04 -- Lecture 01: Generics Fundamentals (Generic Classes)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain why generics improve type safety and reuse.
+    \item Create and use a generic class like \texttt{Box<T>}.
+    \item Identify raw-type usage and explain why it is unsafe.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 04: Generics, Lambdas, GUI Swing \& Database Connectivity}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Generics Fundamentals (Generic Classes)
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Why generics (type safety, reuse)
+    \item Generic classes (`Box<T>`) and basic usage
+    \item Avoiding raw types; common mistakes
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Motivation: the problem without generics}
+  \begin{itemize}[<+->]
+    \item If you store values as \texttt{Object}, you lose type information.
+    \item You must cast back to the expected type.
+    \item Wrong cast $\rightarrow$ \texttt{ClassCastException} at runtime.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{What generics give you}
+  \begin{itemize}[<+->]
+    \item Compile-time type checking (errors caught early).
+    \item Less casting and cleaner code.
+    \item Better readability: \texttt{List<String>} clearly states element type.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Generic class idea}
+  \begin{itemize}[<+->]
+    \item Write a class once: \texttt{Box<T>}
+    \item Use it many times: \texttt{Box<String>}, \texttt{Box<Integer>}, \texttt{Box<Student>}
+    \item The compiler enforces types for each use.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Raw types (avoid)}
+  \begin{itemize}[<+->]
+    \item Raw type: \texttt{Box} instead of \texttt{Box<T>}.
+    \item Compiles with warnings but removes type safety.
+    \item Prefer \texttt{Box<?>} when type is unknown.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: generic class}
+\begin{lstlisting}
+class Box<T> {
+    private final T value;
+    Box(T value) { this.value = value; }
+    T get() { return value; }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example usage}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        Box<String> b1 = new Box<>("UPES");
+        String s = b1.get(); // no cast
+
+        Box<Integer> b2 = new Box<>(10);
+        int x = b2.get();
+        System.out.println(s + " " + x);
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Why is raw \texttt{Box} unsafe?
+    \item Can we write \texttt{List<int>}? If not, what is the correct type?
+    \item Give one real use case of generics in Java collections.
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Generics provide type-safe reuse.
+    \item \texttt{Box<T>} shows how type parameters work.
+    \item Avoid raw types to prevent runtime casting errors.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item What problem do generics solve compared to using \texttt{Object}?
+    \item What is the meaning of \texttt{Box<String>}?
+    \item Why should we avoid raw types?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Generic methods + bounds + wildcards
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will write \texttt{<T>} methods and learn how to restrict types using bounds.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\end{document}

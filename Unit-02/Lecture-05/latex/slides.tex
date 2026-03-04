@@ -1,0 +1,175 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 02 -- Lecture 05: Abstract Classes, `final`, and Interfaces (Design Choices)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Use abstract classes for shared code + required methods.
+    \item Explain \texttt{final} for variables/methods/classes.
+    \item Use interfaces (including \texttt{Comparable}, \texttt{Runnable}) as contracts.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 02: Classes, Inheritance, Packages and Interfaces}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Abstract Classes, `final`, and Interfaces (Design Choices)
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Abstract classes/methods; partial implementations
+    \item `final` variables/methods/classes (design intent)
+    \item Interfaces: built-in examples (`Comparable`, `Runnable`) + user-defined interfaces
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Abstract class (when to use)}
+  \begin{itemize}[<+->]
+    \item Use when you want to share code + force subclasses to implement some methods.
+    \item Abstract class can have fields + concrete methods + abstract methods.
+    \item Cannot instantiate: \texttt{new Shape()} if \texttt{Shape} is abstract.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{\texttt{final} keyword (meaning)}
+  \begin{itemize}[<+->]
+    \item \textbf{final variable}: assigned once (constant-like).
+    \item \textbf{final method}: cannot be overridden.
+    \item \textbf{final class}: cannot be extended (e.g., \texttt{String}).
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Interface (when to use)}
+  \begin{itemize}[<+->]
+    \item Use when you want a contract with multiple implementations.
+    \item Reduces coupling: code depends on interface, not concrete class.
+    \item A class can implement multiple interfaces.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Built-in interfaces (examples)}
+  \begin{itemize}[<+->]
+    \item \texttt{Comparable<T>}: defines natural ordering (\texttt{compareTo}).
+    \item \texttt{Runnable}: defines a task (\texttt{run}) to execute in a thread.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: \texttt{Comparable} for sorting}
+\begin{lstlisting}
+import java.util.Arrays;
+
+class Student implements Comparable<Student> {
+    private final String rollNo;
+    private final double cgpa;
+    Student(String rollNo, double cgpa) { this.rollNo = rollNo; this.cgpa = cgpa; }
+    @Override public int compareTo(Student o) {
+        return Double.compare(o.cgpa, this.cgpa); // descending
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Demo usage}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        Student[] a = {
+            new Student("21CS1001", 8.2),
+            new Student("21CS1002", 9.1)
+        };
+        Arrays.sort(a); // uses compareTo
+        System.out.println(Arrays.toString(a));
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Can we instantiate an abstract class?
+    \item What does \texttt{final class} prevent?
+    \item One sentence: why use interfaces?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Abstract class: share code + require methods.
+    \item Interface: contract + low coupling + multiple implementations.
+    \item \texttt{final} communicates ``no change'' / ``no override'' / ``no extend''.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item When do you prefer interface over abstract class?
+    \item Give one use case for \texttt{final method}.
+    \item What does \texttt{Comparable} enable?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Next Unit Preview}
+  \textbf{Next:} Unit 03 -- Nested Classes, Exceptions, Multithreading, I/O Streams
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will start with nested classes and exception handling.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\end{document}

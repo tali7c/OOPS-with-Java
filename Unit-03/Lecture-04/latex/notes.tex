@@ -1,0 +1,296 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 04 Notes\\Java I/O Streams + FileReader/FileWriter}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Syllabus Alignment (Unit 03)}
+\textbf{Unit 03:} Java I/O streams; \texttt{FileReader}, \texttt{FileWriter}
+
+\section{Prerequisites}
+You should already know:
+\begin{itemize}
+  \item basic exception handling (\texttt{try/catch}),
+  \item loops and string trimming/parsing,
+  \item how to run a Java program from an IDE or terminal.
+\end{itemize}
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Explain the stream model and choose between byte streams and character streams.
+  \item Read and write text files using \texttt{FileReader}/\texttt{FileWriter} with buffering.
+  \item Write exception-safe I/O code using \texttt{try-with-resources} and meaningful error messages.
+\end{itemize}
+
+\section{Lecture Overview}
+In almost every real application you must read/write data:
+\begin{itemize}
+  \item read configuration,
+  \item read input files (CSV/text),
+  \item write reports/logs,
+  \item store results for later use.
+\end{itemize}
+Java provides a stream-based I/O model. In this lecture we focus on text files using \texttt{FileReader}/\texttt{FileWriter} and buffering, and we learn how to avoid the most common beginner mistakes (wrong path, not closing files, confusing exceptions).
+\notesources{\OOPSUnitIIISources}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Stream}: sequence of data flowing from a source to a destination.
+  \item \textbf{Input stream} vs \textbf{output stream}: read vs write.
+  \item \textbf{Byte stream}: reads/writes raw bytes (\texttt{InputStream}/\texttt{OutputStream}).
+  \item \textbf{Character stream}: reads/writes characters (\texttt{Reader}/\texttt{Writer}).
+  \item \textbf{Buffering}: collecting data in memory to reduce expensive I/O operations.
+  \item \textbf{try-with-resources}: \texttt{try(...)} that auto-closes resources.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Stream model (big picture)}
+I/O in Java is organized as streams:
+\begin{itemize}
+  \item A \textbf{source} (keyboard, file, network),
+  \item A \textbf{stream object} (API you use),
+  \item A \textbf{destination} (screen, file, network).
+\end{itemize}
+Streams are \textbf{one-directional}: you create an input stream to read and an output stream to write.
+You can also \textbf{chain} streams: for example, a file reader wrapped by a buffered reader.
+
+\subsection{Byte streams vs character streams}
+\textbf{Byte streams} (\texttt{InputStream}/\texttt{OutputStream}) are used for binary data:
+\begin{itemize}
+  \item images, PDFs, audio/video, serialized binary formats.
+\end{itemize}
+\textbf{Character streams} (\texttt{Reader}/\texttt{Writer}) are used for text:
+\begin{itemize}
+  \item plain text files, logs, reading lines of text.
+\end{itemize}
+\paragraph{Rule of thumb.} Use \texttt{Reader/Writer} for text; use \texttt{InputStream/OutputStream} for binary.
+
+\subsection{Text file I/O with \texttt{FileReader}/\texttt{FileWriter}}
+Basic idea:
+\begin{itemize}
+  \item \texttt{FileReader} reads characters from a file.
+  \item \texttt{FileWriter} writes characters to a file.
+  \item These can be wrapped in buffered versions for performance.
+\end{itemize}
+
+\paragraph{Important note (encoding).}
+\texttt{FileReader/FileWriter} use the platform default charset.
+For most course examples this is fine, but in real projects you often choose a charset explicitly (UTF-8).
+
+\textbf{Buffering:}
+\begin{itemize}
+  \item \texttt{BufferedReader} provides \texttt{readLine()} and reads in chunks.
+  \item \texttt{BufferedWriter} provides efficient writing and \texttt{newLine()}.
+\end{itemize}
+
+\subsection{Reading patterns (three common styles)}
+\textbf{1) Read character-by-character} (rarely used in app code):
+\begin{itemize}
+  \item simple idea, but slower and harder to manage.
+\end{itemize}
+
+\textbf{2) Read line-by-line} (most common for text files):
+\begin{itemize}
+  \item use \texttt{BufferedReader.readLine()}.
+\end{itemize}
+
+\textbf{3) Read tokens/CSV} (usually needs parsing/splitting after reading lines):
+\begin{itemize}
+  \item read line $\rightarrow$ split by delimiter $\rightarrow$ parse fields.
+\end{itemize}
+
+\subsection{Exception-safe I/O: \texttt{try-with-resources}}
+File I/O can fail for many reasons: wrong path, missing file, permissions.
+Also, resources must be closed.
+
+Use:
+\begin{itemize}
+  \item \texttt{try (BufferedReader br = ...)\{...\}} to auto-close even if exception occurs.
+\end{itemize}
+This reduces resource leaks and makes code cleaner.
+
+\subsection{Paths and a common beginner mistake}
+\textbf{The JVM reads files relative to the ``working directory''} (where you run \texttt{java}).
+If the file is ``not found'':
+\begin{itemize}
+  \item confirm the path,
+  \item print the working directory (or use absolute path),
+  \item ensure file extension and capitalization are correct.
+\end{itemize}
+\paragraph{Quick debug snippet (print working directory).}
+\begin{lstlisting}
+System.out.println(new java.io.File(".").getAbsolutePath());
+\end{lstlisting}
+
+\paragraph{Windows path gotcha (Java strings).}
+In Java string literals, backslash is an escape character:
+\begin{itemize}
+  \item wrong: \verb|"D:\data\marks.txt"| (contains escape sequences)
+  \item correct: \verb|"D:\\data\\marks.txt"| or \verb|"D:/data/marks.txt"|
+\end{itemize}
+\subsection{Overwrite vs append (writing)}
+\texttt{FileWriter(path)} overwrites the file by default.
+To append:
+\begin{lstlisting}
+new FileWriter("log.txt", true); // append=true
+\end{lstlisting}
+\notesources{\OOPSUnitIIISources}
+
+\section{Worked Example (tutorial): read marks and write a report}
+\subsection*{Goal}
+Read integer marks from \texttt{marks.txt} (one mark per line), compute sum/avg/max, and write a report to \texttt{report.txt}.
+
+\subsection*{Input file example}
+\begin{lstlisting}[language=]
+78
+91
+65
+
+88
+\end{lstlisting}
+Blank lines are allowed; we will ignore them.
+
+\subsection*{Code}
+\begin{lstlisting}
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class MarksReport {
+    public static void main(String[] args) {
+        String inPath = "marks.txt";
+        String outPath = "report.txt";
+
+        int sum = 0, max = Integer.MIN_VALUE, count = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(inPath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                int x = Integer.parseInt(line);
+                sum += x;
+                if (x > max) max = x;
+                count++;
+            }
+        } catch (IOException e) {
+            System.out.println("I/O error: " + e.getMessage());
+            return;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number in input file: " + e.getMessage());
+            return;
+        }
+
+        double avg = (count == 0) ? 0.0 : (sum / (double) count);
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(outPath))) {
+            bw.write("Count: " + count);
+            bw.newLine();
+            bw.write("Sum: " + sum);
+            bw.newLine();
+            bw.write("Max: " + max);
+            bw.newLine();
+            bw.write(String.format("Avg: %.2f", avg));
+            bw.newLine();
+        } catch (IOException e) {
+            System.out.println("Write error: " + e.getMessage());
+        }
+    }
+}
+\end{lstlisting}
+
+\subsection*{What to notice}
+\begin{itemize}
+  \item \texttt{try-with-resources} closes readers/writers automatically.
+  \item \texttt{BufferedReader.readLine()} makes line-by-line reading easy.
+  \item We handle both I/O errors and invalid numbers separately (better messages).
+  \item We use \texttt{String.format} for formatted average.
+\end{itemize}
+
+\subsection*{Common improvements (good practice)}
+\begin{itemize}
+  \item Validate mark range (0--100) and count invalid rows.
+  \item Show a clearer message when the file is missing (path help).
+  \item Write results in a CSV format if needed.
+\end{itemize}
+
+\section{Mini tutorial: copy a text file}
+Copying is a great exercise because it uses both reading and writing.
+\begin{lstlisting}
+import java.io.*;
+
+public class CopyTextFile {
+    public static void main(String[] args) throws IOException {
+        String src = "input.txt";
+        String dst = "output.txt";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(src));
+             BufferedWriter bw = new BufferedWriter(new FileWriter(dst))) {
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                bw.write(line);
+                bw.newLine();
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Which should be used for text files: byte stream or character stream?\par
+  \textbf{Answer:} character stream (\texttt{Reader/Writer}).
+
+  \item Why do we use buffering?\par
+  \textbf{Answer:} it reduces the number of expensive disk I/O calls by reading/writing in chunks.
+
+  \item If a file is not found, name one common cause.\par
+  \textbf{Answer:} wrong working directory / wrong path.
+\end{enumerate}
+
+\section{Self-Study Practice (with hints)}
+\begin{enumerate}
+  \item Write a program that copies a text file (read from one, write to another) using buffered streams.
+  \textbf{Hint:} the copy tutorial above is the solution pattern.
+
+  \item Write a program that counts lines and words in a file.
+  \textbf{Hint:} count lines with \texttt{readLine}; count words with \texttt{split("\\\\s+")}.
+
+  \item Modify the worked example to ignore marks outside 0--100 and count how many were invalid.
+  \textbf{Hint:} after parsing, check range and continue.
+\end{enumerate}
+
+\section{Summary (what to remember)}
+\begin{itemize}
+  \item Streams model: input vs output; chain streams for features like buffering.
+  \item Use \texttt{Reader/Writer} for text and buffer with \texttt{BufferedReader/BufferedWriter}.
+  \item Use \texttt{try-with-resources} for reliable closing.
+  \item Most file bugs come from wrong paths/working directory: print it and verify.
+  \item Handle \texttt{IOException} separately from parse/validation exceptions.
+\end{itemize}
+
+\section{Lab Alignment (recommended)}
+\begin{itemize}
+  \item Exp-13: File Handling using I/O streams (based on this lecture)
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why is \texttt{try-with-resources} preferred?\par
+\textbf{Sample answer:} It automatically closes resources even if an exception occurs, preventing resource leaks and reducing boilerplate code.
+
+\vspace{0.6em}
+\textbf{Q2.} When do you choose byte streams instead of character streams?\par
+\textbf{Sample answer:} Use byte streams for binary data like images or PDFs. Use character streams for text data.
+
+\end{document}

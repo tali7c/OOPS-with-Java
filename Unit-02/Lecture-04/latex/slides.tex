@@ -1,0 +1,166 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 02 -- Lecture 04: Inheritance, `super`, Overriding, and Dynamic Dispatch}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Decide is-a (inheritance) vs has-a (composition).
+    \item Use \texttt{super(...)} and \texttt{super.method()} correctly.
+    \item Override methods and explain dynamic dispatch with an example.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 02: Classes, Inheritance, Packages and Interfaces}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Inheritance, `super`, Overriding, and Dynamic Dispatch
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Inheritance and types (conceptual); "is-a" vs "has-a"
+    \item `super` usage (constructors + member access)
+    \item Overriding + runtime polymorphism (dynamic method dispatch)
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Is-a vs Has-a (design choice)}
+  \begin{itemize}[<+->]
+    \item Use inheritance for \textbf{is-a}: Dog is-a Animal.
+    \item Use composition for \textbf{has-a}: Car has-a Engine.
+    \item Avoid inheritance only for code reuse (creates strong coupling).
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{\texttt{super} usage}
+  \begin{itemize}[<+->]
+    \item \texttt{super(...)} calls the parent constructor (must be first statement).
+    \item \texttt{super.method()} calls parent implementation if overridden.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Overriding + dynamic dispatch}
+  \begin{itemize}[<+->]
+    \item Overriding: same signature in subclass; use \texttt{@Override}.
+    \item Dynamic dispatch: method chosen at runtime based on actual object type.
+    \item Example: \texttt{Shape s = new Circle(...);} then \texttt{s.area()} runs \texttt{Circle.area()}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: \texttt{Shape} + \texttt{Circle}}
+\begin{lstlisting}
+class Shape {
+    private final String color;
+    Shape(String color) { this.color = color; }
+    double area() { return 0.0; }
+}
+
+class Circle extends Shape {
+    private final double r;
+    Circle(String color, double r) {
+        super(color);
+        this.r = r;
+    }
+    @Override double area() { return Math.PI * r * r; }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamic dispatch demo}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        Shape s = new Circle("red", 2.0);
+        System.out.println(s.area());
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Student--IDCard: is-a or has-a?
+    \item What must be first in a constructor: \texttt{super(...)} or other statements?
+    \item Overloading vs overriding: which is runtime?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Use inheritance only for true is-a relationships.
+    \item \texttt{super(...)} initializes the parent part of an object.
+    \item Overriding + dynamic dispatch enable runtime polymorphism.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item What is the difference between is-a and has-a?
+    \item Why do we use \texttt{@Override}?
+    \item What is dynamic dispatch?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Abstract classes, \texttt{final}, and interfaces (design choices)
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will decide when to use abstract class vs interface.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\end{document}

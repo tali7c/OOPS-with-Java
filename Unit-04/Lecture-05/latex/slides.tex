@@ -1,0 +1,187 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 04 -- Lecture 05: Swing Event Handling + JDBC (Persistence)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Connect Swing UI controls to actions using listeners.
+    \item Explain JDBC flow and choose between \texttt{Statement} and \texttt{PreparedStatement}.
+    \item Implement basic CRUD and read results using \texttt{ResultSet}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 04: Generics, Lambdas, GUI Swing \& Database Connectivity}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Swing Event Handling + JDBC (Persistence)
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Swing events: listeners, event classes, common controls
+    \item JDBC core flow: connection, `Statement`, `PreparedStatement`, `CallableStatement`
+    \item `ResultSet` traversal, basic CRUD, and persistent data design
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Swing events (model)}
+  \begin{itemize}[<+->]
+    \item Source: component (e.g., \texttt{JButton})
+    \item Event: object with details (e.g., \texttt{ActionEvent})
+    \item Listener: handler (e.g., \texttt{ActionListener})
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Registering a listener}
+  \begin{itemize}[<+->]
+    \item \texttt{saveBtn.addActionListener(...);}
+    \item In Java 8+, a lambda is commonly used for \texttt{ActionListener}.
+    \item Keep handler short: validate input, call DAO, show message.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{JDBC flow (memorize)}
+  \begin{enumerate}[<+->]
+    \item Get \texttt{Connection}
+    \item Create \texttt{PreparedStatement}
+    \item Execute SQL (\texttt{executeUpdate}/\texttt{executeQuery})
+    \item Read \texttt{ResultSet} for SELECT
+    \item Close resources (use \texttt{try-with-resources})
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Statement vs PreparedStatement}
+  \begin{itemize}[<+->]
+    \item \texttt{Statement}: builds SQL strings; risky with user input.
+    \item \texttt{PreparedStatement}: parameterized (\texttt{?}); safer and common.
+    \item \texttt{CallableStatement}: stored procedures (DB-specific).
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{ResultSet (reading rows)}
+  \begin{itemize}[<+->]
+    \item Use cursor loop: \texttt{while (rs.next()) \{...\}}
+    \item Get columns: \texttt{rs.getString("name")}, \texttt{rs.getInt("capacity")}
+    \item Map to objects: \texttt{Resource} model class
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: button click handler (save)}
+\begin{lstlisting}
+saveBtn.addActionListener(e -> {
+    String name = nameField.getText().trim();
+    if (name.isEmpty()) {
+        JOptionPane.showMessageDialog(f, "Name required");
+        return;
+    }
+    try {
+        dao.insert(new Resource(name, type, capacity));
+        JOptionPane.showMessageDialog(f, "Saved!");
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(f, "DB error: " + ex.getMessage());
+    }
+});
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: JDBC insert (PreparedStatement)}
+\begin{lstlisting}
+String sql = "INSERT INTO resources(name, type, capacity) VALUES(?,?,?)";
+try (Connection con = DriverManager.getConnection(url, user, pass);
+     PreparedStatement ps = con.prepareStatement(sql)) {
+  ps.setString(1, r.getName());
+  ps.setString(2, r.getType());
+  ps.setInt(3, r.getCapacity());
+  ps.executeUpdate();
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Which is safer for user input: \texttt{Statement} or \texttt{PreparedStatement}?
+    \item Which method for SELECT: \texttt{executeQuery} or \texttt{executeUpdate}?
+    \item Why should UI not freeze during DB operations?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Event handling connects UI actions to code using listeners.
+    \item JDBC provides the standard pattern for DB access in Java.
+    \item Prefer \texttt{PreparedStatement} and use \texttt{try-with-resources}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item What is a listener and how do you register it?
+    \item Why is \texttt{PreparedStatement} preferred?
+    \item What is \texttt{ResultSet} used for?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Next Unit Preview}
+  \textbf{Next:} Unit 05 -- Collections Framework
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will store objects in lists/sets/maps and iterate/sort them.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\end{document}

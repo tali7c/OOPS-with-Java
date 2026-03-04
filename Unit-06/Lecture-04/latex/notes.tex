@@ -1,0 +1,174 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 06 -- Lecture 04 Notes\\Database Design + JDBC Layer}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+Your Swing UI is not complete until data is saved permanently.
+This lecture converts your entity model into a database schema and creates the JDBC/DAO layer.
+Deliverable-3 is a big milestone: once DAO CRUD works, UI integration becomes easy.
+\notesources{\OOPSUnitVISources}
+
+\section{Syllabus Alignment (Unit 06)}
+\textbf{Unit 06:} database design + JDBC persistence
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Convert an ER/entity model into tables with keys and constraints.
+  \item Implement JDBC DAO methods using \texttt{PreparedStatement} and \texttt{ResultSet} mapping.
+  \item Complete Deliverable-3: DB schema + CRUD for 1--2 core entities.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Primary key (PK)}: unique identifier for a row.
+  \item \textbf{Foreign key (FK)}: reference to PK in another table.
+  \item \textbf{Constraint}: rule enforced by DB (NOT NULL, UNIQUE, FK).
+  \item \textbf{Index}: speeds up search (usually on PK/FK columns).
+  \item \textbf{DAO}: class that performs CRUD using JDBC.
+  \item \textbf{Mapping}: converting a DB row (\texttt{ResultSet}) into a Java object.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{ER/entity model $\rightarrow$ relational schema}
+Start with the entities from Deliverable-2.
+For each entity:
+\begin{itemize}
+  \item create a table,
+  \item choose a primary key,
+  \item choose column types (\texttt{INT}, \texttt{VARCHAR}, \texttt{TIMESTAMP}),
+  \item add constraints (NOT NULL, UNIQUE),
+  \item add foreign keys for relationships.
+\end{itemize}
+
+\paragraph{Example mapping.} Booking has a resource $\rightarrow$ \texttt{bookings.resource\_id} is a foreign key referencing \texttt{resources.id}.
+
+\subsection{Keys and constraints (minimum)}
+\begin{itemize}
+  \item Use integer auto-increment PKs or meaningful unique keys (like roll number) depending on domain.
+  \item Use NOT NULL for mandatory fields.
+  \item Use UNIQUE where duplicates are not allowed (e.g., resource name).
+  \item Use FK constraints to preserve relationships.
+\end{itemize}
+
+\subsection{JDBC layer (DAO pattern)}
+Recommended structure:
+\begin{itemize}
+  \item \texttt{DbUtil}: provides DB connection.
+  \item \texttt{ResourceDao}: CRUD for resources.
+  \item \texttt{BookingDao}: CRUD for bookings.
+\end{itemize}
+Use \texttt{PreparedStatement} for all user-provided values.
+\texttt{try-with-resources} ensures connections and statements are closed properly.
+\notesources{\OOPSUnitVISources}
+
+\section{Worked Example: schema + DAO skeleton}
+\subsection*{Schema (example)}
+\begin{lstlisting}[language=]
+-- resources table
+CREATE TABLE resources (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  type VARCHAR(50) NOT NULL,
+  capacity INT NOT NULL
+);
+
+-- bookings table
+CREATE TABLE bookings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  resource_id INT NOT NULL,
+  user_name VARCHAR(100) NOT NULL,
+  start_time TIMESTAMP NOT NULL,
+  end_time TIMESTAMP NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  CONSTRAINT fk_booking_resource FOREIGN KEY (resource_id)
+    REFERENCES resources(id)
+);
+\end{lstlisting}
+
+\subsection*{DbUtil (connection helper)}
+\begin{lstlisting}
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DbUtil {
+    private static final String URL = "jdbc:mysql://localhost:3306/crm";
+    private static final String USER = "root";
+    private static final String PASS = "password";
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASS);
+    }
+}
+\end{lstlisting}
+
+\subsection*{ResourceDao (CRUD skeleton)}
+\begin{lstlisting}
+import java.sql.*;
+import java.util.*;
+
+public class ResourceDao {
+    public void insert(Resource r) throws SQLException {
+        String sql = "INSERT INTO resources(name, type, capacity) VALUES(?,?,?)";
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, r.getName());
+            ps.setString(2, r.getType());
+            ps.setInt(3, r.getCapacity());
+            ps.executeUpdate();
+        }
+    }
+
+    public List<Resource> findAll() throws SQLException {
+        String sql = "SELECT id, name, type, capacity FROM resources";
+        List<Resource> out = new ArrayList<>();
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                out.add(new Resource(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("type"),
+                    rs.getInt("capacity")
+                ));
+            }
+        }
+        return out;
+    }
+}
+\end{lstlisting}
+
+\section{Deliverable-3 checklist}
+\begin{itemize}
+  \item ER/schema diagram or table list (resources, bookings, users)
+  \item SQL schema script committed in repo (\texttt{schema.sql})
+  \item DAO CRUD for 1--2 core entities (at least: insert + list)
+  \item Simple test runner/main method that demonstrates DAO works
+\end{itemize}
+
+\section{In-Class Activity (evidence)}
+\begin{itemize}
+  \item Commit \texttt{schema.sql} and DAO code.
+  \item Create PR for DB module.
+  \item Add issues for remaining DAO methods (update/delete/search).
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why use foreign keys?\par
+\textbf{Sample answer:} Foreign keys enforce relationships between tables, preventing invalid references (e.g., a booking referencing a resource that does not exist).
+
+\vspace{0.6em}
+\textbf{Q2.} Why use \texttt{PreparedStatement}?\par
+\textbf{Sample answer:} It supports parameterized queries, improves safety for user input, and avoids SQL injection risks compared to concatenating strings.
+
+\end{document}

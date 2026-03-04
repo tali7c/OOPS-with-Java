@@ -1,0 +1,176 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 01 -- Lecture 04: Control Flow + Arrays + Strings}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Use \texttt{if/else}, \texttt{switch}, and loops to control program flow.
+    \item Create/traverse 1D and 2D arrays and solve simple array problems.
+    \item Explain \texttt{String} immutability and use \texttt{StringBuilder} when needed.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 01: Introduction to OOPs}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Control Flow + Arrays + Strings
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Program control statements (selection + loops)
+    \item Arrays (1D/2D), types of arrays, common patterns
+    \item Strings (immutability, common methods), `StringBuilder` (need-based)
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Control flow (quick)}
+  \begin{itemize}[<+->]
+    \item Selection: \texttt{if/else}, \texttt{switch}
+    \item Loops: \texttt{for}, \texttt{while}, \texttt{do-while}
+    \item Useful keywords: \texttt{break}, \texttt{continue}
+  \end{itemize}
+  \begin{block}{Common pitfalls}
+    \begin{itemize}
+      \item Off-by-one errors in loops
+      \item Missing \texttt{break} in \texttt{switch} (unintended fall-through)
+    \end{itemize}
+  \end{block}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Arrays (1D/2D)}
+  \begin{itemize}[<+->]
+    \item 1D: \texttt{int[] a = new int[n];} and \texttt{a.length}
+    \item Traversal: \texttt{for (int i=0; i<a.length; i++)} or \texttt{for (int x: a)}
+    \item 2D: \texttt{int[][] m = new int[r][c];}
+    \item Jagged arrays: each row can have different length (use \texttt{m[i].length})
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Strings (must-know)}
+  \begin{itemize}[<+->]
+    \item \texttt{String} is \textbf{immutable}: methods return new strings.
+    \item Compare content with \texttt{equals()}, not \texttt{==}.
+    \item Repeated concatenation in loops is slow $\rightarrow$ use \texttt{StringBuilder}.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: grades (arrays + control flow) (1/2)}
+\begin{lstlisting}
+import java.util.Scanner;
+
+public class GradeStats {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of students: ");
+        int n = sc.nextInt();
+
+        int[] marks = new int[n];
+        for (int i = 0; i < n; i++) {
+            System.out.print("Marks for student " + (i + 1) + ": ");
+            marks[i] = sc.nextInt();
+        }
+\end{lstlisting}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: grades (arrays + control flow) (2/2)}
+\begin{lstlisting}
+// continued...
+        int max = marks[0], sum = 0;
+        for (int x : marks) { sum += x; if (x > max) max = x; }
+        double avg = sum / (double) n;
+        System.out.printf("Max=%d, Avg=%.2f%n", max, avg);
+        sc.close();
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Array of length 10: what is the last valid index?
+    \item Which compares string content: \texttt{==} or \texttt{equals}?
+    \item Which loop runs at least once: \texttt{while} or \texttt{do-while}?
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Use selection + loops to express logic clearly (avoid off-by-one bugs).
+    \item Arrays store many values of the same type; \texttt{length} guides safe iteration.
+    \item Strings are immutable; use \texttt{equals()} and \texttt{StringBuilder} when needed.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item How do you avoid off-by-one errors in array loops?
+    \item Why should we use \texttt{equals()} for strings?
+    \item When is \texttt{StringBuilder} preferred over \texttt{String} concatenation?
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Next Unit Preview}
+  \textbf{Next:} Unit 02 -- Classes, Objects, and Encapsulation
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will start writing proper classes with private fields and methods.
+    \item Bring one example of a real-world entity you want to model as a class.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\end{document}

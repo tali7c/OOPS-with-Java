@@ -1,0 +1,176 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 02 Notes\\Constructors, `this`, Overloading, `static`, and GC Overview}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture explains how objects are created and how to design classes cleanly:
+\begin{itemize}
+  \item constructors and constructor chaining,
+  \item \texttt{this} vs \texttt{this(...)},
+  \item method overloading,
+  \item the \texttt{static} keyword,
+  \item and a realistic overview of garbage collection (GC).
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Syllabus Alignment (Unit 02)}
+\textbf{Unit 02:} constructors, \texttt{this}, overloading, \texttt{static}, garbage collection
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Write default and parameterized constructors and use constructor chaining.
+  \item Use \texttt{this} to refer to the current object and resolve shadowing.
+  \item Overload methods correctly (and explain what is \emph{not} overloading).
+  \item Use \texttt{static} fields/methods for class-level data/behavior.
+  \item Explain what GC does and what it does \emph{not} guarantee.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Constructor}: special method to initialize an object (same name as class, no return type).
+  \item \textbf{Shadowing}: parameter/local variable has same name as field (e.g., \texttt{name}).
+  \item \textbf{\texttt{this}}: reference to the current object.
+  \item \textbf{\texttt{this(...)} }: call another constructor in the same class (must be first statement).
+  \item \textbf{Overloading}: same method name, different parameter list (compile-time selection).
+  \item \textbf{\texttt{static}}: belongs to the class, shared across all objects.
+  \item \textbf{Garbage collection}: automatic memory reclamation for unreachable objects.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Constructors and constructor chaining}
+Constructors are used to:
+\begin{itemize}
+  \item put an object into a valid initial state,
+  \item enforce invariants early (validate inputs),
+  \item and set default values when necessary.
+\end{itemize}
+
+\textbf{Default constructor rule:} If you do not write any constructor, Java provides a default no-arg constructor.
+If you write \emph{any} constructor, Java does \emph{not} automatically create a default one.
+
+\textbf{Constructor chaining:}
+\begin{itemize}
+  \item Use \texttt{this(...)} to call another constructor in the same class.
+  \item \texttt{this(...)} must be the \textbf{first statement} in the constructor.
+\end{itemize}
+
+\subsection{\texttt{this} vs \texttt{this(...)}}
+\begin{itemize}
+  \item \texttt{this} refers to the current object (useful for field access and method calls).
+  \item \texttt{this(...)} calls another constructor.
+\end{itemize}
+
+\textbf{Shadowing example:} if constructor parameter is \texttt{name}, the field is also \texttt{name}.
+Use \texttt{this.name = name;} to distinguish.
+
+\subsection{Method overloading (rules)}
+Overloading means:
+\begin{itemize}
+  \item same method name,
+  \item different parameter list (number/type/order).
+\end{itemize}
+Not overloading:
+\begin{itemize}
+  \item changing only the return type,
+  \item changing only parameter names.
+\end{itemize}
+
+\paragraph{Why it matters.} Overloading lets you offer ``one concept'' in multiple forms (e.g., \texttt{print(int)} and \texttt{print(String)}).
+
+\subsection{\texttt{static} keyword}
+\textbf{Static field} is shared among all objects:
+\begin{itemize}
+  \item Use it for counters, constants, or shared configuration.
+\end{itemize}
+
+\textbf{Static method} belongs to the class:
+\begin{itemize}
+  \item You can call it as \texttt{ClassName.method()}.
+  \item It cannot directly access instance fields (because there is no \texttt{this}).
+\end{itemize}
+
+\textbf{Utility class pattern:} when a class only has static methods (like \texttt{Math}), make the constructor \texttt{private} to prevent creating objects.
+
+\subsection{Garbage collection overview}
+GC frees memory of objects that are \textbf{no longer reachable} from any live reference.
+Key points:
+\begin{itemize}
+  \item You cannot reliably force GC (\texttt{System.gc()} is only a suggestion).
+  \item GC does not prevent all ``memory leaks'' if references are kept unnecessarily (e.g., in a static list).
+  \item GC improves safety compared to manual memory management, but you still must close files, DB connections, etc.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Worked Example: \texttt{Employee} (constructors + overloading + static)}
+\begin{lstlisting}
+public class Employee {
+    private static int nextId = 1;
+
+    private final int id;
+    private final String name;
+    private double salary;
+
+    public Employee() {
+        this("NA", 0.0); // constructor chaining
+    }
+
+    public Employee(String name, double salary) {
+        if (name == null || name.isBlank()) throw new IllegalArgumentException("name");
+        if (salary < 0) throw new IllegalArgumentException("salary");
+
+        this.id = nextId++;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    // Overloading: same name, different parameters
+    public void raiseSalary(double percent) {
+        raiseSalary(percent, 0.0);
+    }
+
+    public void raiseSalary(double percent, double bonus) {
+        if (percent < 0) throw new IllegalArgumentException("percent");
+        salary = salary + (salary * percent / 100.0) + bonus;
+    }
+
+    public static int getNextId() { return nextId; }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item What is the difference between \texttt{this} and \texttt{this(...)}?\par
+  \textbf{Answer:} \texttt{this} refers to current object; \texttt{this(...)} calls another constructor.
+
+  \item Can we overload a method by changing only return type?\par
+  \textbf{Answer:} No.
+
+  \item Can a static method access an instance field directly?\par
+  \textbf{Answer:} No, because there is no \texttt{this}. It needs an object reference.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Create a \texttt{Point} class with 3 constructors (0-arg, 2-arg, copy constructor) using chaining.
+  \item Overload a method \texttt{area(...)} for a square (1 param) and rectangle (2 params).
+  \item Write a class-level counter using a static field and print how many objects were created.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why do we use constructor chaining?\par
+\textbf{Sample answer:} It reduces duplicate initialization code. One constructor can call the main constructor that performs validation and sets fields consistently.
+
+\vspace{0.6em}
+\textbf{Q2.} What does garbage collection do?\par
+\textbf{Sample answer:} GC reclaims memory of objects that are no longer reachable. It does not guarantee immediate collection and does not automatically close external resources like files or DB connections.
+
+\end{document}

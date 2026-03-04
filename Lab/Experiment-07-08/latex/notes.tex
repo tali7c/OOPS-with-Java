@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-07\&08: Classes/Objects + Overloading (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This handout gives the implementation requirements and submission checklist.
+Do not copy solutions from outside sources; write and test your own code.
+
+\section{Experiment 07 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To understand classes, objects, and constructors.
+  \item \textbf{Problem Statement:} Design classes with data members and member functions.
+  \item \textbf{Expected Outcome:} Students will understand object creation and encapsulation.
+\end{itemize}
+
+\section{Experiment 08 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To demonstrate compile-time polymorphism.
+  \item \textbf{Problem Statement:} Implement method and constructor overloading in Java.
+  \item \textbf{Expected Outcome:} Students will understand method resolution at compile time.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- Student class with validation (Exp-07)}
+Create \texttt{StudentDemo.java} with a \texttt{Student} class.
+
+\noindent Fields (private):
+\begin{itemize}[leftmargin=*]
+  \item \texttt{rollNo} (must be positive)
+  \item \texttt{name} (must be non-empty)
+  \item \texttt{cgpa} (0 to 10)
+\end{itemize}
+
+\noindent Requirements:
+\begin{itemize}[leftmargin=*]
+  \item Validate in constructor.
+  \item Provide a safe update method \texttt{updateCgpa(double)} with validation.
+  \item Override \texttt{toString()} to print object details.
+\end{itemize}
+
+\subsection{Task B --- Overloading demo (Exp-08)}
+Create \texttt{OverloadingDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Create class \texttt{Box} with overloaded constructors:
+  \begin{itemize}[leftmargin=*]
+    \item default: unit box
+    \item 1 parameter: cube
+    \item 3 parameters: \texttt{w, h, d}
+  \end{itemize}
+  \item Add method \texttt{volume()}.
+  \item Write overloaded methods:
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{area(double r)} $\rightarrow$ circle area
+    \item \texttt{area(double w, double h)} $\rightarrow$ rectangle area
+  \end{itemize}
+  \item In \texttt{main}, create objects using different constructors and print volumes and areas.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Keep fields private and expose behavior through methods.
+  \item Constructor overloading can reduce duplicate initialization code using \texttt{this(...)} chaining.
+  \item Overloading cannot be done using only return type; parameter list must change.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{StudentDemo.java}
+  \item \texttt{OverloadingDemo.java}
+  \item sample output for both programs
+  \item observations (5--10 lines): why encapsulation helps; how Java chooses overloaded methods
+\end{itemize}
+
+\notesources{\OOPSUnitIISources}
+\end{document}

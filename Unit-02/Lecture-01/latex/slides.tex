@@ -1,0 +1,190 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 02 -- Lecture 01: Classes, Objects, and Encapsulation (Basics)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Identify fields vs methods and explain state vs behavior.
+    \item Explain references and aliasing using a small example.
+    \item Apply encapsulation using \texttt{private} fields and validation methods.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 02: Classes, Inheritance, Packages and Interfaces}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Classes, Objects, and Encapsulation (Basics)
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Class fundamentals: fields, methods, state vs behavior
+    \item Objects and reference semantics; object diagrams (mental model)
+    \item Encapsulation motivation (invariants) + intro to access modifiers
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Class vs Object (quick)}
+  \begin{itemize}[<+->]
+    \item \textbf{Class} = blueprint (type): fields + methods
+    \item \textbf{Object} = instance at runtime (identity + state + behavior)
+    \item State = values in fields; Behavior = what methods do
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{References and aliasing (important)}
+  \begin{itemize}[<+->]
+    \item In Java, variables of class type hold \textbf{references}.
+    \item Assignment copies the reference (not the whole object).
+    \item If two references point to the same object, changes are shared (\textbf{aliasing}).
+  \end{itemize}
+  \begin{block}{Why it matters}
+    Many bugs come from unexpected shared updates.
+  \end{block}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Encapsulation = protect invariants}
+  \begin{itemize}[<+->]
+    \item Make fields \texttt{private}.
+    \item Update state via methods that validate inputs.
+    \item Keep object invariants always true (e.g., \texttt{0 <= cgpa <= 10}).
+  \end{itemize}
+  \begin{block}{Common mistake}
+    Adding setters for everything and allowing invalid values.
+  \end{block}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: \texttt{Student} (encapsulation) (1/2)}
+\begin{lstlisting}
+public class Student {
+    private final String rollNo;
+    private final String name;
+    private double cgpa; // invariant: 0..10
+
+    public Student(String rollNo, String name, double cgpa) {
+        if (cgpa < 0.0 || cgpa > 10.0)
+            throw new IllegalArgumentException("cgpa");
+        this.rollNo = rollNo;
+        this.name = name;
+        this.cgpa = cgpa;
+    }
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: \texttt{Student} (encapsulation) (2/2)}
+\begin{lstlisting}
+// continued...
+
+    public void updateCgpa(double newCgpa) {
+        if (newCgpa < 0.0 || newCgpa > 10.0)
+            throw new IllegalArgumentException("cgpa");
+        cgpa = newCgpa;
+    }
+
+    public double getCgpa() { return cgpa; }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Aliasing demo (observe)}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        Student a = new Student("21CS1001", "Asha", 8.2);
+        Student b = a;   // same object
+        b.updateCgpa(9.0);
+        System.out.println(a.getCgpa()); // prints 9.0
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item What is the difference between a class and an object?
+    \item If \texttt{b = a} and \texttt{b} modifies the object, does \texttt{a} see it?
+    \item Give one invariant for \texttt{BankAccount} or \texttt{LibraryBook}.
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Classes define state + behavior; objects are runtime instances.
+    \item Java object variables are references; aliasing is common.
+    \item Encapsulation protects invariants using \texttt{private} + validation methods.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why do we keep fields \texttt{private}?
+    \item What is aliasing and why can it be risky?
+    \item What is an invariant? Give one example.
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Constructors, \texttt{this}, Overloading, \texttt{static}, and GC overview
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will learn how objects are created and how constructors enforce invariants.
+    \item We will also learn when to use \texttt{static}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\end{document}

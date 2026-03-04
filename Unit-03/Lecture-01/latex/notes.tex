@@ -1,0 +1,293 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 01 Notes\\Nested Classes (Types + Practical Use-Cases)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use these notes (self-study)}
+Read in order. Try the tiny code snippets mentally first, then run the worked example.
+For each section, answer the checkpoint questions before you move on.
+
+\section{Syllabus Alignment (Unit 03)}
+\textbf{Unit 03:} nested classes and their types
+
+\section{Prerequisites}
+You should already be comfortable with:
+\begin{itemize}
+  \item classes/objects and access modifiers (\texttt{private/public}),
+  \item interfaces and implementations,
+  \item basic method calls and constructors.
+\end{itemize}
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Explain why nested classes exist and when they improve design.
+  \item Differentiate static nested, inner, local, and anonymous classes.
+  \item Recognize common use cases like helpers and callbacks/listeners.
+\end{itemize}
+
+\section{Lecture Overview}
+A \textbf{nested class} is a class declared \textbf{inside} another class, or inside a method.
+Java supports nested classes because sometimes a type is only meaningful within a bigger type.
+Nested classes let you:
+\begin{itemize}
+  \item keep helpers \textbf{close} to where they are used (readability),
+  \item hide implementation details (encapsulation),
+  \item implement small callbacks/listeners without creating many separate files.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Static nested class}: nested class with \texttt{static}; no implicit outer instance.
+  \item \textbf{Inner class}: non-static member class; has implicit reference to outer object.
+  \item \textbf{Local class}: class declared inside a method.
+  \item \textbf{Anonymous class}: unnamed local class used inline to implement an interface/extend a class.
+  \item \textbf{Callback}: passing code/behavior to run later (often via interfaces).
+  \item \textbf{Effectively final}: a local variable that is not reassigned after initialization.
+  \item \textbf{Outer instance}: the object of the outer class that an inner class ``belongs to''.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Nested classes at a glance}
+Use this table when you are unsure which kind you need:
+
+\begin{tabular}{@{}p{0.26\linewidth}p{0.20\linewidth}p{0.48\linewidth}@{}}
+\toprule
+\textbf{Type} & \textbf{Needs outer object?} & \textbf{Typical use-case} \\
+\midrule
+Static nested & No & helper tied to a concept (e.g., \texttt{Builder}, \texttt{Entry}, \texttt{Node}) \\
+Inner (member) & Yes & helper that needs outer state (iterator, view, controller) \\
+Local (in method) & No (but can capture) & short helper for one method, but named \\
+Anonymous & No (but can capture) & one-time callback/listener implementation \\
+\bottomrule
+\end{tabular}
+
+\subsection{Motivation: scope and encapsulation}
+Sometimes a helper type is only meaningful inside one class.
+If you declare it as a top-level class, it becomes visible everywhere and increases the public ``API surface''.
+By nesting it, you communicate: \textit{this helper belongs here}.
+
+\subsection{Types of nested classes (with intuition)}
+\subsubsection{1) Static nested class}
+\begin{itemize}
+  \item Declared with \texttt{static}.
+  \item Does \textbf{not} need an outer object to be created.
+  \item Can only directly access \textbf{static} members of the outer class.
+\end{itemize}
+Use-case: helper/utility class tied to a concept (e.g., \texttt{Map.Entry}, \texttt{Builder}, \texttt{Node}).
+
+\paragraph{Mini example (validator helper).}
+\begin{lstlisting}
+class BankAccount {
+    private double balance;
+
+    static class Validator {
+        static void requirePositive(double amount) {
+            if (amount <= 0) throw new IllegalArgumentException("amount");
+        }
+    }
+
+    void deposit(double amount) {
+        Validator.requirePositive(amount);
+        balance += amount;
+    }
+}
+\end{lstlisting}
+Notice: the validator does not need an outer object, so it is static.
+
+\subsubsection{2) Inner class (non-static member class)}
+\begin{itemize}
+  \item Has an implicit reference to the outer object.
+  \item Can access outer instance fields/methods directly.
+\end{itemize}
+Use-case: iterators or helpers that need access to the outer object's state.
+
+\paragraph{How to create an inner class object (syntax).}
+An inner class instance is tied to an outer instance:
+\begin{lstlisting}
+Outer outer = new Outer();
+Outer.Inner inner = outer.new Inner();
+\end{lstlisting}
+
+\paragraph{Important design note.}
+Because an inner class carries an outer reference, be careful when the inner object may live longer than the outer object (can keep it in memory longer than expected).
+If you do not need outer state, prefer a static nested class.
+
+\subsubsection{3) Local class (inside a method)}
+\begin{itemize}
+  \item Exists only within the method scope.
+  \item Can access local variables only if they are \textbf{effectively final}.
+\end{itemize}
+Use-case: small helper that is too specific to become a member class.
+
+\paragraph{Why effectively final?}
+When a local/anonymous class uses a local variable, the compiler ``captures'' its value.
+If that value could change later, the captured value would be confusing/unsafe.
+So Java requires the variable not to be reassigned.
+
+\subsubsection{4) Anonymous class}
+\begin{itemize}
+  \item Created inline with \texttt{new Interface() \{ ... \}}.
+  \item Useful for one-time implementations (callbacks/listeners).
+\end{itemize}
+In modern Java, lambdas often replace anonymous classes for functional interfaces (Unit 04), but anonymous classes are still important to understand because:
+\begin{itemize}
+  \item older code uses them frequently,
+  \item you can create an anonymous class even for non-functional interfaces and abstract classes.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\subsection{Access rules (important and often surprising)}
+\begin{itemize}
+  \item The outer class can access private members of the nested class.
+  \item The nested class can access private members of the outer class.
+\end{itemize}
+This is allowed because the Java compiler generates the necessary bridge code.
+So \texttt{private} is still respected at the source-code level, but nested/outer types are considered closely related.
+
+\subsection{Common mistakes (and quick fixes)}
+\begin{enumerate}
+  \item \textbf{Mistake:} Trying to create an inner class without an outer object.\par
+  \textbf{Fix:} create an outer instance first: \texttt{outer.new Inner()}.
+
+  \item \textbf{Mistake:} Local/anonymous class uses a variable that you later modify.\par
+  \textbf{Fix:} keep the variable effectively final (do not reassign), or move state into a field.
+
+  \item \textbf{Mistake:} Choosing an inner class when a static nested class is enough.\par
+  \textbf{Fix:} if you do not need outer instance data, make it \texttt{static}.
+\end{enumerate}
+
+\section{Worked Example (tutorial): one outer type using all 4 kinds}
+We will build a small \texttt{IntBag} container and use nested classes for iteration, helpers, and filtering.
+
+\subsection*{Step 1: Define a small callback interface}
+\begin{lstlisting}
+interface IntPredicate {
+    boolean test(int x);
+}
+\end{lstlisting}
+This lets us pass ``a condition'' (behavior) into a method like \texttt{countIf(...)}.
+
+\subsection*{Step 2: Outer class + inner cursor (needs outer state)}
+\begin{lstlisting}
+import java.util.Arrays;
+
+public class IntBag {
+    private final int[] data;
+
+    public IntBag(int[] data) {
+        this.data = data.clone();
+    }
+
+    // INNER class: it needs access to 'data'
+    public class Cursor {
+        private int idx = 0;
+        public boolean hasNext() { return idx < data.length; }
+        public int next() { return data[idx++]; }
+    }
+
+    public Cursor cursor() { return new Cursor(); }
+
+    public int countIf(IntPredicate p) {
+        int c = 0;
+        for (int x : data) if (p.test(x)) c++;
+        return c;
+    }
+
+    @Override public String toString() {
+        return Arrays.toString(data);
+    }
+}
+\end{lstlisting}
+Why inner? \texttt{Cursor} directly reads \texttt{data} from the outer object.
+
+\subsection*{Step 3: Static nested helper (does not need outer object)}
+\begin{lstlisting}
+public class IntBag {
+    // ... keep previous code ...
+
+    public static class Stats {
+        public static int max(int[] a) {
+            int m = Integer.MIN_VALUE;
+            for (int x : a) if (x > m) m = x;
+            return m;
+        }
+    }
+}
+\end{lstlisting}
+Why static? \texttt{Stats.max} only needs an array; it does not need an \texttt{IntBag} instance.
+
+\subsection*{Step 4: Local class and anonymous class (filters)}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        IntBag bag = new IntBag(new int[]{3, 1, 2, 8, 5});
+        System.out.println("Bag = " + bag);
+
+        // INNER class object comes from an outer object
+        IntBag.Cursor cur = bag.cursor();
+        System.out.print("Iterate: ");
+        while (cur.hasNext()) System.out.print(cur.next() + " ");
+        System.out.println();
+
+        // LOCAL class (named helper inside a method)
+        final int threshold = 3; // effectively final
+        class GreaterThan implements IntPredicate {
+            public boolean test(int x) { return x > threshold; }
+        }
+        System.out.println("count(x > 3) = " + bag.countIf(new GreaterThan()));
+
+        // ANONYMOUS class (one-time implementation)
+        int evens = bag.countIf(new IntPredicate() {
+            public boolean test(int x) { return x % 2 == 0; }
+        });
+        System.out.println("count(even) = " + evens);
+    }
+}
+\end{lstlisting}
+Later in Unit 04 you will replace many anonymous classes like the even-check with a lambda, but the idea (passing behavior) remains the same.
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Which nested type has an implicit reference to the outer object?\; \textbf{Answer:} inner class.
+  \item Which nested type is often used for callbacks/listeners?\; \textbf{Answer:} anonymous class.
+  \item Can a local class access a non-final local variable?\; \textbf{Answer:} no (must be effectively final).
+\end{enumerate}
+
+\section{Self-Study Practice (with hints)}
+\begin{enumerate}
+  \item Add a method \texttt{sum()} to \texttt{IntBag}. Keep it simple.\par
+  \textbf{Hint:} loop over \texttt{data}.
+
+  \item Modify the demo to count odd numbers using an anonymous class.\par
+  \textbf{Hint:} \texttt{x \% 2 != 0}.
+
+  \item Make a new static nested class \texttt{MinMax} that computes both min and max.\par
+  \textbf{Hint:} return an \texttt{int[]} of length 2 or create a tiny nested data class.
+\end{enumerate}
+
+\section{Summary (1 minute)}
+\begin{itemize}
+  \item Use a \textbf{static nested class} when the helper does not need an outer object.
+  \item Use an \textbf{inner class} when the helper needs outer state.
+  \item Use a \textbf{local class} when the helper is only for one method but benefits from a name.
+  \item Use an \textbf{anonymous class} for one-time callbacks (often replaced by lambdas later).
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why do nested classes help encapsulation?\par
+\textbf{Sample answer:} They keep helper types close to where they are used and reduce the public API. This prevents accidental use from unrelated code and improves readability.
+
+\vspace{0.6em}
+\textbf{Q2.} What is the difference between a static nested class and an inner class?\par
+\textbf{Sample answer:} A static nested class does not have an implicit outer reference and can be created without an outer object. An inner class has an implicit reference to an outer instance and can access its instance members.
+
+\end{document}

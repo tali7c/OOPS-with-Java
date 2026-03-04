@@ -1,0 +1,228 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Miscellaneous: Why Do We Need Interfaces?}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSMiscWhyInterfacesSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:motivation}{\beamerbutton{Motivation}}\hspace{0.6em}
+  \hyperlink{sec:usecases}{\beamerbutton{Use Cases}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain what an interface represents (a contract for behavior).
+    \item Explain why interfaces reduce coupling and improve design flexibility.
+    \item Apply interfaces in common scenarios: strategy, testing, and data access.
+    \item Decide when to use an interface vs an abstract class (rule-of-thumb).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The one-line answer}
+  \begin{block}{Why do we need interfaces?}
+    So our code depends on \textbf{contracts} (behavior) rather than \textbf{concrete classes} (implementation).
+  \end{block}
+
+  \vspace{0.5em}
+  \begin{itemize}[<+->]
+    \item Easier to change (swap implementations without rewriting business logic)
+    \item Easier to extend (add new implementations without touching existing code)
+    \item Easier to test (replace real dependencies with fakes/mocks)
+  \end{itemize}
+\end{frame}
+
+\section{Motivation (Tight Coupling)}
+\label{sec:motivation}
+
+\begin{frame}[fragile]{Without interfaces: a rigid design}
+\begin{lstlisting}
+class CardPayment {
+    void pay(int amount) { /* call bank */ }
+}
+
+class CheckoutService {
+    void checkout(int amount) {
+        CardPayment payment = new CardPayment(); // fixed choice
+        payment.pay(amount);
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Symptoms of tight coupling}
+  \begin{itemize}[<+->]
+    \item New requirement (UPI/Wallet) forces edits in \texttt{CheckoutService}
+    \item Testing is painful (real bank calls, slow and flaky)
+    \item High-level business code depends on low-level implementation details
+  \end{itemize}
+\end{frame}
+
+\section{Contract (Interface)}
+\label{sec:contract}
+
+\begin{frame}[fragile]{Introduce a contract}
+\begin{lstlisting}
+interface PaymentMethod {
+    void pay(int amount);
+}
+
+class CardPayment implements PaymentMethod {
+    public void pay(int amount) { /* call bank */ }
+}
+
+class UpiPayment implements PaymentMethod {
+    public void pay(int amount) { /* call UPI */ }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Business logic depends on the contract}
+\begin{lstlisting}
+class CheckoutService {
+    private final PaymentMethod payment;
+
+    CheckoutService(PaymentMethod payment) {
+        this.payment = payment;
+    }
+
+    void checkout(int amount) {
+        payment.pay(amount);
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{What we gained}
+  \begin{itemize}[<+->]
+    \item \textbf{Flexibility:} choose implementation at runtime (Card/UPI/Wallet)
+    \item \textbf{Extensibility:} add a new payment type without changing checkout
+    \item \textbf{Testability:} pass a fake implementation in tests
+  \end{itemize}
+
+  \vspace{0.5em}
+  \begin{center}
+    \texttt{CheckoutService} $\rightarrow$ \texttt{PaymentMethod} $\leftarrow$ \texttt{CardPayment / UpiPayment}
+  \end{center}
+\end{frame}
+
+\section{Use Cases}
+\label{sec:usecases}
+
+\begin{frame}[fragile]{Use case 1: plug-in behavior (Strategy)}
+\begin{lstlisting}
+interface DiscountPolicy { int discount(int total); }
+class NoDiscount implements DiscountPolicy {
+    public int discount(int total) { return 0; }
+}
+class StudentDiscount implements DiscountPolicy {
+    public int discount(int total) { return total / 10; } // 10%
+}
+class Billing {
+    private final DiscountPolicy policy;
+    Billing(DiscountPolicy policy) { this.policy = policy; }
+    int finalAmount(int total) { return total - policy.discount(total); }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Use case 2: unit testing with a fake}
+\begin{lstlisting}
+interface Notifier { void send(String to, String msg); }
+
+class FakeNotifier implements Notifier {
+    String lastTo, lastMsg;
+    public void send(String to, String msg) {
+        lastTo = to; lastMsg = msg;
+    }
+}
+\end{lstlisting}
+\begin{itemize}[<+->]
+  \item Real code uses \texttt{EmailNotifier}; tests use \texttt{FakeNotifier}
+  \item No real network calls; tests become fast and reliable
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Use case 3: decouple storage (Repository)}
+\begin{lstlisting}
+class User { String id; String name; }
+
+interface UserRepository {
+    User findById(String id);
+    void save(User u);
+}
+
+class InMemoryUserRepository implements UserRepository { /* for tests */ }
+class SqlUserRepository implements UserRepository { /* for production */ }
+\end{lstlisting}
+\end{frame}
+
+\section{Java Examples}
+\label{sec:java}
+
+\begin{frame}{Interfaces you already use in Java}
+  \begin{itemize}[<+->]
+    \item Collections: \texttt{List}, \texttt{Set}, \texttt{Map}, \texttt{Iterable}, \texttt{Iterator}
+    \item Ordering: \texttt{Comparable}, \texttt{Comparator}
+    \item Concurrency: \texttt{Runnable}, \texttt{Callable}
+    \item Resource handling: \texttt{AutoCloseable} (try-with-resources)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why Java loves interfaces}
+  \begin{itemize}[<+->]
+    \item A class can implement \textbf{multiple interfaces} (multiple roles/capabilities)
+    \item Frameworks use interfaces for callbacks (``I will call your code'')
+    \item Standard libraries are designed around interface types (program to the abstraction)
+  \end{itemize}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Interface vs abstract class (simple rule)}
+  \begin{itemize}[<+->]
+    \item Use an \textbf{interface} for a capability/role with many unrelated implementations.
+    \item Use an \textbf{abstract class} when you need shared state + shared code for closely related classes.
+    \item Interfaces can have \texttt{default} methods; use them carefully to keep the contract clean.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Summary}
+  \begin{itemize}[<+->]
+    \item Interfaces reduce coupling by separating \textit{what} from \textit{how}.
+    \item They enable plug-in designs (strategy), test doubles (fakes/mocks), and clean architectures (repositories).
+    \item Many Java APIs are built around interface types.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Quick practice}
+  \begin{enumerate}[<+->]
+    \item Design an \texttt{Exporter} interface with \texttt{CsvExporter} and \texttt{JsonExporter}.
+    \item Write a tiny test that uses a \texttt{FakeNotifier} and checks the last message sent.
+    \item Refactor any earlier program: replace direct concrete usage with an interface + two implementations.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

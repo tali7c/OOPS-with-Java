@@ -1,0 +1,204 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 06 -- Lecture 01 Notes\\Capstone Kickoff + Team Setup + Git/GitHub}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This is the start of the capstone project.
+The goal is not only ``write code''; the goal is to build a small but complete software product with:
+\begin{itemize}
+  \item clear scope,
+  \item clean OOP design,
+  \item a working Swing UI,
+  \item JDBC persistence,
+  \item and a professional Git/GitHub workflow.
+\end{itemize}
+\notesources{\OOPSUnitVISources}
+
+\section{Syllabus Alignment (Unit 06)}
+\textbf{Unit 06:} standalone Java project; source control; collaboration; build and artifacts
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Select a realistic problem statement with clear scope boundaries.
+  \item Create a team repo and organize work using issues and branches.
+  \item Follow a simple Git workflow (branching + pull requests).
+  \item Produce Deliverable-0: proposal (1 page) + initial backlog (issues).
+\end{itemize}
+
+\section{Project theme options (pick one)}
+Choose a domain that naturally needs OOP modelling + collections + Swing UI + JDBC persistence:
+\begin{itemize}
+  \item Library management (books, members, issue/return)
+  \item Hostel / room booking
+  \item Inventory management (products, stock in/out)
+  \item Clinic appointment booking
+  \item Campus resource booking (classrooms/labs/equipment) --- recommended
+\end{itemize}
+
+\section{Scope boundaries (most important success factor)}
+Projects fail mostly due to unclear scope.
+Use a simple scope definition:
+\begin{itemize}
+  \item \textbf{Must-have}: required for minimum working demo.
+  \item \textbf{Should-have}: improves product but not required for demo.
+  \item \textbf{Could-have}: optional enhancements if time permits.
+  \item \textbf{Non-goals}: explicitly out of scope (avoid wasted effort).
+\end{itemize}
+
+\textbf{Example (Campus resource booking):}
+\begin{itemize}
+  \item Must: add/list resources; create booking; prevent overlapping bookings.
+  \item Should: user login (simple roles); booking cancel; search/filter.
+  \item Could: export report (CSV/PDF); notifications.
+  \item Non-goals: full web app; payment gateway; complex authentication.
+\end{itemize}
+
+\section{Evaluation mindset (what usually matters)}
+Even if the exact rubric differs, these are typical expectations:
+\begin{itemize}
+  \item \textbf{Correctness}: features work, edge cases handled.
+  \item \textbf{Design}: good class structure; separation of UI vs DB vs logic.
+  \item \textbf{Database}: schema + CRUD, data persists correctly.
+  \item \textbf{UI}: usable screens, validations, meaningful messages.
+  \item \textbf{Git hygiene}: commits, branches, PRs, issues, evidence of collaboration.
+  \item \textbf{Documentation}: README, setup steps, screenshots (optional), report/proposal.
+\end{itemize}
+
+\section{Team setup checklist}
+\begin{enumerate}
+  \item Create team (3--4 students, as per batch rule).
+  \item Create a GitHub repository (one repo per team).
+  \item Add collaborators (all team members + instructor if needed).
+  \item Add a \texttt{README.md} with:
+  \begin{itemize}
+    \item project title + short description,
+    \item tech stack (Java, Swing, JDBC, DB),
+    \item how to run (steps),
+    \item team members.
+  \end{itemize}
+  \item Create labels: \texttt{feature}, \texttt{bug}, \texttt{doc}, \texttt{db}, \texttt{ui}.
+\end{enumerate}
+
+\section{Git/GitHub workflow (simple and effective)}
+\subsection{Branching convention}
+\begin{itemize}
+  \item \texttt{main}: always stable / demo-ready.
+  \item Feature branches: \texttt{feature/<short-name>} (e.g., \texttt{feature/resource-crud}).
+  \item Fix branches: \texttt{fix/<short-name>}.
+\end{itemize}
+
+\subsection{Pull request (PR) habit}
+For each feature:
+\begin{enumerate}
+  \item Create issue.
+  \item Create branch from \texttt{main}.
+  \item Commit frequently with meaningful messages.
+  \item Open a PR and request review from teammate.
+  \item Merge after review (and after fixing comments).
+\end{enumerate}
+
+\subsection{Commit message guideline}
+Keep it short and clear:
+\begin{itemize}
+  \item \texttt{Add ResourceDao insert + findAll}
+  \item \texttt{Fix booking overlap validation}
+  \item \texttt{Update README setup steps}
+\end{itemize}
+
+\section{How to write good GitHub issues (beginner-friendly)}
+GitHub issues are your ``work tracker'' and also your evidence of collaboration.
+An issue should be small enough to finish in \textbf{one focused session} (or at most 1--2 sessions).
+
+\subsection{Issue template (simple)}
+Use this structure (copy/paste into issue description):
+\begin{itemize}
+  \item \textbf{Problem/Goal:} what needs to be built or fixed?
+  \item \textbf{Acceptance criteria:} 3--6 testable bullets (how do we know it is done?)
+  \item \textbf{Tasks:} checklist of steps (UI/service/DAO/DB/test/doc)
+  \item \textbf{Notes:} screenshots, UI sketch, edge cases (optional)
+\end{itemize}
+
+\subsection{Example issue (Campus Resource Manager)}
+\textbf{Title:} Prevent overlapping bookings for same resource\par
+\textbf{Acceptance criteria (sample):}
+\begin{itemize}
+  \item If a new booking overlaps an existing booking for the same resource, the system shows an error message and does not save it.
+  \item Edge case: booking that ends at the exact start time of another booking is allowed.
+  \item Valid booking is saved to DB and appears in booking list view.
+\end{itemize}
+\textbf{Tasks (sample):}
+\begin{itemize}
+  \item Add overlap check method in \texttt{BookingService}
+  \item Add DAO query to find overlaps (by resource + time range)
+  \item Add UI validation message near booking form
+  \item Test with 3 cases (overlap, boundary-touch, non-overlap)
+\end{itemize}
+
+\section{Suggested repo structure (keep it simple)}
+You can organize your repo like this:
+\begin{lstlisting}[language=]
+repo-root/
+  README.md
+  docs/
+    deliverable-0-proposal.pdf
+    deliverable-1-use-cases.pdf
+    deliverable-2-class-diagram.pdf
+  src/
+    com/upes/crm/...
+  db/
+    schema.sql
+\end{lstlisting}
+\textbf{Tip:} Keep deliverables in \texttt{docs/} and keep code in \texttt{src/}. This makes demo preparation easier.
+
+\section{Deliverable-0 (proposal + backlog)}
+\subsection*{Deliverable-0A: 1-page proposal (template)}
+\begin{itemize}
+  \item Title + team members (roll numbers)
+  \item Problem statement (3--5 lines)
+  \item Must/Should/Could features (bullets)
+  \item UI screens (list)
+  \item Database entities/tables (list)
+  \item Milestones (week-wise or lecture-wise plan)
+  \item Risks (2--3) + mitigation
+  \item GitHub repo link
+\end{itemize}
+
+\subsection*{Deliverable-0B: backlog (initial issues)}
+Create issues for each must-have item, plus technical tasks.
+Example issue list:
+\begin{itemize}
+  \item Create DB schema (resources, bookings)
+  \item Resource CRUD UI + DAO
+  \item Booking create + validation (no overlap)
+  \item List bookings (table view)
+  \item Exception handling + user-friendly messages
+  \item README run instructions
+\end{itemize}
+\notesources{\OOPSUnitVISources}
+
+\section{In-Class Activity (evidence to produce)}
+\begin{itemize}
+  \item Repo created + collaborators added
+  \item README created
+  \item At least 8--12 issues created (must-have + setup tasks)
+  \item At least 1 PR opened (even if small: README + folder structure)
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why do we define Must/Should/Could/Non-goals?\par
+\textbf{Sample answer:} It prevents scope creep, helps teams finish a working minimum product, and makes planning measurable.
+
+\vspace{0.6em}
+\textbf{Q2.} Why use branches + PRs instead of committing everything to \texttt{main}?\par
+\textbf{Sample answer:} Branches isolate changes and keep \texttt{main} stable. PRs enable review and reduce bugs, and they create evidence of collaboration.
+
+\end{document}

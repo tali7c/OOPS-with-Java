@@ -1,0 +1,240 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 06 -- Lecture 02 Notes\\Requirements → Use Cases → Milestones}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+In Deliverable-0 you selected a theme and defined a scope.
+Now we convert that scope into \textbf{clear requirements} that can be implemented and tested.
+The workflow is:
+\begin{center}
+Requirements $\rightarrow$ Use Cases $\rightarrow$ Milestones/Backlog
+\end{center}
+\notesources{\OOPSUnitVISources}
+
+\section{Syllabus Alignment (Unit 06)}
+\textbf{Unit 06:} requirements + use cases + project planning
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Identify actors and write use cases with success/failure scenarios and acceptance criteria.
+  \item Create Deliverable-1: use case diagram + 3 written use cases.
+  \item Convert requirements into milestones and update your GitHub backlog.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Requirement}: what the system must do (functional) or must be (non-functional).
+  \item \textbf{Functional requirement}: a feature/behavior (e.g., create a booking).
+  \item \textbf{Non-functional requirement}: quality/constraint (e.g., usability, security, performance).
+  \item \textbf{Actor}: external role interacting with the system (admin, user).
+  \item \textbf{Use case}: goal-oriented interaction between an actor and the system.
+  \item \textbf{Scenario}: step-by-step story of using the system (success/failure paths).
+  \item \textbf{Acceptance criteria}: conditions to consider a use case complete (testable).
+  \item \textbf{Definition of done (DoD)}: your team's shared checklist for when work is truly ``complete''.
+  \item \textbf{Milestone}: group of backlog items delivered by a date/session.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Step 1: Convert scope into requirements}
+Your Deliverable-0 scope (Must/Should/Could/Non-goals) is still high level.
+Now we convert it into requirements that can be \textbf{implemented} and \textbf{tested}.
+
+\subsubsection{How to write a good requirement}
+Good requirements are:
+\begin{itemize}
+  \item \textbf{clear:} avoid vague words like ``fast'' or ``good'',
+  \item \textbf{specific:} mention the feature and the rule,
+  \item \textbf{testable:} you can write 2--3 test cases from it.
+\end{itemize}
+
+\textbf{Weak (avoid):}
+\begin{itemize}
+  \item ``The system should be fast.''
+  \item ``The UI should be user friendly.''
+\end{itemize}
+
+\textbf{Better (testable):}
+\begin{itemize}
+  \item ``Booking cannot overlap an existing booking for the same resource.''
+  \item ``Capacity must be a positive integer; otherwise show an error message and do not save.''
+  \item ``On success, the record is saved in DB and appears in the list view without restarting the app.''
+\end{itemize}
+
+\subsection{Step 2: Identify actors and use cases (goals)}
+Start from your requirements and identify:
+\begin{itemize}
+  \item actors (roles): Admin, User, Staff, etc.,
+  \item goals: what each actor wants to achieve.
+\end{itemize}
+Each goal becomes a use case.
+
+\textbf{Example (Campus Resource Booking):}
+\begin{itemize}
+  \item Actor: Admin $\rightarrow$ Add/Update Resource
+  \item Actor: User $\rightarrow$ Create Booking, Cancel Booking, View Availability
+\end{itemize}
+
+\subsection{Step 3: Create a use case diagram (quick guide)}
+The use case diagram is a \textbf{map} of your features:
+\begin{itemize}
+  \item draw a system boundary rectangle (your application),
+  \item put actors outside (roles),
+  \item put use cases inside as verb phrases (``Create Booking'', ``Add Resource'').
+\end{itemize}
+\textbf{Tip:} keep the diagram simple; use \texttt{include/extend} only if you truly need it.
+
+\subsection{Step 4: Write the use cases (template)}
+Write each use case in a structured way. Keep it short but complete:
+\begin{itemize}
+  \item Use case name
+  \item Primary actor
+  \item Preconditions
+  \item Trigger
+  \item Main success scenario (numbered steps)
+  \item Alternate flows (failures/edge cases)
+  \item Postconditions
+  \item Acceptance criteria (3--6 testable bullets)
+\end{itemize}
+
+\subsection{Worked example: Use case ``Create Booking'' (full)}
+\textbf{Use case name:} Create Booking\par
+\textbf{Primary actor:} User\par
+\textbf{Preconditions (examples):}
+\begin{itemize}
+  \item At least one resource exists in the system.
+  \item Database connection is available.
+\end{itemize}
+\textbf{Trigger:} user clicks ``Create Booking'' / ``Save Booking'' button.
+
+\subsubsection*{Main success scenario (example)}
+\begin{enumerate}
+  \item System shows booking form (resource, start time, end time).
+  \item User selects a resource and enters start/end time.
+  \item System validates input (mandatory fields, start $<$ end).
+  \item System checks overlap for the same resource.
+  \item System saves booking in DB.
+  \item System shows success message.
+  \item System updates booking list view (the new booking is visible).
+\end{enumerate}
+
+\subsubsection*{Alternate flows (examples)}
+\begin{itemize}
+  \item \textbf{A1: Invalid time range} (start $\ge$ end)\par
+  System shows validation error and does not save.
+
+  \item \textbf{A2: Overlap exists}\par
+  System shows ``Overlapping booking'' message and does not save.
+
+  \item \textbf{A3: DB failure}\par
+  System shows a friendly error message and does not crash.
+\end{itemize}
+
+\subsubsection*{Postconditions (examples)}
+\begin{itemize}
+  \item On success, booking record exists in DB and is visible in UI list.
+  \item On failure, no record is created (data remains consistent).
+\end{itemize}
+
+\subsubsection*{Acceptance criteria (sample)}
+\begin{itemize}
+  \item Booking cannot overlap an existing booking for the same resource.
+  \item Boundary case: end time equal to another booking's start time is allowed.
+  \item Invalid input shows a clear message near the form and does not save.
+  \item On success, booking is saved and visible in list view.
+\end{itemize}
+
+\subsection{Step 5: Convert use cases into backlog items}
+One use case usually becomes \textbf{multiple issues} (UI + service + DAO + DB).
+\textbf{Example breakdown for ``Create Booking'':}
+\begin{itemize}
+  \item UI: create booking form panel + input validation
+  \item Service: \texttt{BookingService.createBooking(...)} with overlap rules
+  \item DAO: \texttt{BookingDao.insert(...)} + query to find overlaps
+  \item DB: schema constraints + indexes (by \texttt{resource\_id}, time range)
+  \item Test/demo: 3 scenarios (success, overlap, invalid time)
+\end{itemize}
+
+\subsection{Step 6: Milestones (turn backlog into a plan)}
+Milestones help you avoid ``everything at the end''.
+Keep milestones aligned with Unit 06 deliverables:
+\begin{itemize}
+  \item \textbf{Milestone-1 (Deliverable-1):} diagram + 3 written use cases
+  \item \textbf{Milestone-2 (Deliverable-2):} class diagram + package structure
+  \item \textbf{Milestone-3 (Deliverable-3):} DB schema + DAO CRUD for 1--2 entities
+  \item \textbf{Milestone-4 (Deliverable-4):} UI integration + validations + end-to-end flow
+  \item \textbf{Milestone-5 (final):} testing, packaging, polish, demo readiness
+\end{itemize}
+\notesources{\OOPSUnitVISources}
+
+\section{Deliverable-1: Use case diagram + 3 written use cases}
+\subsection*{Deliverable-1A: Use case diagram}
+Diagram should include:
+\begin{itemize}
+  \item 2--3 actors,
+  \item 6--10 use cases,
+  \item relationships if needed (include/extend --- optional).
+\end{itemize}
+
+\subsection*{Deliverable-1B: 3 written use cases (suggested)}
+Pick the most important core flows:
+\begin{itemize}
+  \item Create Booking (core)
+  \item Add Resource (admin)
+  \item List/Search Bookings (read flow)
+\end{itemize}
+
+\subsection*{Minimum quality bar (what we will check)}
+\begin{itemize}
+  \item Each written use case has at least 6--10 steps in main success scenario.
+  \item Each use case includes at least 2 alternate flows (invalid input + business rule failure).
+  \item Acceptance criteria are testable and can be demonstrated during the final demo.
+\end{itemize}
+
+\section{In-Class Activity (evidence)}
+\begin{itemize}
+  \item Add Deliverable-1 document to repo (PDF/Doc) or link in README.
+  \item Create/update GitHub issues based on use cases (one issue per use case / feature).
+  \item Add milestone labels or GitHub milestones (optional).
+\end{itemize}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Convert one Must-have feature into 2 requirements.\par
+  \textbf{Sample:} ``Create booking'' $\rightarrow$ (1) booking must store resource + start + end, (2) booking must not overlap existing booking for same resource.
+
+  \item Identify 2--3 actors for your project.\par
+  \textbf{Sample:} Admin, User/Student/Faculty.
+
+  \item Write 3 acceptance criteria for ``Add Resource''.\par
+  \textbf{Sample:} name required; capacity positive; on success resource appears in list.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Write a use case diagram for your project (6--10 use cases).
+  \item Write 2 complete written use cases using the template (include alternate flows).
+  \item Convert one use case into at least 5 GitHub issues (UI/service/DAO/DB/test).
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why do we write acceptance criteria?\par
+\textbf{Sample answer:} Acceptance criteria make requirements testable. They define what ``done'' means, reduce confusion, and help validate the system during demo.
+
+\vspace{0.6em}
+\textbf{Q2.} What is the difference between an actor and a use case?\par
+\textbf{Sample answer:} An actor is a role interacting with the system. A use case is a goal/action the actor performs using the system.
+
+\vspace{0.6em}
+\textbf{Q3.} Why do we separate ``main success scenario'' and ``alternate flows''?\par
+\textbf{Sample answer:} It forces you to think about errors and edge cases early. Alternate flows often become validations and exception-handling code.
+
+\end{document}

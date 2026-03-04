@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-01\&02: Java Programming Environment + Input Handling (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is a \textbf{pre-submission} student handout.
+It provides \textbf{requirements} and \textbf{hints}, but not full solutions.
+Teacher model solutions are kept privately.
+
+\section{Experiment 01 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To understand the Java programming environment, program structure, compilation, and execution process.
+  \item \textbf{Problem Statement:} Design and implement a basic Java program demonstrating class declaration, \texttt{main()} method, and standard output statements.
+  \item \textbf{Expected Outcome:} Ability to write, compile, and execute a basic Java program.
+\end{itemize}
+
+\section{Experiment 02 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To understand different methods of input handling in Java.
+  \item \textbf{Problem Statement:} Develop a Java program that accepts input using standard input methods and command line arguments.
+  \item \textbf{Expected Outcome:} Ability to handle input from multiple sources.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- Java setup + first program (Exp-01)}
+\begin{enumerate}[leftmargin=*]
+  \item Verify installation (attach output screenshots):
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{java -version}
+    \item \texttt{javac -version}
+  \end{itemize}
+
+  \item Create \texttt{HelloUPES.java} that prints:
+  \begin{itemize}[leftmargin=*]
+    \item a welcome message,
+    \item Java version using \texttt{System.getProperty("java.version")},
+    \item number of command line arguments.
+  \end{itemize}
+
+  \item Compile and run:
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{javac HelloUPES.java}
+    \item \texttt{java HelloUPES}
+    \item \texttt{java HelloUPES A B}
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Task B --- Keyboard input + command line args (Exp-02)}
+\begin{enumerate}[leftmargin=*]
+  \item Create \texttt{InputArgsDemo.java} that:
+  \begin{itemize}[leftmargin=*]
+    \item reads \texttt{bonusPercent} from command line arguments,
+    \item reads \texttt{name} and \texttt{baseSalary} using \texttt{Scanner},
+    \item computes \texttt{finalSalary = baseSalary + baseSalary * bonusPercent / 100},
+    \item prints the final salary using formatted output.
+  \end{itemize}
+
+  \item Validations (mandatory):
+  \begin{itemize}[leftmargin=*]
+    \item check \texttt{args.length} before accessing \texttt{args[0]},
+    \item handle invalid bonus argument (\texttt{NumberFormatException}),
+    \item handle invalid salary input (\texttt{InputMismatchException}).
+  \end{itemize}
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Command line arguments are always strings; parse numbers using \texttt{Integer.parseInt} or \texttt{Double.parseDouble}.
+  \item Close \texttt{Scanner} using \texttt{finally} or try-with-resources.
+  \item If you mix \texttt{nextInt()/nextDouble()} with \texttt{nextLine()}, remember the newline issue.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item source code: \texttt{HelloUPES.java}, \texttt{InputArgsDemo.java}
+  \item output screenshots or copied output
+  \item observations (5--10 lines): compile-time vs runtime; what happens for invalid inputs
+\end{itemize}
+
+\notesources{\OOPSUnitISources}
+\end{document}

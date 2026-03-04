@@ -1,0 +1,198 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 01 Notes\\OOP Paradigm + Principles + Modelling}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture starts the course with two questions:
+\begin{enumerate}
+  \item \textbf{Why do we use OOP?} (what problems it solves compared to purely procedural code)
+  \item \textbf{How do we think in OOP?} (principles + modelling a real-world problem into classes and objects)
+\end{enumerate}
+We will connect ideas to simple, beginner-friendly Java examples (no advanced syntax yet).
+\notesources{\OOPSUnitISources}
+
+\section{Syllabus Alignment (Unit 01)}
+\textbf{Unit 01:} Introduction to OOPs
+\begin{itemize}
+  \item OOP history and evolution
+  \item OOP principles
+  \item Modelling a real-world entity
+\end{itemize}
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Explain (in your own words) why OOP became popular for large software systems.
+  \item Define and differentiate \textbf{abstraction}, \textbf{encapsulation}, \textbf{inheritance}, and \textbf{polymorphism}.
+  \item Convert a short problem statement into a small class design (classes, fields, methods, responsibilities).
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Class}: A blueprint (type) describing data (fields) and operations (methods).
+  \item \textbf{Object}: A runtime instance of a class (has identity + state + behavior).
+  \item \textbf{State}: The data inside an object (values of its fields at a time).
+  \item \textbf{Behavior}: What an object can do (methods).
+  \item \textbf{Invariant}: A rule that must always remain true for an object (e.g., \texttt{balance >= 0}).
+  \item \textbf{Interface (idea)}: A public view/contract of what operations are allowed (we will formalize this later in Java).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Why OOP? (vs procedural)}
+\textbf{Procedural programming} organizes software around \emph{procedures/functions} that operate on data.
+This is great for small programs, but as the program grows, a few problems become common:
+\begin{itemize}
+  \item \textbf{Shared state becomes risky:} if many functions can modify the same data, it becomes hard to guarantee correctness.
+  \item \textbf{Tight coupling:} one change in data structure often forces changes in many functions.
+  \item \textbf{Poor ``real-world'' mapping:} business concepts (student, course, account, booking) are not first-class; you must manually manage relationships.
+\end{itemize}
+
+\textbf{Object-Oriented Programming (OOP)} organizes software around \emph{objects}.
+An object keeps its data together with the operations that are allowed on that data.
+That makes it easier to:
+\begin{itemize}
+  \item \textbf{Divide responsibilities} (each class owns a small part of the system).
+  \item \textbf{Protect invariants} (only methods can change internal data).
+  \item \textbf{Reuse designs} (inheritance, composition, and interfaces).
+  \item \textbf{Build large systems} by combining small, understandable pieces.
+\end{itemize}
+
+\paragraph{Rule of thumb.} In OOP, \emph{data is not ``free'' to modify}. Most fields should be private and updated through methods that validate.
+
+\subsection{The 4 OOP principles (with intuition)}
+\subsubsection{Abstraction}
+\textbf{Abstraction} means focusing on \emph{what} something does, not \emph{how} it does it.
+We hide irrelevant details so that the user of a class sees a simple model.
+
+\textbf{Example.} You know a \texttt{BankAccount} supports \texttt{deposit()} and \texttt{withdraw()}. You do not care about internal storage details.
+
+\textbf{Pitfall.} If you expose internal details (public fields), users can bypass rules and break the model.
+
+\subsubsection{Encapsulation}
+\textbf{Encapsulation} means bundling data with methods and controlling access to protect invariants.
+In Java this usually means \texttt{private} fields + public methods.
+
+\textbf{Example.} If \texttt{balance} is private, only \texttt{deposit()} / \texttt{withdraw()} can change it, so we can ensure \texttt{balance >= 0}.
+
+\textbf{Pitfall.} ``Getters/setters for everything'' is not real encapsulation if setters allow invalid states (e.g., \texttt{setBalance(-100)}).
+
+\subsubsection{Inheritance}
+\textbf{Inheritance} models an \textbf{is-a} relationship: a child class is a specialized form of a parent class.
+It enables reuse of common code \emph{when the relationship is truly is-a}.
+
+\textbf{Example.} \texttt{SavingAccount} is-a \texttt{BankAccount} (it has all account behaviors and adds interest calculation).
+
+\textbf{Pitfall.} Do not use inheritance only to reuse code. If it is not is-a, prefer composition (has-a).
+
+\subsubsection{Polymorphism}
+\textbf{Polymorphism} means ``many forms''.
+In Java, the most important form is \textbf{runtime polymorphism}:
+when a parent reference points to a child object, the overridden method that runs is chosen at runtime.
+
+\textbf{Example (idea).} A variable of type \texttt{BankAccount} can hold a \texttt{SavingAccount}; calling \texttt{withdraw()} executes the child's override if it exists.
+
+\textbf{Pitfall.} Confusing \textbf{overloading} (same method name, different parameters) with \textbf{overriding} (same signature in subclass).
+
+\subsection{How to model a real-world entity}
+When you get a problem statement, you are doing \textbf{modelling}: converting real-world concepts into a class design.
+One practical step-by-step method:
+\begin{enumerate}
+  \item \textbf{Read scenarios}: list 3--5 user actions (``deposit money'', ``book a room'').
+  \item \textbf{Extract nouns}: candidate classes/entities (Account, Customer, Booking).
+  \item \textbf{Extract verbs}: candidate methods/operations (deposit, book, cancel).
+  \item \textbf{Define responsibilities}: what each class owns/does (avoid ``God'' classes).
+  \item \textbf{Write invariants}: rules that must never break (balance non-negative, booking has start < end).
+  \item \textbf{Validate with examples}: run your design on sample inputs mentally.
+\end{enumerate}
+
+\paragraph{CRC cards (quick idea).} For each class, write:
+\textbf{C}lass name, \textbf{R}esponsibilities, and \textbf{C}ollaborators.
+This simple technique prevents one class from doing everything.
+
+\section{Worked Example: \texttt{BankAccount} (Encapsulation + Invariants)}
+\subsection*{Goal}
+Model a bank account so that the invariant \texttt{balance >= 0} is always true.
+
+\subsection*{Code}
+\begin{lstlisting}
+public class BankAccount {
+    private final String accountNo;
+    private double balance; // invariant: balance >= 0
+
+    public BankAccount(String accountNo, double openingBalance) {
+        if (accountNo == null || accountNo.isBlank())
+            throw new IllegalArgumentException("accountNo required");
+        if (openingBalance < 0)
+            throw new IllegalArgumentException("openingBalance cannot be negative");
+
+        this.accountNo = accountNo;
+        this.balance = openingBalance;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("amount must be positive");
+        balance += amount;
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("amount must be positive");
+        if (amount > balance) throw new IllegalArgumentException("insufficient balance");
+        balance -= amount;
+    }
+}
+\end{lstlisting}
+
+\subsection*{What to notice}
+\begin{itemize}
+  \item Encapsulation: \texttt{balance} is \texttt{private}.
+  \item Invariant protection: constructor and methods validate inputs.
+  \item Abstraction: users do not directly ``set balance''; they request operations.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item \textbf{Model a \texttt{Student} entity.} Identify 3 fields and 3 methods.\par
+  \textbf{Sample:} fields = \texttt{rollNo, name, cgpa}; methods = \texttt{updateCgpa(), enrollCourse(), printTranscript()}.
+
+  \item \textbf{Find the invariant.} For each, write one invariant:\par
+  \textbf{(a)} Rectangle \textbf{(b)} Inventory item \textbf{(c)} Booking.\par
+  \textbf{Sample:} Rectangle: width/height > 0; Booking: startDate < endDate.
+
+  \item \textbf{Is-a or has-a?} Decide if it should be inheritance or composition:\par
+  \textbf{(a)} Car and Engine \textbf{(b)} Dog and Animal.\par
+  \textbf{Answer:} Car has-a Engine (composition). Dog is-a Animal (inheritance).
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Convert a real-world object (Library Book, ATM Card, Classroom) into a class with fields + methods + 1 invariant.
+  \item Write a 5--7 line paragraph: ``Why OOP helps in large software projects'' using one example.
+  \item Modify \texttt{BankAccount} to add \texttt{transferTo(BankAccount other, double amount)}.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why do we keep fields private in OOP?\par
+\textbf{Sample answer:} Private fields prevent external code from putting an object into an invalid state. Changes happen only through methods, so we can validate inputs and preserve invariants.
+
+\vspace{0.6em}
+\textbf{Q2.} What is the difference between abstraction and encapsulation?\par
+\textbf{Sample answer:} Abstraction is about simplifying the model (what is exposed); encapsulation is about protecting the internal state and controlling access (how it is protected).
+
+\vspace{0.6em}
+\textbf{Q3.} Give one example of ``is-a'' and one example of ``has-a''.\par
+\textbf{Sample answer:} Dog is-a Animal (inheritance). Car has-a Engine (composition).
+
+\end{document}

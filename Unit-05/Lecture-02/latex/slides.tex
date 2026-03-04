@@ -1,0 +1,164 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 05 -- Lecture 02: Set/SortedSet + Map/SortedMap}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Choose Set vs List and \texttt{HashSet} vs \texttt{TreeSet}.
+    \item Explain \texttt{equals}/\texttt{hashCode} and common mistakes.
+    \item Use \texttt{HashMap}/\texttt{TreeMap} for counting and sorted keys.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 05: Collections and Wrapper Class}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Set/SortedSet + Map/SortedMap
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Set vs list; `HashSet` vs `TreeSet`
+    \item Equality and hashing basics (`equals`/`hashCode`) and common mistakes
+    \item Map basics; `HashMap` vs `TreeMap`; common use-cases (counting/grouping)
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Set vs List}
+  \begin{itemize}[<+->]
+    \item List: ordered, duplicates allowed.
+    \item Set: no duplicates; great for membership and deduplication.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{HashSet vs TreeSet}
+  \begin{itemize}[<+->]
+    \item \texttt{HashSet}: no guaranteed order; fast average operations.
+    \item \texttt{TreeSet}: sorted order; needs \texttt{Comparable} or \texttt{Comparator}.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Why \texttt{equals} and \texttt{hashCode} matter}
+  \begin{itemize}[<+->]
+    \item Hash-based collections use \texttt{hashCode} to find a bucket.
+    \item \texttt{equals} confirms the match inside the bucket.
+    \item Contract: if \texttt{a.equals(b)} then \texttt{a.hashCode()==b.hashCode()}.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Map basics}
+  \begin{itemize}[<+->]
+    \item Map = key $\rightarrow$ value.
+    \item Use cases: counting, grouping, lookups by id.
+    \item \texttt{HashMap}: fast average; \texttt{TreeMap}: keys sorted.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: Set + Map counting}
+\begin{lstlisting}
+import java.util.*;
+public class Demo {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("Asha", "Ravi", "Asha");
+        Set<String> unique = new HashSet<>(names);
+        System.out.println(unique);
+
+        String[] words = {"a","b","a","c","b","a"};
+        Map<String,Integer> freq = new HashMap<>();
+        for (String w : words) freq.put(w, freq.getOrDefault(w,0) + 1);
+        System.out.println(freq);
+
+        Map<String,Integer> sorted = new TreeMap<>(freq);
+        System.out.println(sorted);
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item When do you prefer Set over List?
+    \item Which keeps sorted order: \texttt{HashSet} or \texttt{TreeSet}?
+    \item If you override \texttt{equals}, what else must you override?
+  \end{enumerate}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Set enforces uniqueness; TreeSet provides sorted order.
+    \item Hashing relies on correct \texttt{equals}/\texttt{hashCode}.
+    \item Map enables fast key-based lookup and counting/grouping.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why do Hash-based collections need \texttt{hashCode} and \texttt{equals}?
+    \item When do you choose \texttt{TreeMap} over \texttt{HashMap}?
+    \item Give one example of counting/grouping using a map.
+  \end{enumerate}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Wrapped Collections + \texttt{Collections} utilities + Wrapper classes
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item Utility methods and common pitfalls with autoboxing.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\end{document}

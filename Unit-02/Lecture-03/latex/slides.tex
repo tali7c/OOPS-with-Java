@@ -1,0 +1,160 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 02 -- Lecture 03: Access Modifiers + Packages + Interface Intro}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Choose correct access modifiers to protect a class design.
+    \item Organize code using packages and imports.
+    \item Explain interfaces as contracts and write a basic interface example.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 02: Classes, Inheritance, Packages and Interfaces}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Access Modifiers + Packages + Interface Intro
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Access control: `private`, default, `protected`, `public`
+    \item Packages: `package`, `import`, naming conventions, project structure
+    \item Interfaces: motivation + "contract" view (full interface treatment later)
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Access modifiers (quick table)}
+  \begin{center}
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Modifier} & \textbf{Visible where?} \\
+    \midrule
+    \texttt{private} & inside the same class \\
+    (default) & inside the same package \\
+    \texttt{protected} & same package + subclasses \\
+    \texttt{public} & everywhere \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{0.3em}
+  \textbf{Rule of thumb:} fields are usually \texttt{private}.
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Packages: why and how}
+  \begin{itemize}[<+->]
+    \item Organize code and avoid name conflicts.
+    \item First line in file: \texttt{package com.upes.demo.pay;}
+    \item Folder matches package: \texttt{com/upes/demo/pay/}
+    \item Use \texttt{import} to avoid long names.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Interfaces (intro)}
+  \begin{itemize}[<+->]
+    \item Interface = \textbf{contract} (what operations must exist).
+    \item Classes \textbf{implement} interfaces.
+    \item Benefit: reduce coupling; caller depends on interface, not concrete class.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: interface contract}
+\begin{lstlisting}
+public interface Payable {
+    double amountDue();
+}
+
+public class Invoice implements Payable {
+    private final double total;
+    public Invoice(double total) { this.total = total; }
+    @Override public double amountDue() { return total; }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item If a member has no keyword, where is it visible?
+    \item Why do we use packages?
+    \item What is the main idea of an interface?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Access modifiers protect your design and prevent misuse.
+    \item Packages organize code and enable package-private encapsulation.
+    \item Interfaces provide contracts and reduce coupling between modules.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why should most fields be \texttt{private}?
+    \item What must match: package name and folder structure?
+    \item In one sentence: why are interfaces useful?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Inheritance, \texttt{super}, Overriding, and Dynamic Dispatch
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will learn is-a vs has-a and runtime polymorphism.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\end{document}

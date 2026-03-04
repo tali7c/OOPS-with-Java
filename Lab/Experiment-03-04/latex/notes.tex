@@ -1,0 +1,92 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-03\&04: Operators + Control Flow (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is a \textbf{pre-submission} handout.
+Do the implementation yourself; this document provides the required tasks and some hints.
+
+\section{Experiment 03 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To apply data types and operators in Java programs.
+  \item \textbf{Problem Statement:} Write a Java program demonstrating the use of primitive data types and operators.
+  \item \textbf{Expected Outcome:} Students will understand data manipulation using operators.
+\end{itemize}
+
+\section{Experiment 04 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To implement control flow using conditional and looping statements.
+  \item \textbf{Problem Statement:} Design a Java program using decision-making and looping constructs.
+  \item \textbf{Expected Outcome:} Students will be able to control program flow effectively.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- Types + operators mini-lab (Exp-03)}
+Create \texttt{TypesOperatorsDemo.java} that:
+\begin{enumerate}[leftmargin=*]
+  \item reads two integers \texttt{a} and \texttt{b},
+  \item prints \texttt{a+b}, \texttt{a-b}, \texttt{a*b},
+  \item if \texttt{b != 0}, prints:
+  \begin{itemize}[leftmargin=*]
+    \item integer division: \texttt{a / b}
+    \item floating division: \texttt{a / (double) b}
+    \item remainder: \texttt{a \% b}
+  \end{itemize}
+  \item demonstrates precedence:
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{2 + 3 * 4}
+    \item \texttt{(2 + 3) * 4}
+  \end{itemize}
+  \item demonstrates casting:
+  \begin{itemize}[leftmargin=*]
+    \item widening: \texttt{int -> double}
+    \item narrowing: \texttt{double -> int} (show truncation)
+  \end{itemize}
+  \item prints one boolean expression using \texttt{\&\&} and \texttt{||}.
+\end{enumerate}
+
+\subsection{Task B --- Menu-driven utility program (Exp-04)}
+Create \texttt{MenuUtility.java} that repeats until Exit:
+\begin{enumerate}[leftmargin=*]
+  \item Even/Odd check
+  \item Factorial (loop)
+  \item Prime check
+  \item Exit
+\end{enumerate}
+
+\noindent Requirements:
+\begin{itemize}[leftmargin=*]
+  \item Use \texttt{switch} for menu choice handling.
+  \item Use loops for factorial and prime check.
+  \item Handle invalid menu choice.
+  \item Show at least one \texttt{continue} usage (example: skip processing if input is negative).
+\end{itemize}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item \texttt{5/2} is integer division (result \texttt{2}); use \texttt{5/2.0} for \texttt{2.5}.
+  \item Always check \texttt{b==0} before division/modulo.
+  \item For prime check, loop only up to \texttt{i*i <= n}.
+  \item In \texttt{switch}, forgetting \texttt{break} causes fall-through.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{TypesOperatorsDemo.java}
+  \item \texttt{MenuUtility.java}
+  \item sample output for both programs
+  \item observations (5--10 lines): integer vs floating division; where loops are used; common mistakes you faced
+\end{itemize}
+
+\notesources{\OOPSUnitISources}
+\end{document}

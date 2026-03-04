@@ -1,0 +1,185 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Object Oriented Programming (B.Tech CSE)}
+\rhead{Assignment: Units 01--02 + Unit 03 (Partial)}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Assignment -- Units 01 \& 02 + Unit 03 (Partial)}}\\[0.25em]
+  {\large Object Oriented Programming (CSEG1044)}\\[0.25em]
+  \normalsize (Unit 01: OOP + Java basics; Unit 02: classes/inheritance/packages/interfaces; Unit 03 (partial): nested classes + exception handling/handlers)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item Answer \textbf{all} questions. Write assumptions where needed.
+  \item There is \textbf{no time limit}. Submit on or before \textbf{\SubmissionDeadline}.
+  \item For programming questions, provide: code + short explanation + a sample run/output.
+  \item Unless specified, use only standard Java libraries.
+  \item For Unit-03 topics, cover only: \textbf{Nested Classes (types)} and \textbf{Exception Handling/Handlers}
+    (\texttt{try/catch/finally}, multiple \texttt{catch}, checked vs unchecked, \texttt{throw} vs \texttt{throws}, custom exceptions).
+  \item No multithreading and no file I/O is required in this assignment.
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=E\arabic*., leftmargin=*]
+  \item \textbf{OOP basics:} Define (2--3 lines each): class, object, abstraction, encapsulation, inheritance, polymorphism.
+
+  \item \textbf{Why OOP?} Write 6--10 lines explaining why OOP is preferred for large software compared to procedural programming.
+    Give one example domain.
+
+  \item \textbf{JDK/JRE/JVM:} Differentiate JDK, JRE, and JVM in 6--8 lines.
+
+  \item \textbf{Java program structure:} Write the smallest Java program that prints \texttt{Hello}.
+    Explain the role of \texttt{main} in 3--4 lines.
+
+  \item \textbf{Data types + casting:} What are widening and narrowing conversions? Give one example of each.
+
+  \item \textbf{Control flow:} Differentiate \texttt{for}, \texttt{while}, and \texttt{do-while} (4--6 lines).
+    When do we use \texttt{break} and \texttt{continue}?
+
+  \item \textbf{Arrays:} Explain 1D vs 2D arrays and ``array of objects'' in 6--10 lines.
+    Write one declaration example for each.
+
+  \item \textbf{Strings:} Why is \texttt{String} immutable? Explain in 4--6 lines.
+    When do you prefer \texttt{StringBuilder}?
+
+  \item \textbf{OOP in Java:} Explain \texttt{this} and \texttt{static} with one simple example each.
+
+  \item \textbf{Unit-03 (partial):} (a) List the 4 types of nested classes in Java. (b) Define checked vs unchecked exceptions.
+    (c) What is an exception handler? (1--2 lines each)
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=M\arabic*., leftmargin=*]
+  \item \textbf{Encapsulation + invariants:} Create \texttt{Student} with fields \texttt{name} and \texttt{marks}.
+    Keep fields \texttt{private}. Enforce invariant: marks must be 0--100.
+    Demonstrate valid and invalid updates.
+
+  \item \textbf{Command line args + handlers:} Write a program that reads two integers from command line and prints the sum.
+    Handle: (a) missing args, (b) invalid numbers. Print user-friendly messages.
+
+  \item \textbf{Method overloading:} Create overloaded \texttt{area} methods for circle and rectangle.
+    Include one invalid overload example (only return type changed) in comments and explain why it is invalid.
+
+  \item \textbf{Constructor + \texttt{this()}:} Create a class \texttt{Box} with default and parameterized constructors.
+    Use constructor chaining with \texttt{this(...)}.
+
+  \item \textbf{Inheritance + overriding:} Implement \texttt{Employee} and \texttt{Manager extends Employee}.
+    Use \texttt{super} in constructor and override a method \texttt{getRole()}.
+    Demonstrate dynamic dispatch using an \texttt{Employee} reference.
+
+  \item \textbf{Abstract vs \texttt{final}:} Create an abstract class \texttt{Shape} with abstract method \texttt{area()}.
+    Implement \texttt{Circle} and \texttt{Rectangle}. Make one method \texttt{final} and explain the design intent.
+
+  \item \textbf{Packages:} Create a package \texttt{upes.oop.util} containing class \texttt{MathUtil}.
+    Import and use it from another class in the default package (or a different package). Show correct folder structure.
+
+  \item \textbf{Interfaces:} Define interface \texttt{Payable} with method \texttt{pay(double amount)}.
+    Implement it in \texttt{CardPayment} and \texttt{UpiPayment}.
+    In \texttt{main}, call \texttt{pay()} using a \texttt{Payable} reference.
+
+  \item \textbf{Nested classes (demo):} Write outer class \texttt{Library} with:
+    (a) static nested class \texttt{BookIdGenerator}, (b) inner class \texttt{Book}.
+    Show how to create objects of both and access outer members from inner class.
+
+  \item \textbf{try/catch/finally full example:} Write a program that:
+    \begin{itemize}[leftmargin=*]
+      \item reads two integers,
+      \item divides them,
+      \item handles divide-by-zero using \texttt{catch},
+      \item always prints \texttt{Done} using \texttt{finally}.
+    \end{itemize}
+    Explain the execution sequence for (a) success, (b) failure.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=H\arabic*., leftmargin=*]
+  \item \textbf{Mini design (OOP principles):} Design a \texttt{BankAccount} class that enforces invariants:
+    balance must never be negative; deposit must be positive; withdraw must not exceed balance.
+    Use encapsulation and meaningful method names. Explain design choices in 8--12 lines.
+
+  \item \textbf{Custom unchecked exception:} Create \texttt{InsufficientBalanceException extends RuntimeException}.
+    Use it in \texttt{BankAccount.withdraw()} and show a sample run.
+
+  \item \textbf{Custom checked exception (\texttt{throw} vs \texttt{throws}):} Create \texttt{InvalidMarksException extends Exception}.
+    Write method \texttt{setMarks(int m) throws InvalidMarksException} that \textbf{throws} when marks are invalid.
+    Catch it in \texttt{main} and print a clear message.
+
+  \item \textbf{Exception propagation:} Create a 3-method call chain \texttt{main() -> a() -> b()} where \texttt{b()} throws an exception.
+    Catch it only in \texttt{main}. Print messages to show the flow and explain (6--10 lines) how propagation works.
+
+  \item \textbf{Polymorphism practice:} Build an array of \texttt{Shape} references containing \texttt{Circle} and \texttt{Rectangle}.
+    Iterate and print area for each. Explain why runtime polymorphism is useful (6--10 lines).
+
+  \item \textbf{Packages + access modifiers:} Create two packages and demonstrate:
+    \texttt{private}, default, \texttt{protected}, \texttt{public}. Write 6--10 lines explaining what is accessible where.
+
+  \item \textbf{Interface necessity (use case):} In 10--14 lines, explain why interfaces are needed in Java.
+    Give a use case where inheritance alone becomes limiting, and how an interface solves it.
+
+  \item \textbf{Nested class choice:} For a \texttt{Car} class, you need a helper that validates VIN numbers.
+    Choose \textbf{static nested} or \textbf{inner} class for \texttt{VinValidator} and justify (8--12 lines).
+
+  \item \textbf{Anonymous + local class:} Write one example that uses:
+    (a) a local class inside a method, and
+    (b) an anonymous class implementing a 1-method interface.
+    Explain when each is useful.
+
+  \item \textbf{Finally behavior:} Write a program that has \texttt{return} inside \texttt{try}.
+    Show (via output) that \texttt{finally} still runs. Explain the execution order.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assignment}
+
+\end{document}
+

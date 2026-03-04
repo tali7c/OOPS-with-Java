@@ -1,0 +1,273 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 03 -- Lecture 02: Exception Handling (Core)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Distinguish exception vs error; checked vs unchecked.
+    \item Write \texttt{try/catch/finally} and use \texttt{throw} vs \texttt{throws}.
+    \item Design a small custom exception for validation.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 03: Nested Classes, Exceptions, Multithreading \& IO Streams}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Exception Handling (Core)
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Exceptions vs errors; checked vs unchecked
+    \item `try/catch/finally`, multiple catch; `throw` vs `throws`
+    \item Exception handlers + basic custom exception design for validation
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Exception vs Error}
+  \begin{itemize}[<+->]
+    \item Exceptions: conditions you can handle (invalid input, missing file).
+    \item Errors: serious JVM/system problems (usually not recoverable).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Checked vs Unchecked}
+  \begin{itemize}[<+->]
+    \item Checked: must be caught or declared (\texttt{throws}) to compile.
+    \item Unchecked: \texttt{RuntimeException} (compiler does not force handling).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{\texttt{try/catch/finally} (pattern)}
+  \begin{itemize}[<+->]
+    \item Put risky code in \texttt{try}.
+    \item Catch specific exceptions first.
+    \item Use \texttt{finally} for cleanup (runs even if exception occurs).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{\texttt{throw} vs \texttt{throws}}
+  \begin{itemize}[<+->]
+    \item \texttt{throw}: create and throw an exception now.
+    \item \texttt{throws}: declare that a method may throw an exception.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: \texttt{throw} (happens now)}
+\begin{lstlisting}
+static int divide(int a, int b) {
+    if (b == 0) {
+        throw new IllegalArgumentException("b must not be 0");
+    }
+    return a / b;
+}
+\end{lstlisting}
+  \begin{itemize}[<+->]
+    \item Thrown at runtime when \texttt{b == 0}.
+    \item Execution jumps to a matching \texttt{catch}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: \texttt{throws} (declared in signature)}
+\begin{lstlisting}
+static void pauseOneSecond() throws InterruptedException {
+    Thread.sleep(1000); // checked exception
+}
+\end{lstlisting}
+  \begin{itemize}[<+->]
+    \item \texttt{throws} tells the caller: catch or declare.
+    \item Checked exceptions are enforced by the compiler.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Caller must handle (try/catch) or declare (throws)}
+\begin{lstlisting}
+public static void main(String[] args) {
+    try {
+        pauseOneSecond();
+    } catch (InterruptedException ex) {
+        System.out.println("Interrupted");
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Full example (1/2): \texttt{try} block}
+\begin{lstlisting}
+import java.util.Scanner;
+
+public class DivideDemo {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter a: ");
+            int a = Integer.parseInt(sc.nextLine());
+            System.out.print("Enter b: ");
+            int b = Integer.parseInt(sc.nextLine());
+
+            int q = a / b;
+            System.out.println("a/b = " + q);
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Full example (2/2): \texttt{catch} + \texttt{finally}}
+\begin{lstlisting}
+        } catch (NumberFormatException ex) {
+            System.out.println("Please enter valid integers.");
+        } catch (ArithmeticException ex) {
+            System.out.println("Cannot divide by zero.");
+        } finally {
+            sc.close();
+            System.out.println("Cleanup done (finally).");
+        }
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{How the example behaves}
+  \begin{itemize}[<+->]
+    \item Valid input: prints quotient, then runs \texttt{finally}.
+    \item Invalid integer input: \texttt{NumberFormatException} catch runs, then \texttt{finally}.
+    \item Divide by zero: \texttt{ArithmeticException} catch runs, then \texttt{finally}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Execution sequence (try/catch/finally)}
+  \begin{enumerate}[<+->]
+    \item Enter \texttt{try} and execute statements top-to-bottom.
+    \item If no exception: skip all \texttt{catch} blocks.
+    \item If an exception occurs: jump to the \textbf{first matching} \texttt{catch}.
+    \item After \texttt{try} or \texttt{catch}: always execute \texttt{finally} (cleanup).
+    \item Continue with the next statement after the block (or propagate if not handled).
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: custom checked exception}
+\begin{lstlisting}
+class InsufficientFundsException extends Exception {
+    InsufficientFundsException(String msg) { super(msg); }
+}
+
+class BankAccount {
+    private double balance;
+    BankAccount(double opening) { balance = opening; }
+    void withdraw(double amount) throws InsufficientFundsException {
+        if (amount > balance) throw new InsufficientFundsException("need " + amount);
+        balance -= amount;
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Handling it}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        BankAccount a = new BankAccount(100);
+        try {
+            a.withdraw(150);
+        } catch (InsufficientFundsException e) {
+            System.out.println("Withdraw failed: " + e.getMessage());
+        }
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Give one checked and one unchecked exception example.
+    \item When does \texttt{finally} run?
+    \item Difference between \texttt{throw} and \texttt{throws}?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Exceptions enable safe error handling without crashing.
+    \item Catch specific exceptions; use \texttt{finally} for cleanup.
+    \item Custom exceptions make domain errors clear.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why catch specific exceptions (not \texttt{Exception})?
+    \item What does ``checked exception'' mean?
+    \item When do we use \texttt{throws} in a method signature?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Multithreading + Synchronization
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will create threads using \texttt{Thread} and \texttt{Runnable} and see race conditions.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\end{document}

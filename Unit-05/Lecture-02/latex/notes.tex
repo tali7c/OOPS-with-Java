@@ -1,0 +1,153 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 05 -- Lecture 02 Notes\\Set/SortedSet + Map/SortedMap}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture focuses on \textbf{uniqueness} (Set) and \textbf{key-value lookup} (Map).
+These structures are essential for problems like:
+\begin{itemize}
+  \item removing duplicates,
+  \item membership checks (``is this item present?''),
+  \item counting and grouping (frequency tables),
+  \item fast search by key (roll number $\rightarrow$ student details).
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Syllabus Alignment (Unit 05)}
+\textbf{Unit 05:} Set/SortedSet; Map/SortedMap; equality + hashing
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Choose Set vs List; \texttt{HashSet} vs \texttt{TreeSet}.
+  \item Explain \texttt{equals}/\texttt{hashCode} and why they matter in hash-based collections.
+  \item Use \texttt{HashMap}/\texttt{TreeMap} for counting/grouping and sorted keys.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Set}: collection with no duplicates.
+  \item \textbf{SortedSet}: set that maintains sorted order (e.g., \texttt{TreeSet}).
+  \item \textbf{Hashing}: converting an object to an int hash value (\texttt{hashCode}).
+  \item \textbf{Map}: key-value association.
+  \item \textbf{SortedMap}: map with sorted keys (e.g., \texttt{TreeMap}).
+  \item \textbf{Contract}: if \texttt{a.equals(b)} then \texttt{a.hashCode() == b.hashCode()} must hold.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Set vs List; HashSet vs TreeSet}
+\textbf{List:}
+\begin{itemize}
+  \item ordered, duplicates allowed, index-based access.
+\end{itemize}
+\textbf{Set:}
+\begin{itemize}
+  \item no duplicates, typically no index access.
+  \item ideal for membership: ``contains?'' and deduplication.
+\end{itemize}
+
+\textbf{HashSet:}
+\begin{itemize}
+  \item uses hashing; order is not guaranteed.
+  \item fast average-case add/contains/remove.
+\end{itemize}
+
+\textbf{TreeSet:}
+\begin{itemize}
+  \item keeps elements sorted (needs \texttt{Comparable} or a \texttt{Comparator}).
+  \item slightly slower but provides sorted iteration.
+\end{itemize}
+
+\subsection{Equality and hashing basics (must know)}
+Hash-based collections (\texttt{HashSet}, \texttt{HashMap}) use:
+\begin{itemize}
+  \item \texttt{hashCode()} to choose a bucket,
+  \item \texttt{equals()} to confirm identity inside that bucket.
+\end{itemize}
+
+\textbf{Contract:}
+\begin{itemize}
+  \item If two objects are equal (\texttt{equals} returns true), their hash codes must be equal.
+  \item If you override \texttt{equals}, you should also override \texttt{hashCode}.
+\end{itemize}
+
+\textbf{Common mistakes:}
+\begin{itemize}
+  \item overriding only one of \texttt{equals}/\texttt{hashCode},
+  \item using mutable fields in keys (changing key after insertion breaks map/set behavior),
+  \item using \texttt{==} instead of \texttt{equals} for strings.
+\end{itemize}
+
+\subsection{Map basics; HashMap vs TreeMap}
+\textbf{Map} stores pairs: key $\rightarrow$ value.
+Common operations:
+\begin{itemize}
+  \item \texttt{put(k, v)}, \texttt{get(k)}, \texttt{containsKey(k)}, \texttt{remove(k)}.
+\end{itemize}
+
+\textbf{HashMap:} no ordering, fast average-case lookup.
+\textbf{TreeMap:} keys sorted, good when you need ordered iteration or range queries.
+\notesources{\OOPSUnitVSources}
+
+\section{Worked Example: set + map counting}
+\begin{lstlisting}
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+        // Dedup using Set
+        List<String> names = Arrays.asList("Asha", "Ravi", "Asha", "Neha");
+        Set<String> unique = new HashSet<>(names);
+        System.out.println("Unique: " + unique);
+
+        // Counting with Map (frequency table)
+        String[] words = {"a", "b", "a", "c", "b", "a"};
+        Map<String, Integer> freq = new HashMap<>();
+        for (String w : words) {
+            freq.put(w, freq.getOrDefault(w, 0) + 1);
+        }
+        System.out.println("Freq: " + freq);
+
+        // Sorted keys using TreeMap
+        Map<String, Integer> sorted = new TreeMap<>(freq);
+        System.out.println("Sorted freq: " + sorted);
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item When should you prefer a Set over a List?\par
+  \textbf{Answer:} when duplicates are not allowed or you need fast membership checks.
+
+  \item Which collection keeps elements sorted: \texttt{HashSet} or \texttt{TreeSet}?\par
+  \textbf{Answer:} \texttt{TreeSet}.
+
+  \item If you override \texttt{equals}, what else should you override?\par
+  \textbf{Answer:} \texttt{hashCode}.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Count character frequency in a string using \texttt{Map<Character, Integer>}.
+  \item Store student details in a map: rollNo $\rightarrow$ Student object.
+  \item Create a \texttt{TreeSet} of integers and print them in sorted order.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why are \texttt{equals} and \texttt{hashCode} important for \texttt{HashSet}?\par
+\textbf{Sample answer:} \texttt{HashSet} uses \texttt{hashCode} to locate a bucket and \texttt{equals} to check if an element already exists. Incorrect implementations can cause duplicates or missing lookups.
+
+\vspace{0.6em}
+\textbf{Q2.} When do you choose \texttt{TreeMap} over \texttt{HashMap}?\par
+\textbf{Sample answer:} Choose \texttt{TreeMap} when you need keys in sorted order or want ordered iteration/range queries. Use \texttt{HashMap} when ordering is not needed and you want faster average lookup.
+
+\end{document}

@@ -1,0 +1,192 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Object Oriented Programming (B.Tech CSE)}
+\rhead{Unit 02: Classes, Inheritance, Packages and Interfaces}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Assignment -- Unit 02}}\\[0.25em]
+  {\large Object Oriented Programming (CSEG1044)}\\[0.25em]
+  \normalsize (Classes/objects; constructors; \texttt{this}; overloading; \texttt{static}; access modifiers; packages; interfaces; inheritance; abstract; \texttt{final})
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Submission Deadline:} March 31, 2026\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item Answer \textbf{all} questions. Write assumptions where needed.
+  \item There is \textbf{no time limit}. Submit on or before \textbf{March 31, 2026}.
+  \item For programming questions: write clean Java code, enforce invariants, and show a sample run/output.
+  \item Unless specified, use only standard Java libraries.
+  \item If a question requires packages, follow correct folder structure (package name $\leftrightarrow$ directory path).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=E\arabic*., leftmargin=*]
+  \item \textbf{Class vs object (short):} Write 3 differences between a class and an object, with one small example.
+
+  \item \textbf{Encapsulation (fix design):} Given a class with public fields, rewrite it so fields become \texttt{private}
+    and updates happen via methods that validate inputs. Explain in 4--6 lines why this is safer.
+
+  \item \textbf{Constructors:} What is a constructor? Explain default constructor vs parameterized constructor (4--6 lines).
+
+  \item \textbf{\texttt{this} vs \texttt{this(...)}:} Explain the difference and write one code snippet for each.
+
+  \item \textbf{Overloading rules:} Give 2 valid overloaded method signatures and 1 invalid example
+    (invalid = changing only return type).
+
+  \item \textbf{\texttt{static} basics:} Explain \texttt{static} fields and methods with one real example (e.g., counter/utility).
+
+  \item \textbf{Access modifiers (quick):} For each modifier, write where it is visible:
+    \texttt{private}, default (package-private), \texttt{protected}, \texttt{public}.
+
+  \item \textbf{Packages (naming):} Write a good package name for a project called ``Campus Resource Manager''
+    and show the matching folder path.
+
+  \item \textbf{Interface (idea):} Define what an interface is in 3--5 lines. Write a tiny interface with one method
+    and one class that implements it.
+
+  \item \textbf{is-a vs has-a:} For each pair, decide is-a or has-a and justify in 1--2 lines:
+    \textbf{(a)} Car--Engine \textbf{(b)} Manager--Employee \textbf{(c)} Student--IDCard.
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=M\arabic*., leftmargin=*]
+  \item \textbf{Student class (invariant):} Implement \texttt{Student} with private fields:
+    \texttt{rollNo}, \texttt{name}, \texttt{cgpa}. Enforce invariant \texttt{0 <= cgpa <= 10} using validation.
+    Provide methods to update CGPA safely (no direct setter without validation).
+
+  \item \textbf{Employee with constructor chaining + static counter:} Implement \texttt{Employee} with fields:
+    \texttt{id}, \texttt{name}, \texttt{salary}. Generate \texttt{id} automatically using a static counter.
+    Include at least two constructors using \texttt{this(...)} chaining.
+
+  \item \textbf{BankAccount mini-design:} Implement \texttt{BankAccount} with:
+    account number, balance, \texttt{deposit}, \texttt{withdraw}, \texttt{transferTo}.
+    Add at least one overloaded constructor (e.g., opening balance optional).
+
+  \item \textbf{Packages (multi-file):} Create these files and packages:
+    \begin{itemize}[leftmargin=*]
+      \item \texttt{com.upes.crm.model.Resource}
+      \item \texttt{com.upes.crm.app.Main}
+    \end{itemize}
+    In \texttt{Main}, create a \texttt{Resource} object and print it.
+    (Override \texttt{toString()} in \texttt{Resource}.)
+
+  \item \textbf{Interface + polymorphism:} Define \texttt{Payable} with method \texttt{double amountDue()}.
+    Implement it in \texttt{Invoice} and \texttt{SalarySlip}. In \texttt{main}, store them in a \texttt{Payable[]} array and compute total.
+
+  \item \textbf{Inheritance + overriding:} Create \texttt{Shape} with method \texttt{double area()}.
+    Create \texttt{Circle} and \texttt{Rectangle} subclasses that override \texttt{area()}.
+    Demonstrate dynamic dispatch using a \texttt{Shape} reference.
+
+  \item \textbf{Abstract class:} Create an abstract class \texttt{EmployeeBase} with abstract method
+    \texttt{double calculateSalary()}. Create two subclasses (e.g., \texttt{FullTime}, \texttt{Intern}) and implement salary logic.
+
+  \item \textbf{\texttt{final} keyword:} Demonstrate:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item a \texttt{final} variable,
+      \item a \texttt{final} method,
+      \item a \texttt{final} class.
+    \end{enumerate}
+    Explain the design intention in 6--10 lines.
+
+  \item \textbf{Access modifiers across packages:} Create a base class in \texttt{pkg1} with:
+    one \texttt{protected} method, one package-private method (no keyword), and one \texttt{public} method.
+    Create a subclass in \texttt{pkg2} and show which methods can/can't be accessed (compile-time).
+
+  \item \textbf{Built-in interface: Comparable:} Implement \texttt{Comparable<Student>} in \texttt{Student}
+    (choose a natural ordering: roll number or cgpa).
+    Create a \texttt{Student[]} array and sort it using \texttt{Arrays.sort}.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=H\arabic*., leftmargin=*]
+  \item \textbf{Mini system (design + code):} Implement a very small ``Campus Resource Manager'' core using classes:
+    \texttt{Resource(id,name,type,capacity)} and \texttt{Booking(resourceId,userName,start,end)}.
+    Add basic validations (capacity $>$ 0, start $<$ end). (No DB/UI needed.)
+
+  \item \textbf{Interface-driven design:} Create an interface \texttt{Storage} with methods:
+    \texttt{save(String key, String value)} and \texttt{String find(String key)}.
+    Implement two classes:
+    \texttt{InMemoryStorage} (use arrays) and \texttt{FileStorage} (you may keep file part as TODO comment).
+    Write a \texttt{main} that works with \texttt{Storage} reference.
+
+  \item \textbf{Composition example:} Implement \texttt{Car} has-a \texttt{Engine}.
+    Engine should have fields like \texttt{hp} and \texttt{type}. Show that \texttt{Car} delegates to \texttt{Engine}.
+    Write 5--8 lines: why composition is preferred here.
+
+  \item \textbf{Inheritance with \texttt{super}:} Create \texttt{Person(name)} and \texttt{Student(name,rollNo)}.
+    Use \texttt{super(name)} correctly. Override \texttt{toString()} and print both.
+
+  \item \textbf{Overriding vs overloading:} Create a short example that shows both in the same codebase.
+    Explain in 6--10 lines how Java chooses which method to call.
+
+  \item \textbf{Abstract class vs interface (design decision):} Pick one scenario (payment, logging, notification, or sorting)
+    and argue (10--14 lines) whether you would use an interface or an abstract class. Include one code sketch.
+
+  \item \textbf{Access control (API design):} Design a package \texttt{com.upes.bank} with:
+    a public class \texttt{BankAccount} and a package-private helper class \texttt{Validator}.
+    Explain why hiding helper classes helps maintainability.
+
+  \item \textbf{Small library (search overloading):} Create classes \texttt{Book(title,author,year)} and \texttt{Library}.
+    In \texttt{Library}, implement overloaded methods:
+    \texttt{search(String title)} and \texttt{search(String author, int year)}.
+    (Use arrays to store books; collections are not required.)
+
+  \item \textbf{Prevent invalid states:} Identify 5 invariants from everyday entities (bank account, booking, student, inventory item, rectangle).
+    For any 2 invariants, show how you would enforce them in constructors/methods (write code snippets).
+
+  \item \textbf{Integrated demo app (packages + polymorphism):} Create a small multi-package project with at least:
+    one interface, two implementing classes, one base class with one subclass, and one \texttt{main} that demonstrates dynamic dispatch.
+    Provide the package tree and a short explanation of how to compile/run.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assignment}
+
+\end{document}
+

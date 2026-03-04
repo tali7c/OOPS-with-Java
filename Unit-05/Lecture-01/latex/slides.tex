@@ -1,0 +1,180 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 05 -- Lecture 01: Collections Framework Overview + Iteration + List}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain \texttt{Iterable}, \texttt{Collection}, and \texttt{Iterator}.
+    \item Choose \texttt{ArrayList} vs \texttt{LinkedList} for common use cases.
+    \item Sort a list using \texttt{Comparable} and \texttt{Comparator} (with lambdas).
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 05: Collections and Wrapper Class}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Collections Framework Overview + Iteration + List
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Core interfaces: `Collection`, `Iterable`, `Iterator`
+    \item List interface; `ArrayList` vs `LinkedList` (when to use which)
+    \item Sorting with `Comparable`/`Comparator` (use lambdas where helpful)
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Collections Framework (why)}
+  \begin{itemize}[<+->]
+    \item Standard data structures + algorithms (reduce bugs).
+    \item Works well with generics: \texttt{List<Student>}.
+    \item Includes sorting utilities and iterators.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Iteration (safe removal)}
+  \begin{itemize}[<+->]
+    \item for-each loop uses an \texttt{Iterator} internally.
+    \item Removing inside for-each can throw \texttt{ConcurrentModificationException}.
+    \item Use \texttt{Iterator.remove()} when you need to delete while looping.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{ArrayList vs LinkedList (quick)}
+  \begin{itemize}[<+->]
+    \item \texttt{ArrayList}: fast random access; best default choice.
+    \item \texttt{LinkedList}: slower random access; useful as queue/deque.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Sorting: Comparable vs Comparator}
+  \begin{itemize}[<+->]
+    \item \texttt{Comparable}: natural ordering (\texttt{compareTo}) in the class.
+    \item \texttt{Comparator}: custom ordering (\texttt{compare}) outside the class.
+    \item Lambdas make comparators short and readable.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: List + iterator + sorting (1/2)}
+\begin{lstlisting}
+import java.util.*;
+
+class Student {
+    final String rollNo;
+    final double cgpa;
+    Student(String rollNo, double cgpa) { this.rollNo = rollNo; this.cgpa = cgpa; }
+    double getCgpa() { return cgpa; }
+    public String toString() { return rollNo + ":" + cgpa; }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        List<Student> list = new ArrayList<>();
+        list.add(new Student("21CS1002", 9.1));
+        list.add(new Student("21CS1001", 8.2));
+        list.add(new Student("21CS1003", 3.9));
+\end{lstlisting}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: List + iterator + sorting (2/2)}
+\begin{lstlisting}
+// continued...
+        Iterator<Student> it = list.iterator();
+        while (it.hasNext()) {
+            if (it.next().getCgpa() < 4.0) it.remove();
+        }
+
+        list.sort((a, b) -> Double.compare(b.getCgpa(), a.getCgpa())); // desc
+        System.out.println(list);
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Why use \texttt{Iterator.remove()} when deleting during traversal?
+    \item Which list is best for random access: \texttt{ArrayList} or \texttt{LinkedList}?
+    \item Difference between \texttt{Comparable} and \texttt{Comparator}?
+  \end{enumerate}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Lists store ordered data and allow duplicates.
+    \item Iterators enable safe traversal and removal.
+    \item Sorting is done using \texttt{Comparable} or \texttt{Comparator}.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item What is the purpose of \texttt{Iterator}?
+    \item When do you choose \texttt{LinkedList} over \texttt{ArrayList}?
+    \item How do you sort a list by a custom rule?
+  \end{enumerate}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Set/SortedSet + Map/SortedMap
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item Uniqueness (Set) and key-value storage (Map) with hashing basics.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\end{document}

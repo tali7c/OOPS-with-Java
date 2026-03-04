@@ -1,0 +1,215 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 01 -- Lecture 01: OOP Paradigm + Principles + Modelling}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain why OOP became popular for large software systems.
+    \item Define: abstraction, encapsulation, inheritance, polymorphism (with a small example).
+    \item Convert a short problem statement into a small class design (classes + responsibilities).
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 01: Introduction to OOPs}
+  \begin{itemize}[<+->]
+    \item Lecture focus: OOP Paradigm + Principles + Modelling
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item OOP history and evolution; why OOP (vs procedural)
+    \item Principles: abstraction, encapsulation, inheritance, polymorphism
+    \item Modelling a real-world entity (identify classes/objects/responsibilities)
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Why OOP? (motivation)}
+  \begin{itemize}[<+->]
+    \item Small programs: procedural style works well (few files, few developers).
+    \item Large programs: managing shared state becomes difficult.
+    \item OOP idea: \textbf{data + operations together} as an \textbf{object}.
+    \item Benefit: better modularity, easier maintenance, clearer mapping to real-world entities.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{OOP building blocks}
+  \begin{itemize}[<+->]
+    \item \textbf{Class}: blueprint (fields + methods)
+    \item \textbf{Object}: instance at runtime (identity + state + behavior)
+    \item \textbf{State}: values of fields
+    \item \textbf{Behavior}: methods that operate on the state
+    \item \textbf{Invariant}: rule that must always hold (e.g., \texttt{balance >= 0})
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Principle 1: Abstraction}
+  \begin{itemize}[<+->]
+    \item \textbf{What}: focus on \emph{what} a thing does, not \emph{how} it does it.
+    \item \textbf{Why}: hides complexity; makes code easier to use and change.
+    \item \textbf{Example}: \texttt{BankAccount.deposit()} is visible; internal storage details are hidden.
+    \item \textbf{Pitfall}: exposing internal details (public fields) breaks the model.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Principle 2: Encapsulation}
+  \begin{itemize}[<+->]
+    \item \textbf{What}: keep data private; control changes via methods.
+    \item \textbf{Why}: protects invariants; prevents accidental misuse.
+    \item \textbf{Example}: only \texttt{deposit/withdraw} can change \texttt{balance}.
+    \item \textbf{Pitfall}: setters that allow invalid states (e.g., \texttt{setBalance(-10)}).
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Principle 3: Inheritance}
+  \begin{itemize}[<+->]
+    \item \textbf{What}: models an \textbf{is-a} relationship (specialization).
+    \item \textbf{Why}: reuse common behavior when relationship is truly is-a.
+    \item \textbf{Example}: \texttt{SavingAccount} is-a \texttt{BankAccount}.
+    \item \textbf{Pitfall}: using inheritance only for code reuse; prefer composition for has-a.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Principle 4: Polymorphism}
+  \begin{itemize}[<+->]
+    \item \textbf{What}: one interface/type, many implementations.
+    \item \textbf{Why}: enables flexible design (code works with parent types, not specific classes).
+    \item \textbf{Example}: a \texttt{BankAccount} reference can point to different account subtypes.
+    \item \textbf{Pitfall}: confusing \textbf{overloading} (compile-time) with \textbf{overriding} (runtime).
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Modelling: from problem statement to classes}
+  \begin{enumerate}[<+->]
+    \item List 3--5 \textbf{scenarios} (what users do).
+    \item Extract \textbf{nouns} $\rightarrow$ candidate classes (Account, Customer).
+    \item Extract \textbf{verbs} $\rightarrow$ candidate methods (deposit, withdraw).
+    \item Assign \textbf{responsibilities} (avoid one ``God class'').
+    \item Write \textbf{invariants} and validate with sample cases.
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: Model a real-world entity (1/2)}
+\begin{lstlisting}
+public class BankAccount {
+    private final String accountNo;
+    private double balance; // invariant: balance >= 0
+
+    public BankAccount(String accountNo, double openingBalance) {
+        if (openingBalance < 0) throw new IllegalArgumentException("openingBalance");
+        this.accountNo = accountNo;
+        this.balance = openingBalance;
+    }
+
+    public void deposit(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("amount");
+        balance += amount;
+    }
+\end{lstlisting}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Model a real-world entity (2/2)}
+\begin{lstlisting}
+// continued...
+    public void withdraw(double amount) {
+        if (amount <= 0 || amount > balance)
+            throw new IllegalArgumentException("amount");
+        balance -= amount;
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Model \texttt{Student}: 3 fields + 3 methods + 1 invariant.
+    \item Decide: is-a or has-a?\; Car--Engine,\; Dog--Animal.
+    \item Add \texttt{transferTo(other, amount)} to \texttt{BankAccount}.
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item OOP helps manage complexity by organizing code around objects (state + behavior).
+    \item Abstraction + encapsulation simplify and protect designs.
+    \item Inheritance + polymorphism enable reuse and flexibility (use carefully).
+    \item Modelling is the bridge from real-world requirements to classes and responsibilities.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why do we keep fields private in OOP?
+    \item Give one example each: abstraction and encapsulation.
+    \item Give one example each: is-a and has-a.
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Java Overview + Program Structure + Features
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item Install/verify JDK; practice compile/run on your machine.
+    \item Bring one question about JVM/JDK/JRE (confusing terms are expected!).
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\end{document}

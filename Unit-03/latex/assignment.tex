@@ -1,0 +1,195 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Object Oriented Programming (B.Tech CSE)}
+\rhead{Unit 03: Nested Classes, Exceptions, Multithreading \& I/O Streams}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Assignment -- Unit 03}}\\[0.25em]
+  {\large Object Oriented Programming (CSEG1044)}\\[0.25em]
+  \normalsize (Nested classes; exceptions + handlers; multithreading + synchronization; Java I/O streams with \texttt{FileReader}/\texttt{FileWriter})
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Submission Deadline:} March 31, 2026\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item This assignment covers Unit-03 topics:
+    \textbf{Nested classes}, \textbf{exception handling/handlers}, \textbf{multithreading + synchronization},
+    and \textbf{Java I/O streams} (\texttt{FileReader}/\texttt{FileWriter}).
+  \item Answer \textbf{all} questions. Write assumptions where needed.
+  \item There is \textbf{no time limit}. Submit on or before \textbf{March 31, 2026}.
+  \item For programming questions, provide: code + short explanation + a sample run/output.
+  \item Unless specified, use only standard Java libraries.
+  \item For file I/O questions, create small text files as input and use \texttt{try-with-resources} for safe closing.
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=E\arabic*., leftmargin=*]
+  \item \textbf{Nested classes (why):} In 6--10 lines, explain why Java supports nested classes.
+    Mention two benefits and one use case.
+
+  \item \textbf{Types of nested classes:} List the 4 types:
+    \textbf{static nested}, \textbf{inner (non-static)}, \textbf{local}, \textbf{anonymous}.
+    Give one real use case for each (1--2 lines each).
+
+  \item \textbf{Static nested vs inner:} Compare them in 6--10 lines:
+    (a) object creation syntax, (b) outer instance requirement, (c) access to outer members.
+
+  \item \textbf{Checked vs unchecked exceptions:} Explain the difference in 4--6 lines and give one example of each.
+
+  \item \textbf{try/catch/finally sequence:} Explain the execution sequence (try $\rightarrow$ catch $\rightarrow$ finally)
+    for both (a) no exception, (b) exception occurs (4--6 lines total).
+
+  \item \textbf{\texttt{throw} vs \texttt{throws}:} Explain the difference and write one code line example for each.
+
+  \item \textbf{Multithreading motivation:} What is a thread and why do we use multithreading?
+    Give two real examples (4--6 lines).
+
+  \item \textbf{\texttt{Thread} vs \texttt{Runnable}:} Write 4--6 lines comparing them and when you prefer \texttt{Runnable}.
+
+  \item \textbf{Race condition:} Define race condition in 3--5 lines and explain how \texttt{synchronized} helps.
+
+  \item \textbf{I/O streams (concept):} Differentiate byte streams vs character streams (4--6 lines).
+    When would you use \texttt{FileReader}/\texttt{FileWriter}?
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=M\arabic*., leftmargin=*]
+  \item \textbf{Static nested + inner demo:} Write one outer class \texttt{Outer} with:
+    (a) static nested class \texttt{StaticHelper}, (b) inner class \texttt{InnerHelper}.
+    Instantiate both from \texttt{main} and show a method call from each.
+
+  \item \textbf{Local class capture:} Write a method that defines a local class and uses a captured variable
+    (effectively final). Show correct code and explain why modifying the captured variable would fail.
+
+  \item \textbf{Anonymous class callback:} Create an interface \texttt{ClickHandler} with one method \texttt{onClick()}.
+    In \texttt{main}, create an anonymous implementation and call it.
+
+  \item \textbf{try/catch/finally full example:} Write a full example program that:
+    \begin{itemize}[leftmargin=*]
+      \item reads two integers,
+      \item divides them,
+      \item handles divide-by-zero using \texttt{catch},
+      \item always prints \texttt{``Done''} using \texttt{finally}.
+    \end{itemize}
+    Also explain the execution sequence for both success and failure case.
+
+  \item \textbf{\texttt{throw} vs \texttt{throws} (checked exception):} Create \texttt{InvalidAgeException extends Exception}.
+    Write \texttt{validateAge(int age) throws InvalidAgeException} and \textbf{throw} the exception if age $< 0$ or $> 120$.
+    Call it from \texttt{main} and handle it with a user-friendly message.
+
+  \item \textbf{Create a thread (extend \texttt{Thread}):} Write a program that creates a thread by extending \texttt{Thread}.
+    Print numbers 1--5 with the current thread name.
+
+  \item \textbf{Create a thread (implement \texttt{Runnable}):} Write a program that creates a thread using \texttt{Runnable}.
+    Start two threads and wait for both using \texttt{join()}.
+
+  \item \textbf{Race condition demo + fix:} Write a program with a shared counter incremented by two threads.
+    First show the version \textbf{without} synchronization and explain the possible wrong outcome.
+    Then fix it using \texttt{synchronized} (method or block).
+
+  \item \textbf{File write + read:} Using \texttt{FileWriter}, write 5 lines to \texttt{input.txt}.
+    Then use \texttt{FileReader} (optionally with buffering) to read and print the file.
+    Use \texttt{try-with-resources} and handle \texttt{IOException}.
+
+  \item \textbf{File copy with buffer:} Copy \texttt{input.txt} to \texttt{copy.txt} using \texttt{FileReader}/\texttt{FileWriter}
+    and a character array buffer. Print the total number of characters copied.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=H\arabic*., leftmargin=*]
+  \item \textbf{Thread-safe \texttt{BankAccount}:} Implement \texttt{BankAccount} with \texttt{deposit()} and \texttt{withdraw()}.
+    \begin{itemize}[leftmargin=*]
+      \item Use a custom unchecked exception \texttt{InsufficientBalanceException} for invalid withdrawals.
+      \item Make operations thread-safe using \texttt{synchronized}.
+      \item Start two threads that withdraw money repeatedly and show that balance never becomes negative.
+    \end{itemize}
+
+  \item \textbf{Ticket booking (synchronization):} Simulate a ticket counter with \texttt{availableSeats = 5}.
+    Create 10 threads; each tries to book 1 seat. Use synchronization so no overbooking happens.
+    Print final seats and bookings.
+
+  \item \textbf{Thread lifecycle demo:} Write a program that prints thread states using \texttt{getState()}:
+    show at least \textbf{NEW}, \textbf{RUNNABLE}, \textbf{TIMED\_WAITING} (via \texttt{sleep}), and \textbf{TERMINATED}.
+    Use \texttt{join()} and print a short explanation.
+
+  \item \textbf{Thread priorities (experiment):} Create 3 threads with \texttt{MIN\_PRIORITY}, \texttt{NORM\_PRIORITY},
+    and \texttt{MAX\_PRIORITY}. Each prints 50 iterations.
+    Write 8--12 lines explaining what you observed and why priorities do \textbf{not} guarantee order.
+
+  \item \textbf{\texttt{synchronized} method vs block:} Re-implement your counter program using a \texttt{synchronized} block
+    on a separate lock object. Explain (6--10 lines) when a block is preferred over synchronizing the whole method.
+
+  \item \textbf{Exception handler quality (threads + I/O):} Write 10--14 lines describing what a good exception handler should do
+    in programs that use threads and file I/O (messages, context, cleanup, and where to log).
+
+  \item \textbf{Robust file parsing:} Create \texttt{numbers.txt} containing one value per line (include a few invalid lines like \texttt{abc}).
+    Write a program that:
+    \begin{itemize}[leftmargin=*]
+      \item reads all lines,
+      \item sums valid integers,
+      \item reports invalid lines without stopping the program,
+      \item writes the final sum to \texttt{sum.txt}.
+    \end{itemize}
+    Use \texttt{try-with-resources} and handle exceptions cleanly.
+
+  \item \textbf{Exception propagation with I/O:} Write a 3-method call chain where the deepest method does file reading and
+    declares \texttt{throws IOException}. Catch the exception only in \texttt{main} and print a user-friendly message.
+
+  \item \textbf{Nested class + \texttt{Runnable}:} Design \texttt{JobRunner} with a static nested class \texttt{Task implements Runnable}.
+    Each task processes a range of numbers (e.g., counts evens in the range). Start two tasks concurrently and print results.
+
+  \item \textbf{Mini project (I/O + validation + exceptions):} Read student records from \texttt{students.txt} where each line is:
+    \texttt{Name,Marks}. Validate marks (0--100) using a custom checked exception \texttt{InvalidMarksException}.
+    Write a grade report to \texttt{report.txt}. Use \texttt{try-with-resources} and produce clear error messages.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assignment}
+
+\end{document}

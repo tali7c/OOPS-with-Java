@@ -1,0 +1,147 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 05 -- Lecture 03 Notes\\Wrapped Collections + `Collections` Utilities + Wrappers}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture collects three practical topics that show up in day-to-day Java code:
+\begin{itemize}
+  \item utility methods in \texttt{java.util.Collections},
+  \item wrapper ``views'' around collections (unmodifiable, synchronized, checked),
+  \item wrapper classes (\texttt{Integer}, \texttt{Double}, ...) and autoboxing pitfalls.
+\end{itemize}
+We also briefly introduce the class loading idea from the syllabus.
+\notesources{\OOPSUnitVSources}
+
+\section{Syllabus Alignment (Unit 05)}
+\textbf{Unit 05:} \texttt{Collections} utilities; wrapped collections; wrapper classes; class loading basics
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Use common \texttt{Collections} utilities: sort, min/max, shuffle, reverse.
+  \item Explain why wrapped collections exist and use unmodifiable/synchronized/checked wrappers.
+  \item Explain wrapper classes and avoid common autoboxing/unboxing mistakes.
+  \item State the basic idea of class loading and \texttt{Class.forName} (intro level).
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Utility class}: class with static helper methods (e.g., \texttt{Collections}).
+  \item \textbf{Unmodifiable view}: wrapper that blocks structural modification.
+  \item \textbf{Synchronized wrapper}: wrapper that adds basic synchronization around operations.
+  \item \textbf{Checked wrapper}: wrapper that enforces runtime type checks on adds.
+  \item \textbf{Wrapper class}: object form of a primitive (e.g., \texttt{Integer} for \texttt{int}).
+  \item \textbf{Autoboxing/unboxing}: automatic conversion between primitive and wrapper.
+  \item \textbf{Class loading}: JVM loads class bytecode into memory when needed.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{\texttt{Collections} utilities (common ones)}
+\texttt{java.util.Collections} provides algorithms for collections:
+\begin{itemize}
+  \item \texttt{sort(list)} or \texttt{sort(list, comparator)}
+  \item \texttt{reverse(list)}
+  \item \texttt{shuffle(list)}
+  \item \texttt{min(list)}, \texttt{max(list)}
+  \item \texttt{frequency(collection, element)}
+  \item \texttt{binarySearch(list, key)} (requires sorted list)
+\end{itemize}
+
+\subsection{Wrapped collections (why/when)}
+Wrapped collections are ``views'' (wrappers) around an existing collection.
+They are used to enforce constraints without copying:
+\begin{itemize}
+  \item \texttt{unmodifiableList}: when you want to expose read-only data to callers.
+  \item \texttt{synchronizedList}: basic thread-safety wrapper (older style; modern code may use concurrent collections).
+  \item \texttt{checkedList}: runtime type checking (useful when mixing legacy/raw types).
+\end{itemize}
+
+\textbf{Important:} ``unmodifiable'' means you cannot change structure via the wrapper, but if the underlying list changes, the view reflects it.
+
+\subsection{Wrapper classes + autoboxing pitfalls}
+Wrapper classes are needed because generics work with reference types, not primitives:
+\begin{itemize}
+  \item \texttt{List<Integer>} not \texttt{List<int>}
+\end{itemize}
+
+\textbf{Pitfalls:}
+\begin{itemize}
+  \item Unboxing null $\rightarrow$ \texttt{NullPointerException}\par
+  Example: \texttt{Integer x = null; int y = x;} crashes.
+  \item Using \texttt{==} for wrapper comparisons can be confusing.\par
+  Prefer \texttt{equals()} or compare primitives.
+  \item Performance: excessive boxing/unboxing in tight loops can slow code.
+\end{itemize}
+
+\subsection{Class loading basics (intro)}
+The JVM loads classes when they are needed (first time referenced).
+\texttt{Class.forName("com.mysql.cj.jdbc.Driver")} is sometimes used to load a JDBC driver explicitly (older pattern).
+If a class is missing, you may see \texttt{ClassNotFoundException}.
+\notesources{\OOPSUnitVSources}
+
+\section{Worked Example: utilities + wrappers + autoboxing}
+\begin{lstlisting}
+import java.util.*;
+
+public class Demo {
+    public static void main(String[] args) {
+        List<Integer> a = new ArrayList<>(Arrays.asList(3, 1, 2));
+        Collections.sort(a);
+        System.out.println("Sorted: " + a);
+        System.out.println("Min=" + Collections.min(a) + ", Max=" + Collections.max(a));
+
+        List<Integer> ro = Collections.unmodifiableList(a);
+        // ro.add(99); // UnsupportedOperationException
+
+        List checked = Collections.checkedList(new ArrayList(), String.class);
+        checked.add("ok");
+        // checked.add(123); // ClassCastException at add-time
+
+        Integer x = null;
+        // int y = x; // NullPointerException (unboxing null)
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item What exception occurs if you try to add to an unmodifiable list?\par
+  \textbf{Answer:} \texttt{UnsupportedOperationException}.
+
+  \item Why do we need wrapper classes with collections?\par
+  \textbf{Answer:} generics require reference types; primitives cannot be used directly.
+
+  \item What happens if you unbox \texttt{Integer x = null}?\par
+  \textbf{Answer:} \texttt{NullPointerException}.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Shuffle a list of integers and print the result.
+  \item Create an unmodifiable view of a list and test which operations fail.
+  \item Write a program that reads integers into \texttt{List<Integer>} and finds min/max using \texttt{Collections}.
+\end{enumerate}
+
+\section{Lab Alignment (recommended)}
+\begin{itemize}
+  \item Exp-18: Collections Framework
+  \item Exp-19: Wrapper Classes
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} What is the difference between \texttt{Collections} and \texttt{Collection}?\par
+\textbf{Sample answer:} \texttt{Collection} is an interface representing a group of elements. \texttt{Collections} is a utility class containing static helper methods for working with collections.
+
+\vspace{0.6em}
+\textbf{Q2.} Why can \texttt{int y = Integer x} crash?\par
+\textbf{Sample answer:} If \texttt{x} is null, unboxing tries to convert null to a primitive, causing \texttt{NullPointerException}.
+
+\end{document}

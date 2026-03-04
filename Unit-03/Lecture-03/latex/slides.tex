@@ -1,0 +1,234 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 03 -- Lecture 03: Multithreading + Synchronization}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Create threads using \texttt{Thread} and \texttt{Runnable}.
+    \item Describe thread lifecycle and understand priority limitations.
+    \item Identify race conditions and fix them with \texttt{synchronized}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 03: Nested Classes, Exceptions, Multithreading \& IO Streams}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Multithreading + Synchronization
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Concurrency motivation; `Thread` class and `Runnable` interface
+    \item Thread lifecycle and priorities (what they mean / limitations)
+    \item Race conditions and synchronization (`synchronized`, basic patterns)
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Concurrency vs Parallelism}
+  \begin{itemize}[<+->]
+    \item \textbf{Concurrency}: tasks overlap in time (good for responsiveness).
+    \item \textbf{Parallelism}: tasks run simultaneously on multiple cores (good for speed).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Creating threads (two ways)}
+  \begin{itemize}[<+->]
+    \item Extend \texttt{Thread} and override \texttt{run()}.
+    \item Implement \texttt{Runnable} and pass it to \texttt{new Thread(r)}.
+    \item \textbf{Important:} call \texttt{start()} to create a new thread.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{start()} vs \texttt{run()} (very important)}
+\begin{lstlisting}
+Runnable task = new Runnable() {
+    public void run() {
+        System.out.println(Thread.currentThread().getName());
+    }
+};
+
+Thread t = new Thread(task, "worker");
+
+t.run();   // runs on current thread (main)
+t.start(); // runs on a new thread (worker)
+\end{lstlisting}
+  \begin{itemize}[<+->]
+    \item \texttt{run()} is a normal method call (no new thread).
+    \item \texttt{start()} asks JVM/OS to schedule a new thread.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Waiting for threads: \texttt{join()}}
+\begin{lstlisting}
+Runnable task = new Runnable() {
+    public void run() { /* do work */ }
+};
+
+Thread t1 = new Thread(task);
+Thread t2 = new Thread(task);
+t1.start(); t2.start();
+
+t1.join();  // wait for t1 to finish
+t2.join();  // wait for t2 to finish
+System.out.println("Both done");
+\end{lstlisting}
+  \begin{itemize}[<+->]
+    \item Without \texttt{join()}, main may finish early.
+    \item \texttt{join()} throws \texttt{InterruptedException}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Lifecycle + priorities (practical)}
+  \begin{itemize}[<+->]
+    \item New $\rightarrow$ Runnable/Running $\rightarrow$ Waiting/Blocked $\rightarrow$ Terminated
+    \item Waiting happens due to sleep, locks, I/O, etc.
+    \item Priority is a \textbf{hint}, not a guarantee (depends on OS/JVM).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Race condition (core problem)}
+  \begin{itemize}[<+->]
+    \item Multiple threads modify shared state at the same time.
+    \item Result depends on timing/interleaving.
+    \item Example: \texttt{value++} is not atomic (read-modify-write).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Synchronization with \texttt{synchronized}}
+  \begin{itemize}[<+->]
+    \item Protect a critical section using a lock/monitor.
+    \item Only one thread at a time can execute synchronized code on the same lock.
+    \item Keep synchronized sections small; avoid deadlocks.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: synchronized counter}
+\begin{lstlisting}
+class SafeCounter {
+    private int value = 0;
+    synchronized void inc() { value++; }
+    synchronized int get() { return value; }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Thread demo (two threads) (1/2)}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) throws InterruptedException {
+        SafeCounter c = new SafeCounter();
+
+        Runnable task = new Runnable() {
+            public void run() {
+                for (int i = 0; i < 100000; i++) c.inc();
+            }
+        };
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Thread demo (two threads) (2/2)}
+\begin{lstlisting}
+// continued...
+        Thread t1 = new Thread(task);
+        Thread t2 = new Thread(task);
+        t1.start();
+        t2.start();
+        t1.join(); t2.join();
+        System.out.println(c.get()); // expected 200000
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Difference: \texttt{start()} vs \texttt{run()}?
+    \item Why is \texttt{value++} unsafe in multiple threads?
+    \item What does \texttt{synchronized} guarantee (in one sentence)?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Threads enable concurrency for responsiveness and throughput.
+    \item Race conditions occur with shared mutable state.
+    \item \texttt{synchronized} protects critical sections using a lock.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item What is a race condition?
+    \item Why is thread priority not a guarantee?
+    \item How does \texttt{synchronized} help?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Java I/O Streams + FileReader/FileWriter
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will read/write files and handle errors safely with exceptions.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,146 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 04 Notes\\Inheritance, `super`, Overriding, and Dynamic Dispatch}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+Inheritance and polymorphism are two core tools in OOP, but they must be used carefully.
+This lecture focuses on:
+\begin{itemize}
+  \item modeling \textbf{is-a} relationships with inheritance,
+  \item using \texttt{super} correctly,
+  \item overriding methods and understanding \textbf{dynamic dispatch}.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Syllabus Alignment (Unit 02)}
+\textbf{Unit 02:} inheritance, \texttt{super}, overriding, runtime polymorphism
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Decide whether a relationship is \textbf{is-a} (inheritance) or \textbf{has-a} (composition).
+  \item Use \texttt{super(...)} in constructors and \texttt{super.method()} when needed.
+  \item Override a method and explain why the executed method is chosen at runtime.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Inheritance}: a subclass extends a superclass (\texttt{extends}).
+  \item \textbf{Superclass/Subclass}: parent/child in inheritance hierarchy.
+  \item \textbf{Overriding}: subclass provides its own implementation of a superclass method (same signature).
+  \item \textbf{Dynamic dispatch}: method call resolved at runtime based on the actual object type.
+  \item \textbf{Upcasting}: treating a subclass object as a superclass reference (\texttt{Shape s = new Circle(...)}).
+  \item \textbf{Composition}: has-a relationship (\texttt{Car} has an \texttt{Engine}).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Inheritance and types (conceptual)}
+Java supports:
+\begin{itemize}
+  \item single inheritance of implementation (one direct superclass),
+  \item multilevel and hierarchical inheritance patterns,
+  \item multiple inheritance of \emph{type} through interfaces (covered more later).
+\end{itemize}
+
+\textbf{Is-a vs has-a:}
+\begin{itemize}
+  \item Use inheritance only when the subclass is truly a kind of superclass.
+  \item If something is a part of another thing, prefer composition.
+\end{itemize}
+Examples:
+\begin{itemize}
+  \item Dog is-a Animal (inheritance)
+  \item Car has-a Engine (composition)
+\end{itemize}
+
+\subsection{\texttt{super} usage}
+\textbf{Constructor:} a subclass constructor must call a superclass constructor.
+If you do not write \texttt{super(...)}, Java inserts \texttt{super()} automatically \emph{only if} the superclass has a no-arg constructor.
+
+\textbf{Rule:} \texttt{super(...)} must be the \textbf{first statement} in the constructor (similar to \texttt{this(...)}).
+
+\textbf{Member access:} use \texttt{super.method()} to explicitly call the parent method if overridden.
+
+\subsection{Overriding and dynamic dispatch}
+Overriding rules (important ones):
+\begin{itemize}
+  \item same method signature in subclass,
+  \item cannot reduce visibility (\texttt{public} cannot become \texttt{protected/private}),
+  \item use \texttt{@Override} to catch mistakes.
+\end{itemize}
+
+\textbf{Dynamic dispatch:} if you have \texttt{Shape s = new Circle(...)} then \texttt{s.area()} calls \texttt{Circle.area()} at runtime.
+This is the heart of runtime polymorphism.
+\notesources{\OOPSUnitIISources}
+
+\section{Worked Example: \texttt{Shape} hierarchy}
+\begin{lstlisting}
+class Shape {
+    private final String color;
+
+    Shape(String color) {
+        this.color = color;
+    }
+
+    double area() { return 0.0; }
+    String getColor() { return color; }
+}
+
+class Circle extends Shape {
+    private final double r;
+
+    Circle(String color, double r) {
+        super(color); // superclass constructor
+        this.r = r;
+    }
+
+    @Override
+    double area() { return Math.PI * r * r; }
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        Shape s = new Circle("red", 2.0); // upcasting
+        System.out.println(s.area());    // dynamic dispatch
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Is-a or has-a?\; \textbf{(a)} Student--IDCard \textbf{(b)} Manager--Employee\par
+  \textbf{Answer:} (a) has-a, (b) is-a (in a simple model).
+
+  \item What does \texttt{super(...)} do in a constructor?\par
+  \textbf{Answer:} calls the superclass constructor to initialize the parent part of the object.
+
+  \item If \texttt{Shape s = new Circle(...)} and you call \texttt{s.area()}, which implementation runs?\par
+  \textbf{Answer:} \texttt{Circle.area()} (runtime dispatch).
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Create \texttt{Rectangle} and \texttt{Triangle} subclasses of \texttt{Shape} and override \texttt{area()}.
+  \item Design a model using composition (has-a) and justify why inheritance is not appropriate.
+  \item Write one example where you call \texttt{super.method()} from an overridden method.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why is inheritance sometimes risky?\par
+\textbf{Sample answer:} Inheritance creates strong coupling between parent and child. If the parent changes, many subclasses may break. Using inheritance only when the relationship is truly is-a helps avoid bad designs.
+
+\vspace{0.6em}
+\textbf{Q2.} What is dynamic dispatch?\par
+\textbf{Sample answer:} Dynamic dispatch is when the method that executes is chosen at runtime based on the actual object type, not the reference type.
+
+\end{document}

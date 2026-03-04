@@ -1,0 +1,210 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 01 -- Lecture 02: Java Overview + Program Structure + Features}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain JDK vs JRE vs JVM and what bytecode is.
+    \item Compile and run a Java program; recognize compile-time vs runtime errors.
+    \item List key features of Java and their practical meaning.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 01: Introduction to OOPs}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Java Overview + Program Structure + Features
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Java ecosystem: JDK/JRE/JVM, bytecode, compile/run flow
+    \item Basic program structure: class, `main`, compilation errors vs runtime errors
+    \item Features of Java (platform independence, security, GC overview)
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{JDK vs JRE vs JVM (picture)}
+  \centering
+  \begin{tikzpicture}[
+    box/.style={draw, rounded corners, align=center, minimum width=9.2cm, minimum height=1.2cm, font=\small},
+    inner/.style={draw, rounded corners, align=center, minimum width=8.5cm, minimum height=1.0cm, font=\small}
+  ]
+    \node[box, fill=blue!5] (jdk) {JDK\\\footnotesize developer tools + JRE (includes \texttt{javac})};
+    \node[inner, fill=green!5, below=0.6cm of jdk] (jre) {JRE\\\footnotesize JVM + standard libraries (run-time)};
+    \node[inner, fill=orange!5, below=0.6cm of jre] (jvm) {JVM\\\footnotesize loads + verifies + executes bytecode (\texttt{.class})};
+  \end{tikzpicture}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Compile $\rightarrow$ Run flow}
+  \begin{center}
+  \begin{tikzpicture}[
+    node distance=1.0cm,
+    box/.style={draw, rounded corners, align=center, minimum width=3.0cm, minimum height=1.0cm, font=\small}
+  ]
+    \node[box] (java) {\texttt{Hello.java}\\(source)};
+    \node[box, right=of java] (javac) {\texttt{javac}\\(compiler)};
+    \node[box, right=of javac] (class) {\texttt{Hello.class}\\(bytecode)};
+    \node[box, right=of class] (jvm) {JVM\\\texttt{java Hello}};
+    \draw[-{Stealth[length=3mm]}] (java) -- (javac);
+    \draw[-{Stealth[length=3mm]}] (javac) -- (class);
+    \draw[-{Stealth[length=3mm]}] (class) -- (jvm);
+  \end{tikzpicture}
+  \end{center}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}[fragile]{Program structure (minimum)}
+\begin{lstlisting}
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}
+\end{lstlisting}
+  \begin{itemize}[<+->]
+    \item If the class is \texttt{public}, file name must be \texttt{Hello.java}.
+    \item JVM starts execution from \texttt{main}.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Compile-time vs Runtime (quick)}
+  \begin{itemize}[<+->]
+    \item \textbf{Compile-time error:} caught by \texttt{javac} (syntax/type errors).
+    \item \textbf{Runtime exception:} program compiles but fails while running.
+  \end{itemize}
+  \vspace{0.4em}
+  \begin{block}{Examples}
+    \begin{itemize}
+      \item Compile-time: missing semicolon, ``cannot find symbol''
+      \item Runtime: \texttt{ArithmeticException}, \texttt{NullPointerException}
+    \end{itemize}
+  \end{block}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Features of Java (what you get)}
+  \begin{itemize}[<+->]
+    \item Platform independent: bytecode + JVM
+    \item Strongly typed: many errors caught early
+    \item Garbage collection: automatic memory management
+    \item Rich libraries: collections, I/O, GUI, DB, networking
+    \item Security model: class loading + bytecode verification
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Demo: \texttt{javac} and \texttt{java}}
+\begin{lstlisting}
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}
+\end{lstlisting}
+  \vspace{0.4em}
+  \begin{itemize}[<+->]
+    \item Compile: \texttt{javac Hello.java}
+    \item Run: \texttt{java Hello}
+    \item Try: change message and re-run.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}[fragile]{Demo: runtime exception (observe)}
+\begin{lstlisting}
+public class DivideDemo {
+    public static void main(String[] args) {
+        int a = 10, b = 0;
+        System.out.println(a / b);
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Which contains \texttt{javac}: JDK, JRE, or JVM?
+    \item If you write \texttt{public class Student}, what should the file be named?
+    \item Is ``cannot find symbol'' compile-time or runtime?
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item JDK is for development (includes \texttt{javac}); JRE/JVM are for running.
+    \item Java compiles to bytecode (\texttt{.class}) and runs on the JVM.
+    \item Compile-time errors stop compilation; runtime exceptions happen while running.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why does Java use bytecode?
+    \item Give one compile-time error example and one runtime exception example.
+    \item What is the role of \texttt{main}?
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} I/O + Command Line + Types + Operators
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item Practice running a program with command line arguments.
+    \item Revise basic numeric types and operator precedence.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\end{document}

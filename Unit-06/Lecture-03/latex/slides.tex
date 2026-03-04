@@ -1,0 +1,168 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 06 -- Lecture 03: UML Class Design + Package Structure}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Convert use cases into classes and responsibilities.
+    \item Reduce coupling using interfaces and layered design.
+    \item Complete Deliverable-2: class diagram draft + package structure.
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 06: Capstone Project}
+  \begin{itemize}[<+->]
+    \item Lecture focus: UML Class Design + Package Structure
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Identify classes, relationships, responsibilities
+    \item Interfaces/abstractions to reduce coupling
+    \item Deliverable-2: class diagram (draft) + package/module structure
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{UML notation (quick cheat sheet)}
+  \begin{itemize}[<+->]
+    \item Class box: \textbf{Name} / \textbf{Attributes} / \textbf{Methods}
+    \item Visibility: \texttt{+} public,\; \texttt{-} private,\; \texttt{\#} protected
+    \item Relationships: association (line), inheritance (triangle), composition (filled diamond)
+    \item Multiplicity: \texttt{1}, \texttt{0..1}, \texttt{*}, \texttt{1..*}
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{From use cases to classes}
+  \begin{enumerate}[<+->]
+    \item Use cases $\rightarrow$ nouns (entities) + verbs (operations)
+    \item Entities: Resource, Booking, User
+    \item Services: BookingService (rules)
+    \item DAOs: BookingDao (DB)
+    \item UI: panels/screens
+  \end{enumerate}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Responsibilities (avoid God classes)}
+  \begin{itemize}[<+->]
+    \item UI: read inputs, show messages
+    \item Service: validate rules (overlap checks)
+    \item DAO: SQL + CRUD only
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Relationships (use carefully)}
+  \begin{itemize}[<+->]
+    \item Prefer composition (has-a) for most domain links.
+    \item Use inheritance only for true is-a.
+    \item Interfaces help reduce coupling (e.g., repository/DAO interface).
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Package structure (recommended)}
+  \begin{itemize}[<+->]
+    \item \texttt{com.upes.crm.model}
+    \item \texttt{com.upes.crm.dao}
+    \item \texttt{com.upes.crm.service}
+    \item \texttt{com.upes.crm.ui}
+    \item \texttt{com.upes.crm.util}
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Deliverable-2 checklist}
+  \begin{itemize}[<+->]
+    \item UML class diagram draft (entities + service + DAO + UI)
+    \item Key relationships shown (Booking $\rightarrow$ Resource)
+    \item Package structure documented (tree or list)
+    \item Initial skeleton folders/packages committed (optional)
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}{In-class Activity (evidence)}
+  \begin{itemize}[<+->]
+    \item Draft class diagram uploaded to repo
+    \item Package structure committed (skeleton)
+    \item Issues assigned per module (UI/DB/service)
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Design comes from use cases, not from guessing.
+    \item Layering reduces coupling and makes changes easier.
+    \item Deliverable-2 unlocks implementation work.
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why separate UI/service/DAO?
+    \item Give one example of composition in your project.
+    \item What packages will your project contain?
+  \end{enumerate}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Database Design + JDBC Layer
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item Convert entity model to tables and implement DAO CRUD.
+  \end{itemize}
+  \slidesources{\OOPSUnitVISources}
+\end{frame}
+
+\end{document}

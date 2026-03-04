@@ -1,0 +1,39 @@
+\usetheme{Berlin}
+\usecolortheme{Orchid}
+\useoutertheme{miniframes}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{../images/}}
+
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  breaklines=true
+}
+
+% Per-slide source line (references shown on the slide itself).
+\newcommand{\slidesources}[1]{%
+  \vfill
+  {\tiny\color{gray}\raggedright\sloppy\parbox{\linewidth}{Sources: #1}\par}%
+}
+
+% Unit-wise source strings for this subject (used by slides/notes).
+% Path is relative to the lecture `latex/` folder (the compilation CWD).
+\input{../../../_shared/oops-sources.tex}

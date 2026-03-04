@@ -1,0 +1,202 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Miscellaneous Notes\\Why Do We Need Interfaces?}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{The core idea (1 minute)}
+An \textbf{interface} lets you describe \textit{what an object can do} (its behavior) without committing to \textit{how it does it} (its implementation).
+
+\paragraph{One-line answer.} We need interfaces so our code can depend on \textbf{contracts}, not concrete classes --- which makes systems easier to \textbf{change}, \textbf{extend}, and \textbf{test}.
+
+\section*{What goes wrong without interfaces (tight coupling)}
+Consider a checkout flow.
+
+\paragraph{Naive approach.} The service creates a specific payment class internally:
+\begin{lstlisting}
+class CardPayment {
+    void pay(int amount) { /* call bank */ }
+}
+
+class CheckoutService {
+    void checkout(int amount) {
+        CardPayment payment = new CardPayment(); // fixed choice
+        payment.pay(amount);
+    }
+}
+\end{lstlisting}
+
+\paragraph{Problems.}
+\begin{itemize}
+  \item If tomorrow you add UPI / Wallet payments, you must edit \texttt{CheckoutService}.
+  \item You cannot easily test \texttt{CheckoutService} without calling the real bank API.
+  \item Your high-level business logic is tightly tied to low-level implementation details.
+\end{itemize}
+
+\section*{Interfaces solve this by introducing a contract}
+Define a contract for payment:
+\begin{lstlisting}
+interface PaymentMethod {
+    void pay(int amount);
+}
+\end{lstlisting}
+
+Provide multiple implementations:
+\begin{lstlisting}
+class CardPayment implements PaymentMethod {
+    public void pay(int amount) { /* call bank */ }
+}
+
+class UpiPayment implements PaymentMethod {
+    public void pay(int amount) { /* call UPI */ }
+}
+\end{lstlisting}
+
+Now the checkout logic depends only on the contract:
+\begin{lstlisting}
+class CheckoutService {
+    private final PaymentMethod payment;
+
+    CheckoutService(PaymentMethod payment) {
+        this.payment = payment;
+    }
+
+    void checkout(int amount) {
+        payment.pay(amount);
+    }
+}
+\end{lstlisting}
+
+\paragraph{What changed?}
+\begin{itemize}
+  \item \texttt{CheckoutService} no longer cares \textit{which} payment method is used.
+  \item You can add \texttt{WalletPayment} later without changing \texttt{CheckoutService}.
+  \item This is the idea behind ``program to an interface, not an implementation''.
+\end{itemize}
+
+\section*{Use case 1: Plug-in behavior (Strategy pattern)}
+Interfaces are a clean way to plug in behavior.
+
+\paragraph{Example.} Same checkout flow; different pricing rules:
+\begin{lstlisting}
+interface DiscountPolicy {
+    int discount(int total);
+}
+
+class NoDiscount implements DiscountPolicy {
+    public int discount(int total) { return 0; }
+}
+
+class StudentDiscount implements DiscountPolicy {
+    public int discount(int total) { return (int)(0.10 * total); }
+}
+
+class Billing {
+    private final DiscountPolicy policy;
+    Billing(DiscountPolicy policy) { this.policy = policy; }
+    int finalAmount(int total) { return total - policy.discount(total); }
+}
+\end{lstlisting}
+
+\paragraph{Takeaway.} You can swap policies at runtime without rewriting the billing code.
+
+\section*{Use case 2: Testability (fake/mock implementations)}
+Interfaces make unit testing practical because you can replace a real dependency with a fake.
+
+\paragraph{Example.} A notification service:
+\begin{lstlisting}
+interface Notifier {
+    void send(String to, String message);
+}
+
+class EmailNotifier implements Notifier {
+    public void send(String to, String message) { /* send email */ }
+}
+
+class OrderService {
+    private final Notifier notifier;
+    OrderService(Notifier notifier) { this.notifier = notifier; }
+
+    void placeOrder(String userEmail) {
+        // business logic...
+        notifier.send(userEmail, "Order placed");
+    }
+}
+\end{lstlisting}
+
+\paragraph{Testing without sending real emails.}
+\begin{lstlisting}
+class FakeNotifier implements Notifier {
+    String lastTo;
+    String lastMessage;
+    public void send(String to, String message) {
+        lastTo = to;
+        lastMessage = message;
+    }
+}
+\end{lstlisting}
+
+\paragraph{Takeaway.} The interface lets you test \texttt{OrderService} fast, safely, and deterministically.
+
+\section*{Use case 3: Decouple storage (repositories/data access)}
+Many applications use an interface to separate business logic from data storage.
+
+\begin{lstlisting}
+class User { String id; String name; }
+
+interface UserRepository {
+    User findById(String id);
+    void save(User u);
+}
+
+class InMemoryUserRepository implements UserRepository {
+    // can be used for demos/tests
+    public User findById(String id) { return null; }
+    public void save(User u) { }
+}
+
+class SqlUserRepository implements UserRepository {
+    // can be used in production
+    public User findById(String id) { return null; }
+    public void save(User u) { }
+}
+\end{lstlisting}
+
+\paragraph{Takeaway.} Business code can use \texttt{UserRepository} without caring about SQL, files, or APIs.
+
+\section*{Why interfaces are especially useful in Java}
+\begin{itemize}
+  \item \textbf{Multiple roles:} a class can implement multiple interfaces (Java does not allow multiple inheritance of classes).
+  \item \textbf{Framework callbacks:} Java uses interfaces heavily for ``I call you'' designs.
+\end{itemize}
+
+\paragraph{Examples from Java.}
+\begin{itemize}
+  \item Collections: \texttt{List}, \texttt{Set}, \texttt{Map}, \texttt{Iterable}, \texttt{Iterator}
+  \item Ordering: \texttt{Comparable}, \texttt{Comparator}
+  \item Concurrency: \texttt{Runnable}, \texttt{Callable}
+  \item I/O and lifecycle: \texttt{Closeable}, \texttt{AutoCloseable}
+\end{itemize}
+
+\section*{Interface vs abstract class (simple rule)}
+\begin{itemize}
+  \item Prefer an \textbf{interface} when you want to define a capability/role and expect multiple unrelated implementations.
+  \item Prefer an \textbf{abstract class} when you need shared state and shared code across closely related classes.
+  \item In modern Java, interfaces can also contain \texttt{default} methods --- use them carefully (they are still a contract-first tool).
+\end{itemize}
+
+\section*{Mini exercises (in class or homework)}
+\begin{enumerate}
+  \item Design a small ``export'' feature using an \texttt{Exporter} interface.\\
+        Provide two implementations: \texttt{CsvExporter} and \texttt{JsonExporter}.
+  \item Write a tiny unit test using a \texttt{FakeNotifier} to verify that an order confirmation message is sent.
+  \item Refactor any one program you wrote earlier: replace direct use of a concrete class with an interface + two implementations.
+\end{enumerate}
+\end{document}
+
+\notesources{\OOPSMiscWhyInterfacesSources}

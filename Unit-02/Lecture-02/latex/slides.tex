@@ -1,0 +1,196 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 02 -- Lecture 02: Constructors, `this`, Overloading, `static`, and GC Overview}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Write constructors and use \texttt{this(...)} for constructor chaining.
+    \item Overload methods correctly and avoid common mistakes.
+    \item Use \texttt{static} for class-level state/behavior and explain GC basics.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 02: Classes, Inheritance, Packages and Interfaces}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Constructors, `this`, Overloading, `static`, and GC Overview
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Constructors (default/parameterized), constructor chaining, `this()` / `this`
+    \item Method overloading (rules + examples)
+    \item `static` keyword (fields/methods/blocks) and utility-class pattern
+    \item Garbage collection overview (what it is / what it isn't)
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Constructors (why and how)}
+  \begin{itemize}[<+->]
+    \item Constructor initializes an object and enforces invariants.
+    \item If you define any constructor, Java does \textbf{not} add a default no-arg one automatically.
+    \item Use \texttt{this(...)} for constructor chaining (must be first statement).
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{\texttt{this} vs \texttt{this(...)}}
+  \begin{itemize}[<+->]
+    \item \texttt{this} = current object reference (resolves shadowing: \texttt{this.name = name;}).
+    \item \texttt{this(...)} = calls another constructor (reduces duplicate code).
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Method overloading (rules)}
+  \begin{itemize}[<+->]
+    \item Same method name, different parameter list (number/type/order).
+    \item Not overloading: changing only return type.
+    \item Selected at compile time (based on argument types).
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{\texttt{static} keyword}
+  \begin{itemize}[<+->]
+    \item Static field is shared across all objects (e.g., counters).
+    \item Static method belongs to class: \texttt{ClassName.method()}.
+    \item Static methods cannot access instance fields directly (no \texttt{this}).
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Garbage collection (realistic view)}
+  \begin{itemize}[<+->]
+    \item GC reclaims memory of objects that are no longer reachable.
+    \item \texttt{System.gc()} is a suggestion, not a guarantee.
+    \item GC does not automatically close files/DB connections (you must close resources).
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: constructors + \texttt{static} counter (1/2)}
+\begin{lstlisting}
+public class Employee {
+    private static int nextId = 1;
+
+    private final int id;
+    private final String name;
+    private double salary;
+
+    public Employee() { this("NA", 0.0); }
+
+    public Employee(String name, double salary) {
+        this.id = nextId++;
+        this.name = name;
+        this.salary = salary;
+    }
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: constructors + \texttt{static} counter (2/2)}
+\begin{lstlisting}
+// continued...
+    public static int getNextId() { return nextId; }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: method overloading}
+\begin{lstlisting}
+public void raiseSalary(double percent) {
+    raiseSalary(percent, 0.0);
+}
+
+public void raiseSalary(double percent, double bonus) {
+    salary = salary + (salary * percent / 100.0) + bonus;
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Difference: \texttt{this} vs \texttt{this(...)}?
+    \item Can we overload by changing only return type?
+    \item Can a static method access instance fields directly?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Constructors create valid objects and can be chained using \texttt{this(...)}.
+    \item Overloading = same name, different parameters (compile-time).
+    \item \texttt{static} is class-level; GC is automatic but not controllable exactly.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why is \texttt{this(...)} useful in constructors?
+    \item What is one valid and one invalid way to overload a method?
+    \item What does garbage collection do (in one sentence)?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Access Modifiers + Packages + Interface Intro
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will organize code into packages and control visibility.
+    \item We will introduce interfaces as ``contracts''.
+  \end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\end{document}

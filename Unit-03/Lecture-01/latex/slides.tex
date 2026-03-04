@@ -1,0 +1,216 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 03 -- Lecture 01: Nested Classes (Types + Use-cases)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain why nested classes improve encapsulation in some designs.
+    \item Differentiate static nested, inner, local, and anonymous classes.
+    \item Recognize use cases: helpers and callbacks/listeners (Swing later).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 03: Nested Classes, Exceptions, Multithreading \& IO Streams}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Nested Classes (Types + Use-cases)
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Nested class motivation: scope and encapsulation
+    \item Static nested, inner, local, and anonymous classes
+    \item Use-cases: helpers, callbacks/listeners (bridge to Swing later)
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Why nested classes?}
+  \begin{itemize}[<+->]
+    \item Keep helper types close to the code that uses them.
+    \item Reduce public API surface (better encapsulation).
+    \item Common for callbacks/listeners.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Types (quick)}
+  \begin{itemize}[<+->]
+    \item \textbf{Static nested}: no outer instance reference.
+    \item \textbf{Inner}: has implicit outer instance reference.
+    \item \textbf{Local}: declared inside a method; limited scope.
+    \item \textbf{Anonymous}: unnamed; used inline for one-time behavior.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Static nested vs inner (key difference)}
+  \begin{itemize}[<+->]
+    \item \textbf{Static nested}: behaves like a normal class scoped inside outer; no outer object needed.
+    \item \textbf{Inner}: every instance is tied to an outer object (has an implicit outer reference).
+  \end{itemize}
+  \vspace{0.6em}
+  \textbf{Rule:} if you do not need outer state, prefer \texttt{static}.
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: static nested helper (validator)}
+\begin{lstlisting}
+class BankAccount {
+  static class Validator {
+    static void requirePositive(double amt) {
+      if (amt <= 0) throw new IllegalArgumentException("amt");
+    }
+  }
+
+  void deposit(double amt) {
+    Validator.requirePositive(amt);
+    // ... update balance
+  }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: local class (inside a method)}
+\begin{lstlisting}
+public void demoLocal() {
+  final int times = 2; // effectively final
+
+  class Printer {
+    void say(String msg) {
+      for (int i = 0; i < times; i++)
+        System.out.println(msg);
+    }
+  }
+
+  new Printer().say("Hi");
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Use cases}
+  \begin{itemize}[<+->]
+    \item Helpers: validators, builders, entries/tuples
+    \item Iterators and small adapters
+    \item Callbacks/listeners (Swing event handling later)
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: inner + anonymous (small) (1/2)}
+\begin{lstlisting}
+interface Greeter { void greet(String name); }
+
+public class Outer {
+    private final String prefix = "Hello";
+
+    class InnerGreeter implements Greeter {
+        public void greet(String name) {
+            System.out.println(prefix + ", " + name);
+        }
+    }
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: inner + anonymous (small) (2/2)}
+\begin{lstlisting}
+// continued...
+    public void demo() {
+        Greeter a = new InnerGreeter();
+        Greeter b = new Greeter() { // anonymous
+            public void greet(String name) {
+                System.out.println(prefix + " (anon), " + name);
+            }
+        };
+        a.greet("UPES");
+        b.greet("UPES");
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Which type has an implicit outer reference?
+    \item Which type is commonly used for callbacks?
+    \item What does ``effectively final'' mean for local classes?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Nested classes improve encapsulation and keep helpers local.
+    \item Know the 4 kinds: static nested, inner, local, anonymous.
+    \item Anonymous classes are common for callback-style code (Swing).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Difference: static nested vs inner class?
+    \item Why are anonymous classes used in event handling?
+    \item Where can a local class be used?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Exception Handling (Core)
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will handle errors safely using \texttt{try/catch/finally} and custom exceptions.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\end{document}

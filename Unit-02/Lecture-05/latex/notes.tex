@@ -1,0 +1,150 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 05 Notes\\Abstract Classes, `final`, and Interfaces (Design Choices)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+By now you have seen basic classes, inheritance, and an interface intro.
+This lecture answers the practical design questions:
+\begin{itemize}
+  \item When should I use an \textbf{abstract class}?
+  \item When should I use an \textbf{interface}?
+  \item When should something be \textbf{final}?
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Syllabus Alignment (Unit 02)}
+\textbf{Unit 02:} abstract classes, \texttt{final}, interfaces (built-in + user-defined)
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Create an abstract class and implement abstract methods in subclasses.
+  \item Explain the design intent of \texttt{final} variables/methods/classes.
+  \item Write and use interfaces, including built-in \texttt{Comparable} and \texttt{Runnable}.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Abstract class}: class that cannot be instantiated; may include abstract methods.
+  \item \textbf{Abstract method}: declared without body; must be implemented by concrete subclasses.
+  \item \textbf{Interface}: contract specifying methods a class must provide.
+  \item \textbf{Final}: ``cannot change'' (variable), ``cannot override'' (method), ``cannot extend'' (class).
+  \item \textbf{Contract}: what is promised by a type (what callers can rely on).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Abstract classes and methods}
+Use an abstract class when:
+\begin{itemize}
+  \item you want to enforce a common API (method signatures),
+  \item and you also want to share some implementation code across subclasses.
+\end{itemize}
+
+\textbf{Key properties:}
+\begin{itemize}
+  \item Cannot instantiate: \texttt{new Shape()} is illegal if \texttt{Shape} is abstract.
+  \item Subclasses must implement all abstract methods (unless they are also abstract).
+  \item An abstract class can contain concrete fields and methods.
+\end{itemize}
+
+\subsection{\texttt{final} keyword (design intent)}
+\textbf{Final variable:} assigned once.
+\begin{itemize}
+  \item For primitives: value cannot change.
+  \item For references: reference cannot change, but the object may still change unless the object is immutable.
+\end{itemize}
+
+\textbf{Final method:} cannot be overridden.
+\begin{itemize}
+  \item Used to lock down behavior and prevent subclasses from changing critical logic.
+\end{itemize}
+
+\textbf{Final class:} cannot be extended.
+\begin{itemize}
+  \item Example: \texttt{String} is final (one reason is security/immutability design).
+\end{itemize}
+
+\subsection{Interfaces: built-in + user-defined}
+Use an interface when:
+\begin{itemize}
+  \item you want multiple unrelated classes to share a capability (e.g., \texttt{Comparable}),
+  \item you want multiple implementations (e.g., different payment methods),
+  \item you want flexible designs with low coupling.
+\end{itemize}
+
+\textbf{Built-in examples:}
+\begin{itemize}
+  \item \texttt{Comparable<T>}: defines natural ordering (\texttt{compareTo}). Used by sorting.
+  \item \texttt{Runnable}: defines a task that can run in a thread (\texttt{run}).
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Worked Example: \texttt{Comparable} for sorting}
+\begin{lstlisting}
+import java.util.Arrays;
+
+class Student implements Comparable<Student> {
+    private final String rollNo;
+    private final double cgpa;
+
+    Student(String rollNo, double cgpa) {
+        this.rollNo = rollNo;
+        this.cgpa = cgpa;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        // descending order by cgpa
+        return Double.compare(other.cgpa, this.cgpa);
+    }
+
+    @Override
+    public String toString() {
+        return rollNo + ":" + cgpa;
+    }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        Student[] a = {
+            new Student("21CS1001", 8.2),
+            new Student("21CS1002", 9.1),
+            new Student("21CS1003", 7.6)
+        };
+        Arrays.sort(a); // uses compareTo
+        System.out.println(Arrays.toString(a));
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Can we create an object of an abstract class?\; \textbf{Answer:} No.
+  \item What does \texttt{final class} mean?\; \textbf{Answer:} cannot be extended.
+  \item Why do we use interfaces?\; \textbf{Answer:} contracts + low coupling + multiple implementations.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Create an abstract class \texttt{Shape} with abstract method \texttt{area()} and implement \texttt{Circle} and \texttt{Rectangle}.
+  \item Create an interface \texttt{Payable} and implement it for \texttt{Invoice} and \texttt{SalarySlip}.
+  \item Implement \texttt{Runnable} in a class \texttt{HelloTask} and print a message in \texttt{run()} (we will start threads in Unit 03).
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} When do you prefer an interface over an abstract class?\par
+\textbf{Sample answer:} Prefer an interface when you want a contract that many unrelated classes can implement and you want flexibility and low coupling. Use abstract class when you also want to share code and common state.
+
+\vspace{0.6em}
+\textbf{Q2.} What is the meaning of \texttt{final} in different contexts?\par
+\textbf{Sample answer:} A final variable cannot be reassigned, a final method cannot be overridden, and a final class cannot be extended.
+
+\end{document}

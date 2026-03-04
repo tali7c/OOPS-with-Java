@@ -1,0 +1,250 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 06 -- Lecture 06 Notes\\Testing + Build/Artifacts + Final Demo}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This is the final capstone lecture.
+Your goal is not to add new features endlessly --- your goal is to make the project \textbf{demo-ready}:
+\begin{itemize}
+  \item core flows work reliably,
+  \item mistakes are handled gracefully (validation + errors),
+  \item the project builds into a runnable artifact,
+  \item you have a clear demo script and evidence of teamwork.
+\end{itemize}
+\notesources{\OOPSUnitVISources}
+
+\section{Syllabus Alignment (Unit 06)}
+\textbf{Unit 06:} testing (JUnit), build tool + packaging, final demo/viva
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Write unit tests for your service/business rules using JUnit 5.
+  \item Perform an integration test checklist for DAO + DB.
+  \item Package the project as a runnable artifact (Jar) using Maven/Gradle (or a simple build script).
+  \item Complete Deliverable-5: final demo/viva + release artifact + short report.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Unit test}: tests one class/function in isolation (fast, deterministic).
+  \item \textbf{Integration test}: tests multiple parts together (DAO + DB, UI + service).
+  \item \textbf{Test pyramid}: many unit tests, fewer integration tests, minimal UI/manual tests.
+  \item \textbf{Assertion}: check that expected result is correct (\texttt{assertEquals}, \texttt{assertThrows}).
+  \item \textbf{Fixture}: setup data/objects for tests (\texttt{@BeforeEach}).
+  \item \textbf{Artifact}: build output you can run/distribute (Jar).
+  \item \textbf{Release}: versioned snapshot of your project (tagged commit + artifact).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{What should you test? (capstone strategy)}
+\textbf{Best unit-test targets:}
+\begin{itemize}
+  \item service-layer validation and business rules (``no overlap'', ``capacity $>$ 0'')
+  \item small pure functions (parsers, formatters)
+\end{itemize}
+
+\textbf{Harder to unit test (do minimal/manual):}
+\begin{itemize}
+  \item Swing UI (usually tested manually in this course)
+  \item DAO mapping (better as integration tests with a test database)
+\end{itemize}
+
+\textbf{Why?} Service rules are where bugs hurt the most, and they are easy to test quickly without a GUI or DB.
+
+\subsection{JUnit 5 basics (how a unit test looks)}
+JUnit tests have a simple structure:
+\begin{itemize}
+  \item Arrange: prepare objects
+  \item Act: call the method
+  \item Assert: check result/exception
+\end{itemize}
+
+\begin{lstlisting}
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+class SimpleTest {
+    @Test
+    void endMustBeAfterStart() {
+        ValidationException ex = assertThrows(
+            ValidationException.class,
+            () -> BookingRules.validateTime(10, 10)
+        );
+        assertTrue(ex.getMessage().contains("after"));
+    }
+}
+\end{lstlisting}
+
+\textbf{Tip:} test names should describe behavior: \texttt{rejectsEndBeforeStart}.
+
+\subsection{Design for testability: depend on interfaces}
+If your service depends directly on a JDBC DAO, tests become slow and fragile.
+Instead:
+\begin{itemize}
+  \item define an interface (contract), e.g., \texttt{BookingRepository},
+  \item implement JDBC repository for real app,
+  \item implement an in-memory fake for unit tests.
+\end{itemize}
+
+\subsection{Integration test checklist (DAO + DB)}
+Use a separate test DB/schema (never your real production data).
+\begin{enumerate}
+  \item Run \texttt{schema.sql} on a clean database.
+  \item Run DAO insert for one entity.
+  \item Run DAO list/find and verify data is correct.
+  \item Run update and verify changes.
+  \item Run delete and verify row is gone.
+  \item Test one ``bad input'' case (FK constraint violation, duplicate UNIQUE).
+\end{enumerate}
+
+\subsection{Build tool + packaging (Maven/Gradle idea)}
+\textbf{Why use a build tool?}
+\begin{itemize}
+  \item consistent compilation and testing for everyone in team,
+  \item dependency management (JDBC driver, JUnit),
+  \item easy packaging into a Jar.
+\end{itemize}
+
+\textbf{Maven (common commands):}
+\begin{itemize}
+  \item \texttt{mvn test} --- run unit tests
+  \item \texttt{mvn package} --- build Jar in \texttt{target/}
+\end{itemize}
+
+\textbf{Gradle (common commands):}
+\begin{itemize}
+  \item \texttt{gradle test}
+  \item \texttt{gradle build}
+\end{itemize}
+
+\textbf{Packaging note:} if your Jar needs external libraries (like MySQL connector),
+you either run with a classpath, or build a ``fat Jar'' that bundles dependencies.
+
+\notesources{\OOPSUnitVISources}
+
+\section{Worked Example: unit-test a BookingService without DB}
+This example shows the key pattern for capstone testing: service depends on an interface, not JDBC.
+
+\subsection{Repository interface + in-memory fake}
+\begin{lstlisting}
+import java.util.*;
+
+interface BookingRepository {
+    boolean hasOverlap(int resourceId, long start, long end);
+    void save(Booking b);
+    int count();
+}
+
+class InMemoryBookingRepository implements BookingRepository {
+    private final List<Booking> data = new ArrayList<>();
+
+    public boolean hasOverlap(int resourceId, long start, long end) {
+        for (Booking b : data) {
+            if (b.getResourceId() != resourceId) continue;
+            boolean overlaps = start < b.getEnd() && end > b.getStart();
+            if (overlaps) return true;
+        }
+        return false;
+    }
+
+    public void save(Booking b) { data.add(b); }
+    public int count() { return data.size(); }
+}
+\end{lstlisting}
+
+\subsection{Service (rules) + tests}
+\begin{lstlisting}
+class BookingService {
+    private final BookingRepository repo;
+    BookingService(BookingRepository repo) { this.repo = repo; }
+
+    public void createBooking(int resourceId, String user, long start, long end) {
+        if (user == null || user.trim().isEmpty())
+            throw new ValidationException("User is required.");
+        if (end <= start)
+            throw new ValidationException("End must be after start.");
+        if (repo.hasOverlap(resourceId, start, end))
+            throw new ValidationException("Booking overlaps existing booking.");
+        repo.save(new Booking(resourceId, user.trim(), start, end));
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+
+class BookingServiceTest {
+    private InMemoryBookingRepository repo;
+    private BookingService service;
+
+    @BeforeEach
+    void setup() {
+        repo = new InMemoryBookingRepository();
+        service = new BookingService(repo);
+    }
+
+    @Test
+    void rejectsEndBeforeStart() {
+        assertThrows(ValidationException.class,
+            () -> service.createBooking(1, "A", 10, 10));
+    }
+
+    @Test
+    void rejectsOverlap() {
+        service.createBooking(1, "A", 10, 20);
+        assertThrows(ValidationException.class,
+            () -> service.createBooking(1, "B", 15, 25));
+    }
+
+    @Test
+    void acceptsNonOverlap() {
+        assertDoesNotThrow(() -> service.createBooking(1, "A", 10, 20));
+        assertDoesNotThrow(() -> service.createBooking(1, "B", 21, 30));
+        assertEquals(2, repo.count());
+    }
+}
+\end{lstlisting}
+
+\section{Deliverable-5 checklist (final submission)}
+\begin{itemize}
+  \item Runnable artifact: Jar (plus any config instructions).
+  \item \texttt{schema.sql} + DB setup instructions.
+  \item Basic unit tests for service rules (JUnit) + evidence they pass.
+  \item README: how to run, demo steps, team members + responsibilities.
+  \item Short report (1--2 pages): design summary + what was implemented.
+\end{itemize}
+
+\section{Final Demo Script (suggested)}
+\begin{enumerate}
+  \item Start DB and ensure schema exists.
+  \item Run the application.
+  \item Show one end-to-end use case: Add Resource $\rightarrow$ verify in list.
+  \item Show booking flow: create booking $\rightarrow$ list bookings.
+  \item Show validation: attempt an invalid booking (end before start) and show message.
+  \item Briefly show code structure: UI/service/DAO packages.
+  \item Show tests running (optional but impressive): \texttt{mvn test}.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why unit test service logic instead of Swing UI?\par
+\textbf{Sample answer:} Service logic is easy to test quickly and deterministically; UI tests are slower and fragile.
+
+\vspace{0.6em}
+\textbf{Q2.} What does \texttt{assertThrows} test?\par
+\textbf{Sample answer:} It verifies that a method call throws an expected exception for an invalid case.
+
+\vspace{0.6em}
+\textbf{Q3.} Why use a build tool?\par
+\textbf{Sample answer:} It standardizes builds/tests, manages dependencies, and produces a runnable artifact reliably for the team.
+
+\end{document}

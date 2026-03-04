@@ -1,0 +1,155 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 05 -- Lecture 03: Wrapped Collections + `Collections` Utilities + Wrappers}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Use common \texttt{Collections} utilities (sort, min/max, shuffle, reverse).
+    \item Use wrapped collections (unmodifiable/synchronized/checked) appropriately.
+    \item Avoid common wrapper/autoboxing pitfalls (and know class loading basics).
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 05: Collections and Wrapper Class}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Wrapped Collections + `Collections` Utilities + Wrappers
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item `Collections` utilities: sort, min/max, shuffle (overview)
+    \item Wrapped collections: unmodifiable/synchronized/checked (why/when)
+    \item Wrapper classes + autoboxing pitfalls; class loading basics (syllabus)
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{\texttt{Collections} utilities (common)}
+  \begin{itemize}[<+->]
+    \item \texttt{sort}, \texttt{reverse}, \texttt{shuffle}
+    \item \texttt{min}, \texttt{max}, \texttt{frequency}
+    \item \texttt{binarySearch} (requires sorted list)
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Wrapped collections (why)}
+  \begin{itemize}[<+->]
+    \item \texttt{unmodifiableList}: expose read-only view to callers.
+    \item \texttt{synchronizedList}: basic thread-safe wrapper (older style).
+    \item \texttt{checkedList}: runtime type checking for legacy/raw code.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Wrapper classes + autoboxing pitfalls}
+  \begin{itemize}[<+->]
+    \item Wrapper classes: \texttt{Integer}, \texttt{Double}, ...
+    \item Needed because generics require reference types.
+    \item Pitfall: unboxing \texttt{null} $\rightarrow$ \texttt{NullPointerException}.
+    \item Pitfall: prefer \texttt{equals()} over \texttt{==} for wrappers/strings.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: utilities + wrappers}
+\begin{lstlisting}
+import java.util.*;
+public class Demo {
+    public static void main(String[] args) {
+        List<Integer> a = new ArrayList<>(Arrays.asList(3, 1, 2));
+        Collections.sort(a);
+        System.out.println("Sorted: " + a);
+
+        List<Integer> ro = Collections.unmodifiableList(a);
+        // ro.add(99); // UnsupportedOperationException
+
+        Integer x = null;
+        // int y = x; // NullPointerException (unboxing null)
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item What exception occurs when modifying an unmodifiable list?
+    \item Why do we need \texttt{Integer} instead of \texttt{int} in lists?
+    \item What happens when you unbox \texttt{Integer x = null}?
+  \end{enumerate}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item \texttt{Collections} provides standard algorithms for collections.
+    \item Wrappers enforce policies (read-only, sync, type checks).
+    \item Wrapper classes enable generics; watch autoboxing pitfalls.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Difference: \texttt{Collection} vs \texttt{Collections}?
+    \item When do you use an unmodifiable wrapper?
+    \item Give one autoboxing pitfall.
+  \end{enumerate}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\begin{frame}{Next Unit Preview}
+  \textbf{Next:} Unit 06 -- Capstone Project
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will apply OOP + collections + Swing + JDBC in a complete project.
+  \end{itemize}
+  \slidesources{\OOPSUnitVSources}
+\end{frame}
+
+\end{document}

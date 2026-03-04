@@ -1,0 +1,209 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Object Oriented Programming (B.Tech CSE)}
+\rhead{Unit 03: Diagnostic Assessment}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+% Marks per question (total = 100)
+\newcommand{\EMarks}{\textbf{[2 marks]} }
+\newcommand{\MMarks}{\textbf{[3 marks]} }
+\newcommand{\HMarks}{\textbf{[5 marks]} }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Diagnostic Assessment -- Unit 03}}\\[0.25em]
+  {\large Object Oriented Programming (CSEG1044)}\\[0.25em]
+  \normalsize (Nested classes; exceptions + handlers; multithreading + synchronization; Java I/O streams)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Time Limit:} None\\
+\textbf{Submission Deadline:} March 31, 2026\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item This assessment covers Unit-03 topics:
+    \textbf{Nested classes}, \textbf{exception handling/handlers}, \textbf{multithreading + synchronization},
+    and \textbf{Java I/O streams}.
+  \item \textbf{Total marks: 100.} Easy: 10 $\times$ 2 = 20, Medium: 10 $\times$ 3 = 30, Hard: 10 $\times$ 5 = 50.
+  \item \textbf{No time limit.} Submit on or before \textbf{March 31, 2026}.
+  \item \textbf{Important (70\% rule): To have your assignment marks counted, you must score at least 70\% (70/100 or more) in this assessment.}
+    If you score below 70\%, you may reattempt and resubmit. Your latest submission will be considered.
+  \item Answer \textbf{all} questions. For code questions, snippets are acceptable unless a full program is requested.
+  \item For MCQs, follow the instruction in the question (some are \textbf{select all that apply}).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=\textbf{E\arabic*.}, leftmargin=*]
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are types of nested classes in Java?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Static nested class
+      \item Inner (non-static) class
+      \item Local class
+      \item Anonymous class
+      \item Global class
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Does an inner class require an outer object? Explain in 2--3 lines.
+
+  \item \EMarks \textbf{[MCQ]} Which of the following is a \textbf{checked} exception?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{IOException}
+      \item \texttt{NullPointerException}
+      \item \texttt{ArithmeticException}
+      \item \texttt{StackOverflowError}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} Which block always executes (if the program doesn't terminate abruptly)?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{try}
+      \item \texttt{catch}
+      \item \texttt{finally}
+      \item \texttt{throw}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Difference between \texttt{throw} and \texttt{throws} (3--4 lines).
+
+  \item \EMarks \textbf{[MCQ]} Which method starts a new thread of execution?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{run()}
+      \item \texttt{start()}
+      \item \texttt{sleep()}
+      \item \texttt{wait()}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Valid ways to create a thread in Java are:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Extend \texttt{Thread}
+      \item Implement \texttt{Runnable}
+      \item Call \texttt{run()} directly to start a new OS thread
+      \item Change the \texttt{main} method signature
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} What is the main purpose of \texttt{synchronized}?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Makes code execute faster
+      \item Ensures mutual exclusion for shared data
+      \item Automatically creates threads
+      \item Reads data from a file
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} \texttt{FileReader} is mainly used for:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Byte/binary data
+      \item Character/text data
+      \item Network packets
+      \item Graphics rendering
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} What does \texttt{try-with-resources} guarantee?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item No exceptions will occur inside the \texttt{try} block
+      \item The resource is closed automatically
+      \item I/O becomes faster automatically
+      \item Threads stop automatically on error
+    \end{enumerate}
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=\textbf{M\arabic*.}, leftmargin=*]
+  \item \MMarks \textbf{[Code]} Write code to instantiate a static nested class \texttt{Outer.Nested}.
+
+  \item \MMarks \textbf{[Code]} Write code to instantiate an inner class \texttt{Outer.Inner}.
+
+  \item \MMarks \textbf{[Code]} Write a \texttt{try/catch/finally} block that handles divide-by-zero and always prints \texttt{Done}.
+
+  \item \MMarks \textbf{[Code]} Write a method \texttt{readFirstLine(String path) throws IOException} and show how to call it using \texttt{try/catch}.
+
+  \item \MMarks \textbf{[Code]} Create a thread using \texttt{Runnable} that prints 1--3 and start it.
+
+  \item \MMarks \textbf{[Concept]} What is a race condition? Explain in 4--6 lines.
+
+  \item \MMarks \textbf{[Code]} Write a thread-safe counter increment method using \texttt{synchronized}.
+
+  \item \MMarks \textbf{[Code]} Write a \texttt{try-with-resources} snippet that writes ``Hello'' to \texttt{msg.txt} using \texttt{FileWriter}.
+
+  \item \MMarks \textbf{[Code]} Write a snippet that reads \texttt{msg.txt} using \texttt{FileReader} and prints its content.
+
+  \item \MMarks \textbf{[Concept]} What are thread priorities? Do they guarantee execution order? (4--6 lines)
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=\textbf{H\arabic*.}, leftmargin=*]
+  \item \HMarks \textbf{[Program]} Write a complete program that demonstrates try/catch/finally execution sequence for:
+    (a) success case, (b) exception case. Include output.
+
+  \item \HMarks \textbf{[Program]} Write a program with two threads incrementing a shared counter (e.g., 100000 times each).
+    First run \textbf{without} synchronization, then fix using \texttt{synchronized}. Print final values.
+
+  \item \HMarks \textbf{[Program]} Ticket booking: simulate \texttt{availableSeats = 5} shared by 10 threads (each books 1).
+    Use synchronization to prevent overbooking and print final result.
+
+  \item \HMarks \textbf{[Program]} Write a program that prints thread states using \texttt{getState()} to show:
+    \textbf{NEW}, \textbf{RUNNABLE}, \textbf{TIMED\_WAITING} (via \texttt{sleep}), and \textbf{TERMINATED}.
+
+  \item \HMarks \textbf{[Program]} Copy a text file using \texttt{FileReader}/\texttt{FileWriter} and a character buffer.
+    Use \texttt{try-with-resources} and handle \texttt{IOException}.
+
+  \item \HMarks \textbf{[Program]} Read \texttt{numbers.txt} (one value per line, some invalid).
+    Sum valid integers, report invalid lines, and write sum to \texttt{sum.txt}.
+
+  \item \HMarks \textbf{[Program]} Create an outer class with a static nested class \texttt{Task implements Runnable}.
+    Start two tasks concurrently and print results.
+
+  \item \HMarks \textbf{[Program]} Show exception propagation with I/O using a 3-method call chain:
+    the deepest method declares \texttt{throws IOException} and \texttt{main} handles it.
+
+  \item \HMarks \textbf{[Explain]} Differentiate byte streams vs character streams and justify why
+    \texttt{FileReader}/\texttt{FileWriter} are appropriate for text files (8--12 lines).
+
+  \item \HMarks \textbf{[Program]} Write code showing that \texttt{finally} runs even when \texttt{return} is executed in try.
+    Include output.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assessment}
+
+\end{document}

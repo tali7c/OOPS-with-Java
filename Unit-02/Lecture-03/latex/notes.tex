@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 03 Notes\\Access Modifiers + Packages + Interface Intro}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+As your codebase grows, you need two things:
+\begin{itemize}
+  \item \textbf{control visibility} of classes/fields/methods (to prevent misuse),
+  \item \textbf{organize code} into packages (so files and names stay manageable).
+\end{itemize}
+We also introduce the \textbf{interface} idea as a contract to reduce coupling.
+\notesources{\OOPSUnitIISources}
+
+\section{Syllabus Alignment (Unit 02)}
+\textbf{Unit 02:} access modifiers, packages, interfaces (intro)
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Explain \texttt{private}, default (package-private), \texttt{protected}, \texttt{public}.
+  \item Create a package using \texttt{package} and use \texttt{import} correctly.
+  \item Explain interfaces as contracts and write a basic user-defined interface.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Package}: namespace that groups related classes (also maps to folder structure).
+  \item \textbf{Package-private (default)}: visible only inside the same package.
+  \item \textbf{Protected}: visible in same package and in subclasses (even in other packages).
+  \item \textbf{Public API}: the classes/methods you intentionally expose for others to use.
+  \item \textbf{Coupling}: how strongly one part of code depends on another.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Access control (what each means)}
+Visibility rules (simplified for day-to-day use):
+\begin{itemize}
+  \item \texttt{private}: only inside the same class.
+  \item \textbf{default} (no keyword): inside the same package.
+  \item \texttt{protected}: inside the same package, and also in subclasses.
+  \item \texttt{public}: everywhere.
+\end{itemize}
+
+\paragraph{Rule of thumb.}
+\begin{itemize}
+  \item Keep fields \texttt{private}.
+  \item Expose methods only if necessary.
+  \item Use package-private for helper classes that should not be part of the public API.
+\end{itemize}
+
+\subsection{Packages: why and how}
+Why packages?
+\begin{itemize}
+  \item Avoid name conflicts (\texttt{Student} in two different domains).
+  \item Improve organization and readability.
+  \item Control visibility using package-private access.
+\end{itemize}
+
+\textbf{How to declare a package:} the first non-comment line should be:
+\begin{itemize}
+  \item \texttt{package com.upes.crm.model;}
+\end{itemize}
+The folder path should match:
+\begin{itemize}
+  \item \texttt{com/upes/crm/model/Student.java}
+\end{itemize}
+
+\textbf{Imports:}
+\begin{itemize}
+  \item Use \texttt{import} to avoid writing fully-qualified names.
+  \item Example: \texttt{import java.util.List;}
+\end{itemize}
+
+\subsection{Interface intro: contract view}
+An interface defines \textbf{what operations} a class must provide, without specifying how.
+This allows you to program to an interface (a contract), not to a concrete class.
+
+\textbf{Key benefit:} reduced coupling. Your code depends on an abstract contract, so implementations can change without changing the caller.
+
+We will cover interfaces deeply later (multiple files, design decisions, and real use cases).
+\notesources{\OOPSUnitIISources}
+
+\section{Worked Example: packages + interface (small)}
+\subsection*{File 1: \texttt{com/upes/demo/pay/Payable.java}}
+\begin{lstlisting}
+package com.upes.demo.pay;
+
+public interface Payable {
+    double amountDue();
+}
+\end{lstlisting}
+
+\subsection*{File 2: \texttt{com/upes/demo/pay/Invoice.java}}
+\begin{lstlisting}
+package com.upes.demo.pay;
+
+public class Invoice implements Payable {
+    private final double total;
+
+    public Invoice(double total) {
+        if (total < 0) throw new IllegalArgumentException("total");
+        this.total = total;
+    }
+
+    @Override
+    public double amountDue() {
+        return total;
+    }
+}
+\end{lstlisting}
+
+\subsection*{File 3: \texttt{com/upes/demo/app/Main.java}}
+\begin{lstlisting}
+package com.upes.demo.app;
+
+import com.upes.demo.pay.Invoice;
+import com.upes.demo.pay.Payable;
+
+public class Main {
+    public static void main(String[] args) {
+        Payable p = new Invoice(2500.0);
+        System.out.println(p.amountDue());
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Which access modifier should be used for most fields?\; \textbf{Answer:} \texttt{private}.
+  \item If a member has no access modifier, where is it visible?\; \textbf{Answer:} within the same package.
+  \item Why do we use packages?\; \textbf{Answer:} organization + avoid name conflicts + control visibility.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Create package \texttt{com.upes.bank} with classes \texttt{Account} and \texttt{Customer}.
+  \item Write an interface \texttt{Printable} with method \texttt{print()} and implement it in two classes.
+  \item Make a helper class package-private and observe where it can/can't be used.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} What is the difference between \texttt{private} and package-private?\par
+\textbf{Sample answer:} \texttt{private} is visible only inside the same class. Package-private (default) is visible to any class in the same package.
+
+\vspace{0.6em}
+\textbf{Q2.} Why are interfaces useful?\par
+\textbf{Sample answer:} Interfaces define a contract and reduce coupling. Code written against an interface can work with multiple implementations without changing the caller.
+
+\end{document}

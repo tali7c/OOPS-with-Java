@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 02 Notes\\Java Overview + Program Structure + Features}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture makes you comfortable with the Java ``toolchain'' and the minimum you need to compile and run Java programs.
+By the end, you should clearly understand:
+\begin{itemize}
+  \item what the \textbf{JDK}, \textbf{JRE}, and \textbf{JVM} mean,
+  \item how \textbf{bytecode} enables Java to run on different platforms,
+  \item the difference between \textbf{compile-time errors} and \textbf{runtime errors}.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Syllabus Alignment (Unit 01)}
+\textbf{Unit 01:} Introduction to OOPs (Java overview + features)
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Explain the Java ecosystem: JDK vs JRE vs JVM, and what bytecode is.
+  \item Compile and run a Java program using \texttt{javac} and \texttt{java}.
+  \item Identify whether an error is compile-time (during \texttt{javac}) or runtime (during \texttt{java}).
+  \item List core features of Java and what they imply in practice.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{JDK (Java Development Kit)}: tools for development (compiler \texttt{javac}, docs, etc.).
+  \item \textbf{JRE (Java Runtime Environment)}: runtime needed to run Java apps (JVM + libraries).
+  \item \textbf{JVM (Java Virtual Machine)}: executes Java bytecode (\texttt{.class}).
+  \item \textbf{Bytecode}: platform-neutral instructions produced by \texttt{javac}.
+  \item \textbf{Classpath}: where the JVM looks for compiled classes and libraries.
+  \item \textbf{Compile-time error}: detected by the compiler before running.
+  \item \textbf{Runtime error/exception}: occurs while the program is executing.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Java ecosystem: JDK vs JRE vs JVM}
+Think of Java in layers:
+\begin{itemize}
+  \item \textbf{JDK}: used by developers to \emph{create} programs. Includes \texttt{javac} (compiler) and other tools.
+  \item \textbf{JRE}: used to \emph{run} programs. Includes the JVM and standard libraries.
+  \item \textbf{JVM}: the engine that loads classes, verifies bytecode, and executes it.
+\end{itemize}
+
+\paragraph{Rule of thumb.} If you want to \emph{write/compile} Java, install the \textbf{JDK}. If you only want to \emph{run} Java (rare for students), the \textbf{JRE} is enough.
+
+\subsection{Bytecode and the compile/run flow}
+Java is often described as ``Write Once, Run Anywhere'' because compilation produces \textbf{bytecode}, not machine code.
+The same \texttt{.class} file can run on Windows/Linux/macOS \emph{as long as there is a JVM for that OS}.
+
+\textbf{Flow (mental model):}
+\begin{enumerate}
+  \item Write: \texttt{Hello.java}
+  \item Compile: \texttt{javac Hello.java} $\rightarrow$ \texttt{Hello.class}
+  \item Run: \texttt{java Hello} (JVM loads \texttt{Hello.class} and starts \texttt{main})
+\end{enumerate}
+
+\subsection{Basic program structure: class + \texttt{main}}
+A minimal program has:
+\begin{itemize}
+  \item a \textbf{class} (container for code),
+  \item the \textbf{entry point} method: \texttt{public static void main(String[] args)}.
+\end{itemize}
+
+\textbf{Important rule:} if you declare a \texttt{public} class, the file name must match it exactly.
+Example: \texttt{public class Hello} must be in \texttt{Hello.java}.
+
+\subsection{Compile-time vs runtime errors}
+\textbf{Compile-time error} examples:
+\begin{itemize}
+  \item syntax errors (missing semicolon, wrong braces),
+  \item type errors (assigning \texttt{String} to \texttt{int} without conversion),
+  \item missing symbols (calling a method that doesn't exist).
+\end{itemize}
+
+\textbf{Runtime error/exception} examples:
+\begin{itemize}
+  \item \texttt{ArithmeticException} (divide by zero),
+  \item \texttt{NullPointerException} (calling method on \texttt{null}),
+  \item \texttt{ArrayIndexOutOfBoundsException} (invalid index).
+\end{itemize}
+
+\subsection{Features of Java (what they mean in practice)}
+\begin{itemize}
+  \item \textbf{Platform independent}: bytecode runs on any platform with a JVM.
+  \item \textbf{Object-oriented (mostly)}: you model problems using classes/objects (but primitives exist for efficiency).
+  \item \textbf{Automatic memory management}: garbage collector reclaims unused objects (no manual \texttt{free}).
+  \item \textbf{Strong typing}: many errors are caught at compile time (good for large codebases).
+  \item \textbf{Rich standard library}: collections, I/O, networking, GUI, database connectivity, etc.
+  \item \textbf{Security model}: class loading + bytecode verification help reduce unsafe behavior.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Worked Example: Compile \& Run + Observe Errors}
+\subsection*{A minimal program}
+\begin{lstlisting}
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}
+\end{lstlisting}
+
+\subsection*{How to run (terminal)}
+\begin{itemize}
+  \item Compile: \texttt{javac Hello.java}
+  \item Run: \texttt{java Hello}
+\end{itemize}
+
+\subsection*{Runtime exception example}
+\begin{lstlisting}
+public class DivideDemo {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 0;
+        System.out.println(a / b); // ArithmeticException at runtime
+    }
+}
+\end{lstlisting}
+
+\subsection*{Compile-time error example (explain in class)}
+If you write \texttt{System.out.println("Hi")} without a semicolon, \texttt{javac} will stop and show an error.
+This is a compile-time error: the program never runs.
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item \textbf{JDK/JRE/JVM:} Which one contains \texttt{javac}? \textbf{Answer:} JDK.
+  \item \textbf{File naming:} What should the file name be if you write \texttt{public class Student}? \textbf{Answer:} \texttt{Student.java}.
+  \item \textbf{Error type:} Is ``cannot find symbol'' a compile-time or runtime error? \textbf{Answer:} compile-time.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Write \texttt{ArgsDemo} that prints all command line arguments with index numbers.
+  \item Create 2 small programs: one that fails at compile time, one that fails at runtime. Write a 2-line explanation for each.
+  \item Install the JDK and run \texttt{java -version} and \texttt{javac -version}. Note the output.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why does Java use bytecode instead of compiling directly to machine code?\par
+\textbf{Sample answer:} Bytecode makes the compiled program portable. The same \texttt{.class} can run on different operating systems because the JVM translates/executes bytecode for the current platform.
+
+\vspace{0.6em}
+\textbf{Q2.} What is the difference between a compile-time error and a runtime exception?\par
+\textbf{Sample answer:} Compile-time errors are detected by \texttt{javac} before execution; runtime exceptions occur while the program is running after compilation succeeds.
+
+\end{document}

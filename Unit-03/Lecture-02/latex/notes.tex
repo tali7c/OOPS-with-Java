@@ -1,0 +1,482 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 02 Notes\\Exception Handling (Core)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Syllabus Alignment (Unit 03)}
+\textbf{Unit 03:} exception handling and exception handlers
+
+\section{Prerequisites}
+You should already know:
+\begin{itemize}
+  \item methods, parameters, return values,
+  \item classes and objects,
+  \item basic input validation (e.g., checking empty strings).
+\end{itemize}
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Distinguish exceptions vs errors; checked vs unchecked.
+  \item Write \texttt{try/catch/finally} with multiple catch blocks.
+  \item Explain \texttt{throw} vs \texttt{throws} and apply them correctly.
+  \item Create a basic custom exception and use it for validation.
+\end{itemize}
+
+\section{Lecture Overview}
+Exceptions are Java's structured way to report \textbf{abnormal situations} without immediately crashing a program.
+Instead of returning special values like \texttt{-1} everywhere, Java can:
+\begin{itemize}
+  \item stop the normal flow,
+  \item ``bubble up'' the problem to a place that can handle it,
+  \item and still clean up resources reliably.
+\end{itemize}
+In this lecture you will learn what exceptions are, how to handle them, and how to create simple custom exceptions for clearer programs.
+\notesources{\OOPSUnitIIISources}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Exception}: abnormal condition a program can potentially handle.
+  \item \textbf{Error}: serious problem typically not recoverable (e.g., \texttt{OutOfMemoryError}).
+  \item \textbf{Checked exception}: must be caught or declared (e.g., \texttt{IOException}).
+  \item \textbf{Unchecked exception}: subclass of \texttt{RuntimeException} (e.g., \texttt{NullPointerException}).
+  \item \textbf{Stack trace}: call history showing where an exception occurred.
+  \item \textbf{Handler}: catch block that responds to an exception.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Exceptions vs Errors}
+\begin{itemize}
+  \item \textbf{Exceptions} are conditions that can be handled: invalid input, missing file, etc.
+  \item \textbf{Errors} are typically JVM-level problems: memory exhaustion, serious linkage errors, etc.
+\end{itemize}
+
+\paragraph{Rule of thumb.} Catch exceptions you can handle meaningfully. Do not catch \texttt{Error} in normal application code.
+
+\subsection{What happens when an exception occurs? (stack unwinding)}
+When an exception is thrown:
+\begin{enumerate}
+  \item Java creates an exception object (with message + stack trace).
+  \item The current method stops executing immediately.
+  \item Java looks for a matching \texttt{catch} in the current method.
+  \item If not found, the exception goes to the caller (method that called it).
+  \item This continues until a catch is found or the program terminates.
+\end{enumerate}
+This process is called \textbf{stack unwinding}.
+
+\subsection{How to read a stack trace (very important skill)}
+When you see a stack trace, do this:
+\begin{enumerate}
+  \item Find the first line: exception type + message.
+  \item Look for the first stack frame that points to \textbf{your code} (your file/class).
+  \item That line number is usually where the exception was thrown.
+  \item If you see \texttt{Caused by:}, read the \textbf{root cause} first.
+\end{enumerate}
+Do not panic: stack traces are your friend.
+
+\subsection{Checked vs unchecked exceptions (when to use which?)}
+\begin{tabular}{@{}p{0.29\linewidth}p{0.67\linewidth}@{}}
+\toprule
+\textbf{Category} & \textbf{Typical meaning} \\
+\midrule
+Checked (\texttt{Exception}) & Caller is expected to handle it; condition is reasonably recoverable (e.g., \texttt{IOException}). \\
+Unchecked (\texttt{RuntimeException}) & Programming mistake or invalid argument; often not recoverable at runtime (e.g., \texttt{NullPointerException}). \\
+\bottomrule
+\end{tabular}
+
+\paragraph{Practical guideline.}
+\begin{itemize}
+  \item Use \textbf{checked} when the caller can take a meaningful alternate action (try another file, ask user again, retry).
+  \item Use \textbf{unchecked} for invalid arguments and broken assumptions (caller passed wrong values).
+\end{itemize}
+
+\subsection{\texttt{try/catch/finally} and multiple catch}
+Basic structure:
+\begin{itemize}
+  \item \texttt{try} contains code that may throw an exception.
+  \item \texttt{catch} handles specific exception types.
+  \item \texttt{finally} executes whether an exception occurs or not (useful for cleanup).
+\end{itemize}
+
+\textbf{Best practice:}
+\begin{itemize}
+  \item catch the most specific exception you can handle,
+  \item avoid \texttt{catch (Exception e)} unless you rethrow/log properly,
+  \item never silently swallow exceptions.
+\end{itemize}
+
+\paragraph{Catch order matters.}
+Always catch the more specific exceptions first. If you catch \texttt{Exception} first, other catches become unreachable.
+
+\paragraph{Multi-catch (one handler for multiple types).}
+\begin{lstlisting}
+try {
+    // ...
+} catch (NumberFormatException | IllegalArgumentException ex) {
+    System.out.println("Bad input: " + ex.getMessage());
+}
+\end{lstlisting}
+Use multi-catch when the handling is identical.
+
+\subsection{Full example: \texttt{try/catch/finally} with multiple catches}
+\textbf{Problem statement:} read two integers from the user and print \texttt{a/b}.
+We want the program to:
+\begin{itemize}
+  \item handle invalid integer input (e.g., user types \texttt{abc}),
+  \item handle divide-by-zero cleanly,
+  \item always perform cleanup (close \texttt{Scanner}) and print a final message.
+\end{itemize}
+
+\subsubsection*{Full code (copy, compile, run)}
+\begin{lstlisting}
+import java.util.Scanner;
+
+public class DivideDemo {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter a: ");
+            int a = Integer.parseInt(sc.nextLine());
+
+            System.out.print("Enter b: ");
+            int b = Integer.parseInt(sc.nextLine());
+
+            int q = a / b; // may throw ArithmeticException
+            System.out.println("a/b = " + q);
+
+        } catch (NumberFormatException ex) {
+            System.out.println("Please enter valid integers.");
+
+        } catch (ArithmeticException ex) {
+            System.out.println("Cannot divide by zero.");
+
+        } finally {
+            sc.close();
+            System.out.println("Cleanup done (finally).");
+        }
+    }
+}
+\end{lstlisting}
+
+\subsubsection*{Detailed explanation (what each block does)}
+\textbf{1) \texttt{try} block:}
+\begin{itemize}
+  \item Reads input using \texttt{sc.nextLine()}.
+  \item Converts to integer using \texttt{Integer.parseInt(...)}.
+  \item Computes the quotient using \texttt{a / b}.
+\end{itemize}
+
+\textbf{What can go wrong inside \texttt{try}?}
+\begin{itemize}
+  \item If the user types \texttt{abc}, then \texttt{Integer.parseInt("abc")} throws \texttt{NumberFormatException}.
+  \item If the user enters \texttt{b = 0}, then \texttt{a / 0} throws \texttt{ArithmeticException}.
+\end{itemize}
+
+\textbf{2) \texttt{catch} blocks:}
+\begin{itemize}
+  \item A catch block runs only if an exception of that type (or subtype) occurred in the try block.
+  \item Java chooses the \textbf{first matching catch} from top to bottom.
+\end{itemize}
+
+\textbf{3) \texttt{finally} block:}
+\begin{itemize}
+  \item Runs \textbf{after} the try/catch finishes --- whether an exception happened or not.
+  \item Used for \textbf{cleanup}: closing files, DB connections, scanners, releasing locks.
+  \item It also runs even if you \texttt{return} inside \texttt{try} or \texttt{catch}.
+\end{itemize}
+\textbf{Rare exceptions:} \texttt{finally} may not run if the JVM exits abruptly (e.g., \texttt{System.exit(0)}) or the process is killed.
+
+\subsubsection*{Sequence of execution (step-by-step)}
+Students often memorize the syntax but get confused about \textbf{when} each block runs.
+Use this mental model:
+\begin{enumerate}
+  \item Control enters the \texttt{try} block and executes statements \textbf{top to bottom}.
+  \item If no exception occurs in the \texttt{try} block:
+    \begin{itemize}
+      \item the \texttt{catch} blocks are skipped,
+      \item the \texttt{finally} block executes,
+      \item execution continues after the whole try/catch/finally structure.
+    \end{itemize}
+  \item If an exception occurs at some line inside \texttt{try}:
+    \begin{itemize}
+      \item the remaining statements in \texttt{try} are skipped immediately,
+      \item Java searches catch blocks from \textbf{top to bottom} and selects the \textbf{first matching} one,
+      \item the selected \texttt{catch} runs (others are skipped),
+      \item then \texttt{finally} runs,
+      \item then execution continues after the structure.
+    \end{itemize}
+  \item If no \texttt{catch} matches the exception type:
+    \begin{itemize}
+      \item \texttt{finally} still runs,
+      \item then the exception is \textbf{propagated} to the caller (the method exits abnormally).
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Catch matching rule (very important).}
+A catch matches if it has the same exception type or a \textbf{superclass} of the thrown exception.
+That is why catch order matters: specific first, generic last.
+
+\paragraph{Return + finally.}
+If you \texttt{return} from \texttt{try} or \texttt{catch}, Java still executes \texttt{finally} before returning.
+
+\subsubsection*{Sample runs (what you should observe)}
+\textbf{Case A: valid input}
+\begin{lstlisting}[language=]
+Enter a: 10
+Enter b: 2
+a/b = 5
+Cleanup done (finally).
+\end{lstlisting}
+
+\textbf{Case B: invalid number}
+\begin{lstlisting}[language=]
+Enter a: abc
+Please enter valid integers.
+Cleanup done (finally).
+\end{lstlisting}
+
+\textbf{Case C: divide by zero}
+\begin{lstlisting}[language=]
+Enter a: 10
+Enter b: 0
+Cannot divide by zero.
+Cleanup done (finally).
+\end{lstlisting}
+
+\paragraph{Note about closing \texttt{Scanner}.}
+Closing a \texttt{Scanner} created from \texttt{System.in} also closes the underlying input stream.
+In a longer program that continues reading input later, you typically create one scanner and reuse it rather than repeatedly closing/reopening it.
+
+\subsection{\texttt{throw} vs \texttt{throws}}
+\begin{itemize}
+  \item \texttt{throw} actually throws an exception now.
+  \item \texttt{throws} declares that a method may throw an exception (caller must handle/declare).
+\end{itemize}
+
+\subsubsection*{Example A: \texttt{throw} (explicitly throwing now)}
+\textbf{Goal:} stop the method immediately when an argument is invalid.
+\begin{lstlisting}
+static int divide(int a, int b) {
+    if (b == 0) {
+        throw new IllegalArgumentException("b must not be 0");
+    }
+    return a / b;
+}
+\end{lstlisting}
+\textbf{What happens at runtime?}
+\begin{itemize}
+  \item If \texttt{b == 0}, Java creates an \texttt{IllegalArgumentException} object and throws it.
+  \item The method exits immediately; the \texttt{return} line is skipped.
+  \item Control jumps to the nearest matching \texttt{catch} (if any), otherwise the program terminates with a stack trace.
+\end{itemize}
+\textbf{When to use this pattern:} for invalid arguments and broken assumptions (\texttt{IllegalArgumentException} is common).
+
+\subsubsection*{Example B: \texttt{throws} (declaring a checked exception)}
+\textbf{Goal:} let the caller decide what to do if the operation fails.
+\begin{lstlisting}
+static void pauseOneSecond() throws InterruptedException {
+    Thread.sleep(1000); // may throw InterruptedException (checked)
+}
+\end{lstlisting}
+\textbf{Why \texttt{throws}?} \texttt{InterruptedException} is a \textbf{checked} exception, so the compiler forces you to either:
+\begin{itemize}
+  \item \textbf{catch} it, or
+  \item \textbf{declare} it using \texttt{throws} in your own method signature.
+\end{itemize}
+
+\paragraph{Option 1: handle it (catch).}
+\begin{lstlisting}
+public static void main(String[] args) {
+    try {
+        pauseOneSecond();
+        System.out.println("Done");
+    } catch (InterruptedException ex) {
+        System.out.println("Interrupted");
+    }
+}
+\end{lstlisting}
+\textbf{Meaning:} you handle the problem here (show message, cleanup, retry, etc.).
+
+\paragraph{Option 2: propagate it (declare throws).}
+\begin{lstlisting}
+public static void main(String[] args) throws InterruptedException {
+    pauseOneSecond();
+    System.out.println("Done");
+}
+\end{lstlisting}
+\textbf{Meaning:} you are not handling it here; you are pushing responsibility to your caller (for \texttt{main}, this means the JVM may print a stack trace if it happens).
+
+\paragraph{Where should you use \texttt{throws}?}
+Use \texttt{throws} when the method cannot handle the problem meaningfully and it is better to let a higher-level caller decide what to do.
+
+\subsection{Custom exception design (basic, but practical)}
+Create a custom exception when you want a clear domain-specific error message and type.
+Good custom exceptions:
+\begin{itemize}
+  \item are named after the problem (\texttt{InvalidBookingException}),
+  \item include a helpful message for debugging/user feedback,
+  \item (optionally) wrap the original cause exception.
+\end{itemize}
+
+\paragraph{Checked or unchecked for custom exceptions?}
+\begin{itemize}
+  \item Use \textbf{unchecked} (\texttt{extends RuntimeException}) for validation and invalid arguments.
+  \item Use \textbf{checked} (\texttt{extends Exception}) when callers should be forced to handle/recover.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Worked Example (tutorial): build a safe validation flow}
+We will design a small method that validates input and reports problems clearly.
+
+\subsection*{Step 1: Create a small validation exception (unchecked)}
+\begin{lstlisting}
+class ValidationException extends RuntimeException {
+    public ValidationException(String message) {
+        super(message);
+    }
+
+    public ValidationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+\end{lstlisting}
+Why unchecked? If a user enters invalid input, we usually show a message and ask again. We don't want to clutter every method with mandatory \texttt{throws}.
+
+\subsection*{Step 2: Write a parsing method that throws a clear exception}
+\begin{lstlisting}
+class Parsers {
+    static int parsePositiveInt(String s) {
+        if (s == null) throw new ValidationException("Input is required.");
+        s = s.trim();
+        if (s.isEmpty()) throw new ValidationException("Input cannot be empty.");
+
+        try {
+            int x = Integer.parseInt(s);
+            if (x <= 0) throw new ValidationException("Number must be > 0.");
+            return x;
+        } catch (NumberFormatException ex) {
+            throw new ValidationException("Not a valid integer: " + s, ex);
+        }
+    }
+}
+\end{lstlisting}
+Notice:
+\begin{itemize}
+  \item We validate \textbf{null} and \textbf{empty} before parsing.
+  \item We catch \texttt{NumberFormatException} and throw a better message.
+  \item We keep the original cause (\texttt{ex}) for debugging.
+\end{itemize}
+
+\subsection*{Step 3: Use it in \texttt{main} and handle only at the boundary}
+\begin{lstlisting}
+import java.util.Scanner;
+
+public class Demo {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter number of tickets: ");
+            int tickets = Parsers.parsePositiveInt(sc.nextLine());
+            System.out.println("You booked " + tickets + " tickets.");
+        } catch (ValidationException ex) {
+            System.out.println("Input error: " + ex.getMessage());
+        } finally {
+            sc.close();
+        }
+    }
+}
+\end{lstlisting}
+This is a clean pattern: validate/throw in low-level methods, and handle at the boundary (UI/CLI layer) where you can show messages.
+
+\section{Worked Example: custom checked exception (recoverable case)}
+\begin{lstlisting}
+class InsufficientFundsException extends Exception {
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
+}
+
+class BankAccount {
+    private double balance;
+
+    public BankAccount(double openingBalance) {
+        if (openingBalance < 0) throw new IllegalArgumentException("openingBalance");
+        balance = openingBalance;
+    }
+
+    public void withdraw(double amount) throws InsufficientFundsException {
+        if (amount <= 0) throw new IllegalArgumentException("amount");
+        if (amount > balance) throw new InsufficientFundsException("Need " + amount + ", have " + balance);
+        balance -= amount;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        BankAccount a = new BankAccount(100.0);
+        try {
+            a.withdraw(150.0);
+        } catch (InsufficientFundsException e) {
+            System.out.println("Withdraw failed: " + e.getMessage());
+        }
+    }
+}
+\end{lstlisting}
+Here the caller can decide an alternate action: deposit more money, withdraw less, or show a message. That makes a checked exception reasonable.
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Name one checked and one unchecked exception.\par
+  \textbf{Answer:} checked: \texttt{IOException}; unchecked: \texttt{NullPointerException}.
+
+  \item What is the difference between \texttt{throw} and \texttt{throws}?\par
+  \textbf{Answer:} \texttt{throw} throws now; \texttt{throws} declares possibility in method signature.
+
+  \item When does \texttt{finally} execute?\par
+  \textbf{Answer:} almost always (whether exception happens or not), used for cleanup.
+\end{enumerate}
+
+\section{Common bad practices (avoid)}
+\begin{itemize}
+  \item \textbf{Empty catch block}: hides bugs and makes debugging impossible.
+  \item \textbf{Catching \texttt{Exception} everywhere}: can swallow unrelated problems.
+  \item \textbf{Using exceptions for normal flow}: exceptions are slower and reduce clarity.
+  \item \textbf{Throwing generic \texttt{Exception}}: prefer specific types with good messages.
+\end{itemize}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Write a method \texttt{parsePositiveInt(String s)} that throws \texttt{IllegalArgumentException} on invalid input.
+  \item Write a program that reads 2 integers and prints division result; handle divide-by-zero properly.
+  \item Design a custom exception \texttt{InvalidBookingException} for a booking system.
+\end{enumerate}
+
+\section{Summary (what to remember)}
+\begin{itemize}
+  \item Exceptions separate \textbf{normal flow} from \textbf{error handling}.
+  \item Checked exceptions force callers to handle recoverable problems.
+  \item Unchecked exceptions are used for invalid arguments and programming errors.
+  \item Handle exceptions at boundaries (UI/CLI); throw/propagate from deeper logic.
+  \item Learn to read stack traces: find your code line and the root cause.
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why should we catch specific exceptions instead of \texttt{Exception}?\par
+\textbf{Sample answer:} Catching specific exceptions helps you handle known cases correctly and avoids hiding unrelated bugs. Catching \texttt{Exception} broadly can swallow errors and make debugging hard.
+
+\vspace{0.6em}
+\textbf{Q2.} What does checked exception mean?\par
+\textbf{Sample answer:} A checked exception must be handled (caught) or declared with \texttt{throws}; otherwise the code will not compile.
+
+\end{document}

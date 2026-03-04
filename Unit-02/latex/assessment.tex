@@ -1,0 +1,175 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Object Oriented Programming (B.Tech CSE)}
+\rhead{Unit 02: Diagnostic Assessment}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+% Marks per question (total = 100)
+\newcommand{\EMarks}{\textbf{[2 marks]} }
+\newcommand{\MMarks}{\textbf{[3 marks]} }
+\newcommand{\HMarks}{\textbf{[5 marks]} }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Diagnostic Assessment -- Unit 02}}\\[0.25em]
+  {\large Object Oriented Programming (CSEG1044)}\\[0.25em]
+  \normalsize (Classes + OOP design in Java; designed to identify learning gaps)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Time Limit:} None\\
+\textbf{Submission Deadline:} March 31, 2026\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{This is a diagnostic assessment, not a quiz/test.} The goal is to identify learning gaps so you know what to revise next.
+  \item \textbf{Total marks: 100.} Easy: 10 $\times$ 2 = 20, Medium: 10 $\times$ 3 = 30, Hard: 10 $\times$ 5 = 50.
+  \item \textbf{No time limit.} Submit on or before \textbf{March 31, 2026}.
+  \item \textbf{Important (70\% rule): To have your assignment marks counted, you must score at least 70\% (70/100 or more) in this assessment.}
+    If you score below 70\%, you may reattempt and resubmit. Your latest submission will be considered.
+  \item Answer \textbf{all} questions. For code questions, snippets are acceptable unless a full program is requested.
+  \item For MCQs, follow the instruction in the question (some are \textbf{select all that apply}).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=\textbf{E\arabic*.}, leftmargin=*]
+  \item \EMarks \textbf{[MCQ]} Encapsulation usually means:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Make all fields public
+      \item Keep fields private and validate through methods
+      \item Use inheritance everywhere
+      \item Use \texttt{static} for all members
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are valid method overloads of \texttt{sum(int a, int b)}?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{sum(int a)}
+      \item \texttt{sum(int a, int b, int c)}
+      \item \texttt{sum(double a, double b)}
+      \item \texttt{double sum(int a, int b)}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} What is the difference between \texttt{this} and \texttt{this(...)}?
+
+  \item \EMarks \textbf{[Subjective]} What is a \texttt{static} field? Give one example use case.
+
+  \item \EMarks \textbf{[MCQ]} Which access modifier is visible only inside the same class?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{public}
+      \item \texttt{protected}
+      \item \texttt{private}
+      \item default (no keyword)
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} What must match: package name and what? (1--2 lines)
+
+  \item \EMarks \textbf{[Subjective]} Define inheritance in one sentence.
+
+  \item \EMarks \textbf{[Subjective]} What is overriding? Why do we write \texttt{@Override}?
+
+  \item \EMarks \textbf{[Subjective]} What is an interface in Java (3--4 lines)?
+
+  \item \EMarks \textbf{[Subjective]} Explain is-a vs has-a with one example each.
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=\textbf{M\arabic*.}, leftmargin=*]
+  \item \MMarks \textbf{[Code]} Write a \texttt{Student} constructor that enforces \texttt{0 <= cgpa <= 10}.
+
+  \item \MMarks \textbf{[Code]} Write a static counter pattern that generates unique IDs for \texttt{Employee}.
+
+  \item \MMarks \textbf{[Code]} Write a tiny interface \texttt{Payable} and one class \texttt{Invoice} that implements it.
+
+  \item \MMarks \textbf{[Concept]} Why is it risky to provide setters for every field? (6--8 lines)
+
+  \item \MMarks \textbf{[Code]} Given \texttt{Shape s = new Circle(...);}, write one line that shows dynamic dispatch.
+    Explain in 2--3 lines what runs at runtime.
+
+  \item \MMarks \textbf{[Code]} Write an abstract class \texttt{Shape} with abstract method \texttt{area()} and one concrete method \texttt{printInfo()}.
+
+  \item \MMarks \textbf{[Concept]} Give 3 situations where you would prefer an interface over an abstract class.
+
+  \item \MMarks \textbf{[Code]} Show one example of using \texttt{super(...)} in a subclass constructor.
+
+  \item \MMarks \textbf{[Code]} Write a package declaration for \texttt{com.upes.crm.model} and one import statement for using \texttt{List}.
+
+  \item \MMarks \textbf{[Concept]} Explain what \texttt{final} means for: variable, method, class.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=\textbf{H\arabic*.}, leftmargin=*]
+  \item \HMarks \textbf{[Program]} Implement \texttt{BankAccount} with invariant \texttt{balance >= 0} and methods
+    \texttt{deposit}, \texttt{withdraw}, \texttt{transferTo}. Show a sample run.
+
+  \item \HMarks \textbf{[Program]} Implement inheritance: \texttt{Shape} (base), \texttt{Circle} and \texttt{Rectangle} (subclasses).
+    Create an array \texttt{Shape[]} and print areas using a loop.
+
+  \item \HMarks \textbf{[Program]} Create interface \texttt{Payable} and two implementations. Use a \texttt{Payable[]} array and sum \texttt{amountDue()}.
+
+  \item \HMarks \textbf{[Program]} Create two packages and demonstrate access:
+    show a \texttt{protected} member accessible in subclass in other package, but default access is not.
+
+  \item \HMarks \textbf{[Explain]} Explain in 10--14 lines: why ``inheritance only for code reuse'' is a bad design.
+    Give one example where composition is better.
+
+  \item \HMarks \textbf{[Design]} Design a package structure for ``Campus Resource Manager'' using model/dao/service/ui/util layers.
+    Write at least 5 packages and one class name per package.
+
+  \item \HMarks \textbf{[Code]} Implement \texttt{Comparable<Student>} and sort a \texttt{Student[]} array using \texttt{Arrays.sort}.
+
+  \item \HMarks \textbf{[Code]} Show overloading and overriding together in one example and explain which is compile-time vs runtime.
+
+  \item \HMarks \textbf{[Explain]} Write 8--12 lines explaining what garbage collection does and what it does \textbf{not} do
+    (especially about closing files/DB connections).
+
+  \item \HMarks \textbf{[Design + Code]} Create a small library system:
+    \texttt{Book}, \texttt{Library}, and overloaded search methods. Use arrays (collections not required).
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assessment}
+
+\end{document}
+

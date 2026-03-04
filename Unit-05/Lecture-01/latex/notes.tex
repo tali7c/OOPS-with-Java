@@ -1,0 +1,155 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 05 -- Lecture 01 Notes\\Collections Framework Overview + Iteration + List}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+The Collections Framework gives you standard, reusable data structures in Java.
+Instead of creating arrays manually and writing custom logic, you use:
+\begin{itemize}
+  \item \texttt{List} for ordered sequences,
+  \item \texttt{Set} for unique values,
+  \item \texttt{Map} for key-value lookups.
+\end{itemize}
+This lecture focuses on \textbf{lists}, \textbf{iteration}, and \textbf{sorting}.
+\notesources{\OOPSUnitVSources}
+
+\section{Syllabus Alignment (Unit 05)}
+\textbf{Unit 05:} Collections, iteration, Collection interface; List; sorting
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Explain \texttt{Iterable}, \texttt{Collection}, and \texttt{Iterator}.
+  \item Choose \texttt{ArrayList} vs \texttt{LinkedList} for common use cases.
+  \item Sort a list using \texttt{Comparable} and \texttt{Comparator} (including lambdas).
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Collection}: group of elements (root interface for many collections).
+  \item \textbf{Iterable}: can be used in for-each loop (provides \texttt{iterator()}).
+  \item \textbf{Iterator}: cursor used to traverse a collection safely.
+  \item \textbf{List}: ordered collection with duplicates allowed and index-based access.
+  \item \textbf{Comparable}: natural ordering (\texttt{compareTo}).
+  \item \textbf{Comparator}: custom ordering (\texttt{compare}).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Core interfaces: \texttt{Iterable}, \texttt{Collection}, \texttt{Iterator}}
+\textbf{Iterable:}
+\begin{itemize}
+  \item Any \texttt{Iterable} can be used with the enhanced for loop.
+\end{itemize}
+\textbf{Iterator:}
+\begin{itemize}
+  \item Provides \texttt{hasNext()}, \texttt{next()}, and optional \texttt{remove()}.
+  \item Use iterator when you need to remove elements while looping.
+\end{itemize}
+
+\paragraph{Common pitfall.} Removing from a list inside a for-each loop can throw \texttt{ConcurrentModificationException}. Use an \texttt{Iterator} instead.
+
+\subsection{List: ArrayList vs LinkedList}
+\textbf{ArrayList:}
+\begin{itemize}
+  \item Backed by a dynamic array.
+  \item Fast random access: \texttt{get(i)} is efficient.
+  \item Good for most use cases: iterate a lot, access by index.
+\end{itemize}
+
+\textbf{LinkedList:}
+\begin{itemize}
+  \item Nodes with links (doubly linked list).
+  \item Slower random access (must traverse nodes).
+  \item Useful when you frequently add/remove at ends and use it as a queue/deque.
+\end{itemize}
+
+\paragraph{Rule of thumb.} Use \texttt{ArrayList} by default unless you have a clear reason to use \texttt{LinkedList}.
+
+\subsection{Sorting: Comparable vs Comparator}
+\textbf{Comparable:}
+\begin{itemize}
+  \item implemented by the class itself (natural ordering).
+  \item example: sort students by roll number.
+\end{itemize}
+
+\textbf{Comparator:}
+\begin{itemize}
+  \item separate ordering logic, reusable and flexible.
+  \item example: sort students by CGPA descending.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Worked Example: list + iterator + sorting}
+\begin{lstlisting}
+import java.util.*;
+
+class Student {
+    private final String rollNo;
+    private final double cgpa;
+
+    Student(String rollNo, double cgpa) {
+        this.rollNo = rollNo;
+        this.cgpa = cgpa;
+    }
+
+    public String getRollNo() { return rollNo; }
+    public double getCgpa() { return cgpa; }
+    public String toString() { return rollNo + ":" + cgpa; }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        List<Student> list = new ArrayList<>();
+        list.add(new Student("21CS1002", 9.1));
+        list.add(new Student("21CS1001", 8.2));
+        list.add(new Student("21CS1003", 3.9));
+
+        // Remove weak students safely using Iterator
+        Iterator<Student> it = list.iterator();
+        while (it.hasNext()) {
+            if (it.next().getCgpa() < 4.0) it.remove();
+        }
+
+        // Sort by CGPA descending using Comparator + lambda
+        list.sort((a, b) -> Double.compare(b.getCgpa(), a.getCgpa()));
+        System.out.println(list);
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Why do we use \texttt{Iterator.remove()} instead of \texttt{list.remove(...)} inside a for-each loop?\par
+  \textbf{Answer:} to avoid concurrent modification issues; iterator removal is safe during traversal.
+
+  \item Which list is better for random access by index?\par
+  \textbf{Answer:} \texttt{ArrayList}.
+
+  \item What is the difference between \texttt{Comparable} and \texttt{Comparator}?\par
+  \textbf{Answer:} \texttt{Comparable} defines natural order inside class; \texttt{Comparator} defines external/custom order.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Create a list of integers and remove all odd numbers using an iterator.
+  \item Sort a list of strings by length using a comparator lambda.
+  \item Implement \texttt{Comparable} in a class \texttt{Book} to sort by title.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why does Java provide a Collections Framework?\par
+\textbf{Sample answer:} It provides standard, reusable data structures and algorithms, reducing bugs and improving productivity compared to writing custom structures every time.
+
+\vspace{0.6em}
+\textbf{Q2.} When should you prefer \texttt{Comparator} over \texttt{Comparable}?\par
+\textbf{Sample answer:} Prefer \texttt{Comparator} when you need multiple sorting orders or when you cannot/should not modify the class to define natural ordering.
+
+\end{document}

@@ -1,0 +1,154 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 01 Notes\\Classes, Objects, and Encapsulation (Basics)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+In Unit 01 we wrote programs using variables, control flow, arrays, and strings.
+Now we start writing \textbf{real OOP code}: we will create classes and objects and learn how encapsulation makes programs safer.
+\notesources{\OOPSUnitIISources}
+
+\section{Syllabus Alignment (Unit 02)}
+\textbf{Unit 02:} Classes, Inheritance, Packages and Interfaces\par
+\textbf{Today:} classes/objects + encapsulation basics
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Identify fields vs methods and explain ``state vs behavior'' for a class.
+  \item Explain object references in Java (aliasing) using a small example.
+  \item Apply encapsulation using \texttt{private} fields and validation methods.
+  \item State at least one invariant for a class and protect it in code.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Field}: data stored inside an object (state).
+  \item \textbf{Method}: behavior (operations) of an object.
+  \item \textbf{Reference}: a variable that points to an object (not the object itself).
+  \item \textbf{Aliasing}: two references pointing to the same object.
+  \item \textbf{Encapsulation}: keeping fields private and changing state through methods.
+  \item \textbf{Access modifier}: \texttt{private}, default, \texttt{protected}, \texttt{public} (controls visibility).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Class fundamentals: fields, methods, state vs behavior}
+A \textbf{class} is a blueprint. It defines:
+\begin{itemize}
+  \item \textbf{Fields} (what data is stored),
+  \item \textbf{Methods} (what operations are allowed),
+  \item and usually a \textbf{constructor} (how objects are created).
+\end{itemize}
+
+\textbf{State vs behavior:}
+\begin{itemize}
+  \item State = current values in fields (e.g., \texttt{cgpa=8.2}).
+  \item Behavior = operations that read/change state (e.g., \texttt{updateCgpa(...)}).
+\end{itemize}
+
+\paragraph{Rule of thumb.} A class should have a clear responsibility. If it tries to do everything, it becomes hard to maintain.
+
+\subsection{Objects and reference semantics (mental model)}
+In Java, objects are created on the heap (conceptually), and variables hold \textbf{references} to objects.
+So assignment copies the reference (not the whole object).
+
+\textbf{Aliasing example:}
+\begin{itemize}
+  \item \texttt{Student a = new Student(...);}
+  \item \texttt{Student b = a;} $\rightarrow$ now both \texttt{a} and \texttt{b} refer to the same object.
+  \item Changes through \texttt{b} are visible through \texttt{a}.
+\end{itemize}
+
+\paragraph{Why it matters.} Many bugs come from unexpected aliasing. Later, you will use immutability and defensive copying in some designs.
+
+\subsection{Encapsulation: protect invariants}
+Encapsulation is not only ``hiding data''; it is mainly about \textbf{protecting invariants}.
+If fields are public, any code can set invalid values.
+
+\textbf{Example invariant:} CGPA must be in range \texttt{0.0} to \texttt{10.0}.
+
+\textbf{Approach:}
+\begin{itemize}
+  \item Make fields \texttt{private}.
+  \item Provide methods that validate inputs before updating the state.
+  \item Expose only what users need (avoid unnecessary setters).
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Worked Example: \texttt{Student} (encapsulation + references)}
+\subsection*{Code}
+\begin{lstlisting}
+public class Student {
+    private final String rollNo;
+    private final String name;
+    private double cgpa; // invariant: 0.0 <= cgpa <= 10.0
+
+    public Student(String rollNo, String name, double cgpa) {
+        if (rollNo == null || rollNo.isBlank()) throw new IllegalArgumentException("rollNo");
+        if (name == null || name.isBlank()) throw new IllegalArgumentException("name");
+        if (cgpa < 0.0 || cgpa > 10.0) throw new IllegalArgumentException("cgpa");
+        this.rollNo = rollNo;
+        this.name = name;
+        this.cgpa = cgpa;
+    }
+
+    public double getCgpa() { return cgpa; }
+
+    public void updateCgpa(double newCgpa) {
+        if (newCgpa < 0.0 || newCgpa > 10.0) throw new IllegalArgumentException("cgpa");
+        this.cgpa = newCgpa;
+    }
+
+    public String summary() {
+        return rollNo + \" - \" + name + \" (CGPA=\" + cgpa + \")\";
+    }
+}
+\end{lstlisting}
+
+\subsection*{Aliasing demo (main)}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) {
+        Student a = new Student("21CS1001", "Asha", 8.2);
+        Student b = a;                 // aliasing
+        b.updateCgpa(9.0);             // changes same object
+        System.out.println(a.getCgpa()); // prints 9.0
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Two references \texttt{a} and \texttt{b} point to the same object. If \texttt{b} modifies it, does \texttt{a} see the change?\par
+  \textbf{Answer:} yes (aliasing).
+
+  \item Why is it risky to keep fields \texttt{public}?\par
+  \textbf{Answer:} any code can put the object into an invalid state, breaking invariants.
+
+  \item Write one invariant for a \texttt{BankAccount} class.\par
+  \textbf{Sample:} \texttt{balance >= 0}.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Design a \texttt{LibraryBook} class with an invariant (e.g., cannot issue if already issued).
+  \item Write a small program that shows aliasing using a class of your choice.
+  \item Refactor a ``public fields'' class into an encapsulated design with validation methods.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} What is encapsulation and why do we use it?\par
+\textbf{Sample answer:} Encapsulation means keeping internal data private and changing it only through methods. It helps protect invariants and prevents accidental misuse, making code easier to maintain.
+
+\vspace{0.6em}
+\textbf{Q2.} What is aliasing?\par
+\textbf{Sample answer:} Aliasing happens when two references point to the same object. Updates through one reference are visible through the other.
+
+\end{document}

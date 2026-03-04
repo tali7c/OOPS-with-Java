@@ -1,0 +1,46 @@
+# LaTeX build artifacts (if used)
+**/*.aux
+**/*.log
+**/*.out
+**/*.toc
+**/*.nav
+**/*.snm
+**/*.vrb
+**/*.synctex.gz
+**/*.fls
+**/*.fdb_latexmk
+
+# Java build artifacts
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+**/bin/
+**/out/
+**/build/
+**/target/
+
+# IDE / OS
+**/.idea/
+**/.vscode/
+**/*.iml
+.DS_Store
+Thumbs.db
+
+# Local scratch/extractions (do not commit)
+_tmp/
+_tools/
+
+# Copyrighted reference PDFs (keep local; do not commit)
+Text-Books/
+
+# Do not commit reference PDFs (if present anywhere)
+**/reference.pdf
+
+# Lab handouts not included in the public GitHub repo
+Lab/Experiment-09-10/
+Lab/Experiment-11-12/
+Lab/Experiment-13-14/
+Lab/Experiment-15-16/
+Lab/Experiment-17-18/
+Lab/Experiment-19-20/

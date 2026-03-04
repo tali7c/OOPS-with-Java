@@ -1,0 +1,171 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 04 -- Lecture 02: Generic Methods + Bounds + Wildcards}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Write a generic method and explain why it reduces duplication.
+    \item Use bounds (\texttt{extends}) to restrict allowed types.
+    \item Use wildcards (\texttt{? extends}, \texttt{? super}) with collections.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 04: Generics, Lambdas, GUI Swing \& Database Connectivity}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Generic Methods + Bounds + Wildcards
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Generic methods
+    \item Bounded type parameters and wildcards (intro level)
+    \item Using generics with collections (patterns that show up in real code)
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Generic method (idea)}
+  \begin{itemize}[<+->]
+    \item Make only the method generic (not necessarily the class).
+    \item Syntax: \texttt{public static <T> void printArray(T[] a)}
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Bounds (restrict types)}
+  \begin{itemize}[<+->]
+    \item \texttt{<T extends Number>} limits \texttt{T} to numeric types.
+    \item Common comparison pattern: \texttt{<T extends Comparable<T>>}
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Why wildcards? (invariance)}
+  \begin{itemize}[<+->]
+    \item \texttt{List<Integer>} is \textbf{not} a \texttt{List<Number>}.
+    \item We need flexible method parameters for collections.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Wildcards: \texttt{extends} vs \texttt{super}}
+  \begin{itemize}[<+->]
+    \item \texttt{? extends T}: use when list produces/read values of \texttt{T}.
+    \item \texttt{? super T}: use when list consumes/you add values of \texttt{T}.
+    \item PECS: Producer Extends, Consumer Super.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: generic method}
+\begin{lstlisting}
+public static <T> void printArray(T[] a) {
+    for (T x : a) System.out.print(x + " ");
+    System.out.println();
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: bounded \texttt{max}}
+\begin{lstlisting}
+public static <T extends Comparable<T>> T max(T a, T b) {
+    return (a.compareTo(b) >= 0) ? a : b;
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: wildcard \texttt{sum}}
+\begin{lstlisting}
+import java.util.List;
+public static double sum(List<? extends Number> list) {
+    double s = 0;
+    for (Number n : list) s += n.doubleValue();
+    return s;
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Why is \texttt{List<Integer>} not a \texttt{List<Number>}?
+    \item Which wildcard for reading: \texttt{extends} or \texttt{super}?
+    \item State the PECS rule.
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Generic methods reduce duplication.
+    \item Bounds restrict allowed types (safer APIs).
+    \item Wildcards make collection parameters flexible (PECS).
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Write one example of a generic method signature.
+    \item What does \texttt{<T extends Number>} restrict?
+    \item When do you use \texttt{? super T}?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Lambdas + Functional Interfaces
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will write short callback functions and use them with collections and UI events.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\end{document}

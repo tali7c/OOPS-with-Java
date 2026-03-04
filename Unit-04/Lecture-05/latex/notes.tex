@@ -1,0 +1,229 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 05 Notes\\Swing Event Handling + JDBC (Persistence)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+In the last lecture we built a Swing UI skeleton.
+Now we make it interactive and persistent:
+\begin{itemize}
+  \item \textbf{Events}: a button click triggers code (save/clear/exit).
+  \item \textbf{Persistence}: data is stored in a database using JDBC so it is not lost after closing the app.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Syllabus Alignment (Unit 04)}
+\textbf{Unit 04:} Swing event handling; database connectivity using JDBC; basic CRUD
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Register Swing listeners (e.g., \texttt{ActionListener}) and handle common events safely.
+  \item Explain JDBC flow: connect $\rightarrow$ prepare statement $\rightarrow$ execute $\rightarrow$ read \texttt{ResultSet}.
+  \item Differentiate \texttt{Statement}, \texttt{PreparedStatement}, \texttt{CallableStatement}.
+  \item Implement basic CRUD operations and map rows to objects.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Event source}: UI component that triggers an event (button, menu item).
+  \item \textbf{Event object}: information about the event (e.g., \texttt{ActionEvent}).
+  \item \textbf{Listener}: object/function that handles events (e.g., \texttt{ActionListener}).
+  \item \textbf{EDT}: Event Dispatch Thread (Swing UI thread).
+  \item \textbf{JDBC}: Java Database Connectivity API.
+  \item \textbf{Connection}: active DB connection.
+  \item \textbf{PreparedStatement}: parameterized SQL statement (safer and common).
+  \item \textbf{ResultSet}: table-like cursor over query results.
+  \item \textbf{CRUD}: Create, Read, Update, Delete.
+  \item \textbf{DAO}: Data Access Object (separate DB code from UI).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Swing event model (listeners)}
+Swing uses a listener-based model:
+\begin{itemize}
+  \item You create a component (e.g., \texttt{JButton saveBtn}).
+  \item You register a listener: \texttt{saveBtn.addActionListener(...)}.
+  \item When user clicks, Swing calls your listener method on the EDT.
+\end{itemize}
+
+\textbf{Common controls and events:}
+\begin{itemize}
+  \item \texttt{JButton} $\rightarrow$ \texttt{ActionListener}
+  \item \texttt{JTextField} $\rightarrow$ \texttt{ActionListener} (press Enter), \texttt{DocumentListener} (text changes)
+  \item \texttt{JTable} $\rightarrow$ selection listeners (advanced)
+\end{itemize}
+
+\paragraph{Important rule.} Do not run slow DB operations on the EDT; it can freeze the UI.
+In a basic course project, keep operations small or use a background thread/SwingWorker (advanced).
+
+\subsection{JDBC core flow (pattern you should memorize)}
+\begin{enumerate}
+  \item Load/ensure driver is available (often automatic in modern JDBC).
+  \item Get a connection: \texttt{DriverManager.getConnection(url, user, pass)}.
+  \item Create a statement (usually \texttt{PreparedStatement}).
+  \item Execute:
+  \begin{itemize}
+    \item \texttt{executeUpdate()} for INSERT/UPDATE/DELETE
+    \item \texttt{executeQuery()} for SELECT
+  \end{itemize}
+  \item Read results using \texttt{ResultSet} (cursor).
+  \item Close resources (use \texttt{try-with-resources}).
+\end{enumerate}
+
+\subsection{\texttt{Statement} vs \texttt{PreparedStatement} vs \texttt{CallableStatement}}
+\begin{itemize}
+  \item \texttt{Statement}: simplest; builds SQL as a string (risk of SQL injection; avoid for user input).
+  \item \texttt{PreparedStatement}: parameterized with \texttt{?}; safer and faster for repeated queries.
+  \item \texttt{CallableStatement}: calls stored procedures (depends on DB).
+\end{itemize}
+
+\subsection{\texttt{ResultSet} traversal}
+\begin{itemize}
+  \item \texttt{while (rs.next()) \{ ... \}} moves row by row.
+  \item Read columns by label or index: \texttt{rs.getInt("id")}, \texttt{rs.getString("name")}.
+  \item Map each row to an object (e.g., \texttt{Resource}).
+\end{itemize}
+
+\subsection{Persistent data design (UI vs DAO)}
+Avoid writing SQL inside button click code.
+Preferred structure:
+\begin{itemize}
+  \item UI layer: reads fields, validates, shows messages.
+  \item DAO layer: contains SQL and JDBC code.
+  \item Model layer: \texttt{Resource} class that represents one row/entity.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Worked Example: Save a resource from Swing to DB (skeleton)}
+\subsection*{1) Model class}
+\begin{lstlisting}
+public class Resource {
+    private final String name;
+    private final String type;
+    private final int capacity;
+
+    public Resource(String name, String type, int capacity) {
+        this.name = name;
+        this.type = type;
+        this.capacity = capacity;
+    }
+
+    public String getName() { return name; }
+    public String getType() { return type; }
+    public int getCapacity() { return capacity; }
+}
+\end{lstlisting}
+
+\subsection*{2) DAO (insert + select)}
+\begin{lstlisting}
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ResourceDao {
+    private final String url = "jdbc:mysql://localhost:3306/crm"; // example
+    private final String user = "root";
+    private final String pass = "password";
+
+    public void insert(Resource r) throws SQLException {
+        String sql = "INSERT INTO resources(name, type, capacity) VALUES(?,?,?)";
+        try (Connection con = DriverManager.getConnection(url, user, pass);
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, r.getName());
+            ps.setString(2, r.getType());
+            ps.setInt(3, r.getCapacity());
+            ps.executeUpdate();
+        }
+    }
+
+    public List<Resource> findAll() throws SQLException {
+        String sql = "SELECT name, type, capacity FROM resources";
+        List<Resource> out = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection(url, user, pass);
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                out.add(new Resource(
+                    rs.getString("name"),
+                    rs.getString("type"),
+                    rs.getInt("capacity")
+                ));
+            }
+        }
+        return out;
+    }
+}
+\end{lstlisting}
+
+\subsection*{3) Event handler (button click)}
+\begin{lstlisting}
+saveBtn.addActionListener(e -> {
+    String name = nameField.getText().trim();
+    String type = typeField.getText().trim();
+    String capText = capacityField.getText().trim();
+
+    if (name.isEmpty() || type.isEmpty() || capText.isEmpty()) {
+        JOptionPane.showMessageDialog(f, "All fields required");
+        return;
+    }
+
+    int cap;
+    try {
+        cap = Integer.parseInt(capText);
+        if (cap <= 0) throw new NumberFormatException();
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(f, "Capacity must be a positive integer");
+        return;
+    }
+
+    try {
+        dao.insert(new Resource(name, type, cap));
+        JOptionPane.showMessageDialog(f, "Saved!");
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(f, "DB error: " + ex.getMessage());
+    }
+});
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Which is safer for user input: \texttt{Statement} or \texttt{PreparedStatement}?\par
+  \textbf{Answer:} \texttt{PreparedStatement}.
+
+  \item Why should heavy DB operations not run on the EDT?\par
+  \textbf{Answer:} the UI can freeze because Swing processes events on the EDT.
+
+  \item What method is used for SELECT queries: \texttt{executeQuery()} or \texttt{executeUpdate()}?\par
+  \textbf{Answer:} \texttt{executeQuery()}.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Add an \texttt{updateCapacity(name, newCapacity)} method in \texttt{ResourceDao}.
+  \item Add a ``Load All'' button that displays all resources in a text area/table.
+  \item Replace DB credentials with a config file and load them at startup (optional).
+\end{enumerate}
+
+\section{Lab Alignment (recommended)}
+\begin{itemize}
+  \item Exp-16: GUI using Swing
+  \item Exp-17: Database connectivity using JDBC
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why is \texttt{PreparedStatement} preferred?\par
+\textbf{Sample answer:} It allows parameterized queries, prevents SQL injection for user input, and can be more efficient for repeated execution.
+
+\vspace{0.6em}
+\textbf{Q2.} What is the role of a DAO?\par
+\textbf{Sample answer:} A DAO separates database code from UI/business logic, making the application easier to maintain, test, and change.
+
+\end{document}

@@ -1,0 +1,195 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 01 -- Lecture 03: I/O + Command Line + Types + Operators}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Read input using \texttt{Scanner} and print formatted output.
+    \item Use command line arguments (\texttt{args}) for simple programs.
+    \item Apply primitive types, operators, precedence, and casting correctly.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 01: Introduction to OOPs}
+  \begin{itemize}[<+->]
+    \item Lecture focus: I/O + Command Line + Types + Operators
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Console I/O (`Scanner`, `BufferedReader`) and output formatting
+    \item Command line arguments and use-cases
+    \item Data types, variables, operators, precedence, type casting
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Console input: \texttt{Scanner} (beginner-friendly)}
+  \begin{itemize}[<+->]
+    \item Reads \textbf{tokens} from \texttt{System.in}: \texttt{nextInt()}, \texttt{nextDouble()}, \texttt{next()}.
+    \item Reads \textbf{lines}: \texttt{nextLine()}.
+    \item Common pitfall: mixing \texttt{nextInt()} then \texttt{nextLine()} (newline remains in buffer).
+    \item Fix: consume leftover newline with one extra \texttt{nextLine()}.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Output formatting: \texttt{printf}}
+  \begin{itemize}[<+->]
+    \item \texttt{println} is fine for simple output.
+    \item \texttt{printf} is better for formatted numbers/text.
+  \end{itemize}
+  \begin{block}{Examples}
+    \begin{itemize}
+      \item \texttt{\%d} integer,\; \texttt{\%f} decimal,\; \texttt{\%.2f} 2 decimals,\; \texttt{\%s} string
+      \item \texttt{\%n} portable newline
+    \end{itemize}
+  \end{block}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Command line arguments (\texttt{args})}
+  \begin{itemize}[<+->]
+    \item Run: \texttt{java Sum 10 20 30}
+    \item Then: \texttt{args[0] = "10"}, \texttt{args[1] = "20"}, ...
+    \item Parse numbers: \texttt{Integer.parseInt(args[i])}
+    \item Pitfall: invalid input throws \texttt{NumberFormatException}
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Primitive types (quick)}
+  \begin{itemize}[<+->]
+    \item Integers: \texttt{byte, short, int, long}
+    \item Floating-point: \texttt{float, double}
+    \item Others: \texttt{char} (Unicode), \texttt{boolean}
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Operator pitfalls (must know)}
+  \begin{itemize}[<+->]
+    \item Integer division: \texttt{5/2 == 2} (use \texttt{5/2.0})
+    \item Precedence: multiplication before addition (use parentheses when unsure)
+    \item Casting: narrowing needs explicit cast (may lose data)
+    \item Short-circuit: \texttt{\&\&} and \texttt{||} help safe null checks
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: Args + Scanner + Formatting (1/2)}
+\begin{lstlisting}
+import java.util.Scanner;
+
+public class InputDemo {
+    public static void main(String[] args) {
+        int maxMarks = 100;
+        if (args.length > 0) maxMarks = Integer.parseInt(args[0]);
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter your name: ");
+        String name = sc.nextLine();
+\end{lstlisting}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Args + Scanner + Formatting (2/2)}
+\begin{lstlisting}
+// continued...
+        System.out.print("Enter marks (0-" + maxMarks + "): ");
+        int marks = sc.nextInt();
+
+        double percent = marks * 100.0 / maxMarks;
+        System.out.printf("Hello %s, marks=%d/%d, percent=%.2f%%%n",
+                name, marks, maxMarks, percent);
+        sc.close();
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Predict output: \texttt{System.out.println(5/2);}
+    \item How to get 2.5 from 5 and 2?
+    \item If you run \texttt{java Demo A B}, what is \texttt{args.length}?
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item \texttt{Scanner} is easy for input; know the \texttt{nextInt()} vs \texttt{nextLine()} pitfall.
+    \item \texttt{printf} makes output readable (format specifiers).
+    \item Command line args are strings; parse to numbers when needed.
+    \item Watch integer division, precedence, and casting.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Why can \texttt{nextLine()} return empty after \texttt{nextInt()}?
+    \item What is the type of \texttt{args[i]}?
+    \item How do you avoid integer division when you want decimals?
+  \end{enumerate}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Control Flow + Arrays + Strings
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item Bring one example where you used a loop in C.
+    \item We will solve simple array + string problems together.
+  \end{itemize}
+  \slidesources{\OOPSUnitISources}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,178 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 04 Notes\\Control Flow + Arrays + Strings}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture teaches you how to \textbf{control program flow} (decisions + loops) and work with two core data structures:
+\textbf{arrays} (for many values of the same type) and \textbf{strings} (text).
+
+These three topics appear in almost every lab/program you will write.
+\notesources{\OOPSUnitISources}
+
+\section{Syllabus Alignment (Unit 01)}
+\textbf{Unit 01:} Control statements, arrays, and strings
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Use selection statements (\texttt{if/else}, \texttt{switch}) and loops (\texttt{for/while/do-while}).
+  \item Create and traverse 1D/2D arrays and solve common array problems (sum, max, search).
+  \item Explain why \texttt{String} is immutable and when to use \texttt{StringBuilder}.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Selection}: choosing one path among many (\texttt{if}, \texttt{switch}).
+  \item \textbf{Iteration}: repeating work until a condition changes (\texttt{for}, \texttt{while}).
+  \item \textbf{Array}: fixed-size contiguous collection of same-type elements.
+  \item \textbf{Index}: position in array (0-based in Java).
+  \item \textbf{Immutable}: cannot be changed after creation (e.g., \texttt{String}).
+  \item \textbf{StringBuilder}: mutable sequence of characters (efficient for repeated concatenation).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Program control statements (selection + loops)}
+\subsubsection{\texttt{if/else}}
+Use \texttt{if} when you have conditions based on boolean expressions.
+
+\textbf{Good practice:}
+\begin{itemize}
+  \item keep conditions readable (break complex conditions into variables),
+  \item avoid deeply nested \texttt{if} blocks (use early returns in methods later).
+\end{itemize}
+
+\subsubsection{\texttt{switch}}
+Use \texttt{switch} when one variable is compared against many constant values.
+It often makes menu-driven programs readable.
+
+\textbf{Pitfall:} forgetting \texttt{break} can cause fall-through (sometimes intended, often a bug).
+
+\subsubsection{Loops}
+\begin{itemize}
+  \item \texttt{for}: when you know the number of iterations (or array traversal).
+  \item \texttt{while}: when you loop until a condition changes.
+  \item \texttt{do-while}: when the body must run at least once.
+\end{itemize}
+\textbf{Pitfall:} off-by-one errors. Remember arrays are 0-based and last index is \texttt{length - 1}.
+
+\subsection{Arrays (1D/2D), types of arrays, common patterns}
+\subsubsection{1D arrays}
+Create:
+\begin{itemize}
+  \item \texttt{int[] a = new int[5];} (all zeros initially)
+  \item \texttt{int[] b = \{1,2,3\};} (initialized)
+\end{itemize}
+Access:
+\begin{itemize}
+  \item \texttt{a[i]} for element, \texttt{a.length} for size (not a method).
+\end{itemize}
+Common patterns:
+\begin{itemize}
+  \item sum/average, max/min, linear search, counting, reversing.
+\end{itemize}
+
+\subsubsection{2D and jagged arrays}
+2D array:
+\begin{itemize}
+  \item \texttt{int[][] m = new int[rows][cols];}
+\end{itemize}
+Jagged array (rows can have different lengths):
+\begin{itemize}
+  \item \texttt{int[][] j = new int[3][];} then allocate each row separately.
+\end{itemize}
+Pitfall: always check \texttt{m[i].length} for column length in jagged arrays.
+
+\subsection{Strings and \texttt{StringBuilder}}
+\subsubsection{String immutability}
+In Java, \texttt{String} is immutable: operations like \texttt{toLowerCase()} or \texttt{trim()} return a new string.
+
+\textbf{Why it matters:}
+\begin{itemize}
+  \item Safer sharing: if two variables reference the same string, it can't be modified unexpectedly.
+  \item Performance implication: repeated concatenation in loops creates many temporary objects.
+\end{itemize}
+
+\subsubsection{\texttt{==} vs \texttt{equals}}
+Use:
+\begin{itemize}
+  \item \texttt{==} to compare references (same object or not),
+  \item \texttt{equals()} to compare string content.
+\end{itemize}
+
+\subsubsection{When to use \texttt{StringBuilder}}
+If you build a string repeatedly (especially in a loop), use \texttt{StringBuilder} and \texttt{append()}.
+\notesources{\OOPSUnitISources}
+
+\section{Worked Example: Grades (control flow + arrays + strings)}
+\begin{lstlisting}
+import java.util.Scanner;
+
+public class GradeStats {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of students: ");
+        int n = sc.nextInt();
+        int[] marks = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Marks for student " + (i + 1) + ": ");
+            marks[i] = sc.nextInt();
+        }
+
+        int max = marks[0];
+        int sum = 0;
+        for (int x : marks) {
+            sum += x;
+            if (x > max) max = x;
+        }
+
+        double avg = sum / (double) n;
+        System.out.printf("Max=%d, Avg=%.2f%n", max, avg);
+
+        String result = (avg >= 40) ? "PASS" : "NEEDS IMPROVEMENT";
+        System.out.println("Class status: " + result);
+
+        sc.close();
+    }
+}
+\end{lstlisting}
+
+\textbf{What to notice:}
+\begin{itemize}
+  \item Off-by-one handling in prompts: \texttt{i+1} for human-friendly numbering.
+  \item Enhanced for-loop (\texttt{for (int x : marks)}) to traverse arrays.
+  \item Casting for average: \texttt{sum / (double)n} to avoid integer division.
+\end{itemize}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item What is the last valid index of an array of length 10?\; \textbf{Answer:} 9.
+  \item Should we use \texttt{==} or \texttt{equals} to compare strings by content?\; \textbf{Answer:} \texttt{equals}.
+  \item Which loop runs at least once: \texttt{while} or \texttt{do-while}?\; \textbf{Answer:} \texttt{do-while}.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Write a program to find the second largest element in an array.
+  \item Write a program to check if a string is a palindrome (ignore spaces and case).
+  \item Create a 2D matrix and compute row-wise sums.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why is \texttt{String} immutable and why does it matter?\par
+\textbf{Sample answer:} Immutability makes strings safe to share and helps with security and caching. It also means operations create new objects, so repeated concatenation in loops can be inefficient.
+
+\vspace{0.6em}
+\textbf{Q2.} How do you avoid off-by-one errors in array loops?\par
+\textbf{Sample answer:} Remember Java arrays are 0-based and the last index is \texttt{length - 1}. Use loop conditions like \texttt{i < a.length} rather than \texttt{i <= a.length}.
+
+\end{document}

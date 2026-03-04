@@ -1,0 +1,159 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 04 -- Lecture 03: Lambdas + Functional Interfaces}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Identify functional interfaces and explain target typing.
+    \item Write lambdas for common patterns (comparators, callbacks, runnable tasks).
+    \item Apply basic readability rules for when to use lambdas.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 04: Generics, Lambdas, GUI Swing \& Database Connectivity}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Lambdas + Functional Interfaces
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Functional interfaces concept; target typing
+    \item Lambda syntax and common patterns (comparators, callbacks)
+    \item Readability guidelines: when to use / when to avoid
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Functional interface (SAM)}
+  \begin{itemize}[<+->]
+    \item Interface with exactly one abstract method.
+    \item Examples: \texttt{Runnable}, \texttt{Comparator<T>}, many Swing listeners.
+    \item Optional: annotate with \texttt{@FunctionalInterface}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Target typing (why lambdas work)}
+  \begin{itemize}[<+->]
+    \item Lambda gets its type from context (assignment or method parameter).
+    \item Example: \texttt{Runnable r = () -> ...}
+    \item Example: \texttt{list.sort((a,b) -> ...)}
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Lambda syntax (common forms)}
+  \begin{itemize}[<+->]
+    \item \texttt{() -> expr}
+    \item \texttt{x -> expr}
+    \item \texttt{(a, b) -> expr}
+    \item \texttt{x -> \{ ...; return ...; \}}
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Readability guidelines}
+  \begin{itemize}[<+->]
+    \item Use lambdas for short, clear behavior (1--3 lines).
+    \item Avoid long lambdas; extract to a named method.
+    \item Use meaningful parameter names if not obvious.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: sort with lambda (\texttt{Comparator})}
+\begin{lstlisting}
+list.sort((a, b) -> Double.compare(b.getCgpa(), a.getCgpa()));
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: runnable task}
+\begin{lstlisting}
+Runnable task = () -> System.out.println("Hello from thread");
+new Thread(task).start();
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item What is a functional interface?
+    \item Where does a lambda get its type from?
+    \item When should you avoid lambdas?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Lambdas are short behavior implementations for functional interfaces.
+    \item Target typing infers lambda type from context.
+    \item Keep lambdas short; extract complex logic to methods.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item Give one example of a functional interface in Java.
+    \item Write a simple lambda for \texttt{Runnable}.
+    \item State one readability rule for lambdas.
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Swing Basics (Components, Containers, Layouts)
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item Lambdas become useful for event handlers in Swing.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\end{document}

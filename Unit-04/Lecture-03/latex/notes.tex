@@ -1,0 +1,168 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 03 Notes\\Lambdas + Functional Interfaces}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+Lambdas are a short way to write ``behavior as a value'' in Java.
+They work with \textbf{functional interfaces} (interfaces with exactly one abstract method).
+This is useful for:
+\begin{itemize}
+  \item sorting (\texttt{Comparator}),
+  \item callbacks and event handling (Swing listeners),
+  \item threading (\texttt{Runnable}),
+  \item cleaner APIs for reusable behavior.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Syllabus Alignment (Unit 04)}
+\textbf{Unit 04:} lambdas and functional interfaces
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Identify functional interfaces and explain target typing (how lambda type is inferred).
+  \item Write lambdas for common patterns (comparators, callbacks, runnable tasks).
+  \item Apply basic readability rules for when to use a lambda vs a named method/class.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Functional interface}: interface with 1 abstract method (SAM).
+  \item \textbf{SAM}: Single Abstract Method.
+  \item \textbf{Lambda}: expression like \texttt{(a, b) -> a + b}.
+  \item \textbf{Target typing}: compiler infers lambda type from context (assignment/argument).
+  \item \textbf{Effectively final}: local variable not modified after initialization (can be captured in lambda).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Functional interfaces (concept)}
+A functional interface has exactly one abstract method.
+It can still have:
+\begin{itemize}
+  \item \texttt{default} methods,
+  \item \texttt{static} methods.
+\end{itemize}
+
+\textbf{Examples:}
+\begin{itemize}
+  \item \texttt{Runnable} (method \texttt{run()})
+  \item \texttt{Comparator<T>} (method \texttt{compare(a,b)})
+  \item \texttt{ActionListener} in Swing (method \texttt{actionPerformed(e)})
+\end{itemize}
+
+\paragraph{Annotation (optional but useful).}
+\texttt{@FunctionalInterface} tells the compiler to enforce the SAM rule.
+
+\subsection{Target typing (how lambdas get a type)}
+Lambda expressions do not have a type by themselves.
+They get a type from where they are used:
+\begin{itemize}
+  \item assignment: \texttt{Runnable r = () -> ...}
+  \item method argument: \texttt{button.addActionListener(e -> ...)}
+\end{itemize}
+If the context expects a functional interface, the lambda is converted to that interface.
+
+\subsection{Lambda syntax (common forms)}
+\begin{itemize}
+  \item No parameters: \texttt{() -> System.out.println("Hi")}
+  \item One parameter: \texttt{x -> x * 2} (parentheses optional)
+  \item Many parameters: \texttt{(a, b) -> a + b}
+  \item Block body: \texttt{x -> \{ int y = x + 1; return y; \}}
+\end{itemize}
+
+\subsection{Common patterns}
+\subsubsection{Comparator for sorting}
+Instead of writing a full comparator class, you can write:
+\begin{itemize}
+  \item \texttt{(a, b) -> a.getCgpa() < b.getCgpa() ? 1 : -1}
+\end{itemize}
+or use helper APIs like \texttt{Comparator.comparing}.
+
+\subsubsection{Runnable for tasks/threads}
+You can write a runnable task in one line and pass it to a \texttt{Thread}.
+
+\subsubsection{Callbacks/listeners}
+Swing event handling uses listeners, which are functional interfaces in many cases (or have adapter patterns).
+Lambdas make event handling code shorter.
+
+\subsection{Readability guidelines}
+Use lambdas when:
+\begin{itemize}
+  \item the behavior is short (1--3 lines),
+  \item the logic is clear from context,
+  \item you do not need to reuse it elsewhere.
+\end{itemize}
+Prefer a named method/class when:
+\begin{itemize}
+  \item the lambda becomes long/complex,
+  \item you need to unit-test or reuse the behavior,
+  \item error handling and branching make it hard to read.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Worked Example: sorting with lambda}
+\begin{lstlisting}
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+class Student {
+    final String rollNo;
+    final double cgpa;
+    Student(String rollNo, double cgpa) { this.rollNo = rollNo; this.cgpa = cgpa; }
+    public double getCgpa() { return cgpa; }
+    public String toString() { return rollNo + ":" + cgpa; }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        List<Student> list = new ArrayList<>();
+        list.add(new Student("21CS1001", 8.2));
+        list.add(new Student("21CS1002", 9.1));
+        list.add(new Student("21CS1003", 7.6));
+
+        list.sort((a, b) -> Double.compare(b.getCgpa(), a.getCgpa())); // desc
+        System.out.println(list);
+
+        list.sort(Comparator.comparing(Student::getCgpa)); // asc (method ref)
+        System.out.println(list);
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item What is a functional interface?\par
+  \textbf{Answer:} an interface with exactly one abstract method (SAM).
+
+  \item Give one example of where you can use lambdas.\par
+  \textbf{Answer:} sorting with \texttt{Comparator}, or creating a \texttt{Runnable}.
+
+  \item Can a lambda capture a local variable that changes later?\par
+  \textbf{Answer:} No, captured local variables must be effectively final.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Write a lambda for \texttt{Runnable} that prints numbers 1--5.
+  \item Sort a list of strings by length using a lambda comparator.
+  \item Replace a complex lambda in your code with a named method and explain why it is clearer.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} What is target typing?\par
+\textbf{Sample answer:} Target typing is how the compiler infers a lambda's type from the expected functional interface in the context (assignment or method parameter).
+
+\vspace{0.6em}
+\textbf{Q2.} When should you avoid using a lambda?\par
+\textbf{Sample answer:} Avoid lambdas when the logic becomes long or complex, because it hurts readability and reuse. Prefer a named method/class in that case.
+
+\end{document}

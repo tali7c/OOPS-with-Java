@@ -1,0 +1,223 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Object Oriented Programming (B.Tech CSE)}
+\rhead{Units 01--02 + Unit 03 (Partial): Diagnostic Assessment}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+% Marks per question (total = 100)
+\newcommand{\EMarks}{\textbf{[2 marks]} }
+\newcommand{\MMarks}{\textbf{[3 marks]} }
+\newcommand{\HMarks}{\textbf{[5 marks]} }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Diagnostic Assessment -- Units 01 \& 02 + Unit 03 (Partial)}}\\[0.25em]
+  {\large Object Oriented Programming (CSEG1044)}\\[0.25em]
+  \normalsize (Unit 01--02 + Unit 03 partial: nested classes + exception handling/handlers; designed to identify learning gaps)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Time Limit:} None\\
+\textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{This is a diagnostic assessment, not a quiz/test.} The goal is to identify what to revise.
+  \item \textbf{Total marks: 100.} Easy: 10 $\times$ 2 = 20, Medium: 10 $\times$ 3 = 30, Hard: 10 $\times$ 5 = 50.
+  \item \textbf{No time limit.} Submit on or before \textbf{\SubmissionDeadline}.
+  \item \textbf{Important (70\% rule): To have your assignment marks counted, you must score at least 70\% (70/100 or more) in this assessment.}
+    If you score below 70\%, you may reattempt and resubmit. Your latest submission will be considered.
+  \item \textbf{Marking policy (honest attempt):} Marks are deducted only for (i) not attempting a question and (ii) high similarity with other submissions (copying).
+    Correctness is \textbf{not} the main focus; your reasoning and effort matter more.
+  \item Answer \textbf{all} questions. For code questions, snippets are acceptable unless a full program is requested.
+  \item For MCQs, follow the instruction in the question (some are \textbf{select all that apply}).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=\textbf{E\arabic*.}, leftmargin=*]
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are core OOP principles?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Abstraction
+      \item Encapsulation
+      \item Compilation
+      \item Inheritance
+      \item Polymorphism
+      \item Pagination
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} If a class is declared \texttt{public class Hello}, what must the file name be?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{Hello.java}
+      \item \texttt{hello.java}
+      \item \texttt{Main.java}
+      \item Any name is fine
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} Which statement is correct?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item JVM compiles Java source code to bytecode
+      \item JDK is required only to run a \texttt{.class} file
+      \item JVM executes bytecode
+      \item JRE is a compiler
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} Which of the following is \textbf{not} a primitive type?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{int}
+      \item \texttt{double}
+      \item \texttt{boolean}
+      \item \texttt{String}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Output]} What is printed?
+    \begin{lstlisting}
+int x = 3;
+while (x > 0) {
+    System.out.print(x + " ");
+    x--;
+}
+    \end{lstlisting}
+
+  \item \EMarks \textbf{[Subjective]} Why is \texttt{String} immutable in Java? (2--3 lines)
+
+  \item \EMarks \textbf{[MCQ]} Which keyword is used to inherit a class in Java?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{implements}
+      \item \texttt{extends}
+      \item \texttt{inherits}
+      \item \texttt{super}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are access modifiers in Java?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{private}
+      \item \texttt{protected}
+      \item \texttt{public}
+      \item \texttt{package}
+      \item \texttt{default}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ]} Which of the following is a \textbf{checked} exception?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item \texttt{IOException}
+      \item \texttt{NullPointerException}
+      \item \texttt{ArithmeticException}
+      \item \texttt{IndexOutOfBoundsException}
+    \end{enumerate}
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are types of nested classes in Java?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Static nested class
+      \item Inner (non-static) class
+      \item Local class
+      \item Anonymous class
+      \item Global class
+    \end{enumerate}
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=\textbf{M\arabic*.}, leftmargin=*]
+  \item \MMarks \textbf{[Code]} Write a \texttt{Student} class with a parameterized constructor and use \texttt{this} to assign fields.
+
+  \item \MMarks \textbf{[Code]} Write two overloaded methods \texttt{max(int a, int b)} and \texttt{max(int a, int b, int c)}.
+
+  \item \MMarks \textbf{[Code]} Write a snippet that demonstrates a \texttt{static} variable counting created objects.
+
+  \item \MMarks \textbf{[Code]} Write an interface \texttt{Payable} and one implementing class \texttt{CardPayment}. Call \texttt{pay()} using a \texttt{Payable} reference.
+
+  \item \MMarks \textbf{[Code]} Write a base class \texttt{Vehicle} and derived class \texttt{Car}. Override a method and show dynamic dispatch.
+
+  \item \MMarks \textbf{[Code]} Write correct \texttt{package} and \texttt{import} lines for a class in package \texttt{upes.oop.util}.
+
+  \item \MMarks \textbf{[Code]} Write a \texttt{try/catch/finally} block that handles divide-by-zero and always prints \texttt{Done}.
+
+  \item \MMarks \textbf{[Code]} Write one line showing \texttt{throw} and one line showing \texttt{throws} (any suitable example).
+
+  \item \MMarks \textbf{[Code]} Write code to instantiate:
+    (a) a static nested class \texttt{Outer.Nested}, and
+    (b) an inner class \texttt{Outer.Inner}.
+
+  \item \MMarks \textbf{[Concept]} What is an exception handler? Write 4--6 lines with one example situation.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=\textbf{H\arabic*.}, leftmargin=*]
+  \item \HMarks \textbf{[Program]} Write a complete program that reads two integers and performs division.
+    Handle invalid input and divide-by-zero. Use \texttt{finally} to print \texttt{Done}. Include sample output.
+
+  \item \HMarks \textbf{[Program]} Implement \texttt{BankAccount} with \texttt{deposit()} and \texttt{withdraw()}.
+    Throw a custom \texttt{InsufficientBalanceException} for invalid withdrawal. Include sample run.
+
+  \item \HMarks \textbf{[Program]} Create an abstract class \texttt{Shape} with method \texttt{area()} and implement \texttt{Circle} and \texttt{Rectangle}.
+    Store objects in \texttt{Shape[]} and print all areas (dynamic dispatch).
+
+  \item \HMarks \textbf{[Program]} Create \texttt{InvalidMarksException extends Exception}.
+    Write method \texttt{setMarks(int m) throws InvalidMarksException} that validates 0--100.
+    Demonstrate using \texttt{try/catch} in \texttt{main}.
+
+  \item \HMarks \textbf{[Program]} Show exception propagation using \texttt{main() -> a() -> b()} where \texttt{b()} throws.
+    Catch only in \texttt{main} and print flow messages.
+
+  \item \HMarks \textbf{[Program]} Demonstrate access modifiers across packages:
+    create two packages and show what can/cannot be accessed for \texttt{private}, default, \texttt{protected}, and \texttt{public}.
+
+  \item \HMarks \textbf{[Program]} Demonstrate nested classes:
+    create an outer class with one static nested class and one inner class; show object creation and member access.
+
+  \item \HMarks \textbf{[Explain]} In 10--14 lines, explain why interfaces are needed in Java with a real use case.
+
+  \item \HMarks \textbf{[Program]} Write a program that uses an anonymous class to implement a 1-method interface and executes it.
+
+  \item \HMarks \textbf{[Program]} Write code showing that \texttt{finally} runs even when \texttt{return} is executed in \texttt{try}.
+    Include output.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assessment}
+
+\end{document}
+

@@ -1,0 +1,162 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 03 Notes\\I/O + Command Line + Types + Operators}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture focuses on the day-to-day basics you need to write useful Java programs:
+\begin{itemize}
+  \item taking input (keyboard / terminal),
+  \item printing output in a readable way,
+  \item using command line arguments,
+  \item understanding primitive data types and operators (and common pitfalls).
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Syllabus Alignment (Unit 01)}
+\textbf{Unit 01:} I/O statements, command line arguments, data types, variables, operators
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Read console input using \texttt{Scanner} and (at a basic level) \texttt{BufferedReader}.
+  \item Use \texttt{System.out.println} and \texttt{System.out.printf} for formatted output.
+  \item Use \texttt{String[] args} to accept command line inputs and parse simple values.
+  \item Choose correct primitive types and apply operators with correct precedence and casting.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Token vs line}: token = one word/number; line = full line of text.
+  \item \textbf{Formatting}: printing numbers/text with a chosen format (decimal places, alignment).
+  \item \textbf{Primitive types}: built-in value types like \texttt{int}, \texttt{double}, \texttt{char}, \texttt{boolean}.
+  \item \textbf{Type casting}: converting a value from one type to another (widening/narrowing).
+  \item \textbf{Precedence}: order in which operators are evaluated.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Console I/O: \texttt{Scanner} (most common for beginners)}
+\texttt{Scanner} reads tokens from an input source like \texttt{System.in}.
+\begin{itemize}
+  \item Use \texttt{nextInt()}, \texttt{nextDouble()}, \texttt{next()} (word), \texttt{nextLine()} (whole line).
+  \item \textbf{Common pitfall:} mixing \texttt{nextInt()} and \texttt{nextLine()}.\par
+  After reading a number, the newline remains in the buffer; the next \texttt{nextLine()} may return an empty string.\par
+  Fix: call an extra \texttt{nextLine()} after reading the number.
+\end{itemize}
+
+\subsection{Console I/O: \texttt{BufferedReader} (fast, line-oriented)}
+\texttt{BufferedReader} reads full lines as \texttt{String}, and you parse manually:
+\begin{itemize}
+  \item Good when you want complete control or faster I/O.
+  \item Slightly more code than \texttt{Scanner} (because you must parse numbers using \texttt{Integer.parseInt}, etc.).
+\end{itemize}
+
+\subsection{Output formatting}
+Use:
+\begin{itemize}
+  \item \texttt{System.out.println(...)} for simple output.
+  \item \texttt{System.out.printf("x = \%d, y = \%.2f\%n", x, y);} for formatted output.
+\end{itemize}
+Common format specifiers:
+\begin{itemize}
+  \item \texttt{\%d} integer,\;\; \texttt{\%f} floating-point,\;\; \texttt{\%s} string,\;\; \texttt{\%n} newline.
+\end{itemize}
+
+\subsection{Command line arguments}
+When you run a Java program, anything after the class name becomes a string in \texttt{args}.
+\begin{itemize}
+  \item Example: \texttt{java Sum 10 20 30}
+  \item Then: \texttt{args[0] = "10"}, \texttt{args[1] = "20"}, etc.
+\end{itemize}
+You often parse numbers using:
+\begin{itemize}
+  \item \texttt{Integer.parseInt(args[i])}
+  \item \texttt{Double.parseDouble(args[i])}
+\end{itemize}
+\textbf{Pitfall:} if input is not numeric, parsing throws \texttt{NumberFormatException}.
+
+\subsection{Data types, operators, precedence, casting}
+\subsubsection{Primitive data types (quick)}
+\begin{itemize}
+  \item Integer types: \texttt{byte}, \texttt{short}, \texttt{int}, \texttt{long}
+  \item Floating types: \texttt{float}, \texttt{double}
+  \item Other: \texttt{char} (Unicode), \texttt{boolean}
+\end{itemize}
+
+\subsubsection{Operator pitfalls you must know}
+\begin{itemize}
+  \item \textbf{Integer division:} \texttt{5/2 == 2} (not 2.5). Use \texttt{5/2.0} or cast: \texttt{(double)5/2}.
+  \item \textbf{Overflow:} \texttt{int} can overflow silently.\par
+  Example: \texttt{int x = 2\_000\_000\_000; x = x + 1\_000\_000\_000;} (wraps around).
+  \item \textbf{Short-circuit logic:} \texttt{\&\&} and \texttt{||} may skip evaluating the right side.\par
+  This is useful for null checks: \texttt{s != null \&\& s.length() > 0}.
+  \item \textbf{Precedence:} multiplication happens before addition. Use parentheses when teaching/learning.
+\end{itemize}
+
+\subsubsection{Casting}
+\textbf{Widening} (safe) happens automatically: \texttt{int} $\rightarrow$ \texttt{double}.
+\textbf{Narrowing} may lose data and requires explicit cast: \texttt{double} $\rightarrow$ \texttt{int}.
+
+\section{Worked Example: Args + Scanner + Formatting}
+\begin{lstlisting}
+import java.util.Scanner;
+
+public class InputDemo {
+    public static void main(String[] args) {
+        int maxMarks = 100;
+        if (args.length > 0) maxMarks = Integer.parseInt(args[0]);
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter your name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter marks (0-" + maxMarks + "): ");
+        int marks = sc.nextInt();
+
+        double percent = marks * 100.0 / maxMarks;
+        System.out.printf("Hello %s, marks=%d/%d, percent=%.2f%%%n",
+                name, marks, maxMarks, percent);
+        sc.close();
+    }
+}
+\end{lstlisting}
+
+\textbf{What to observe:}
+\begin{itemize}
+  \item How \texttt{args} is always a string array and needs parsing.
+  \item How we used a default value (100) and optionally override it using \texttt{args[0]}.
+  \item How formatted output (\texttt{printf}) improves readability.
+  \item Why we used \texttt{100.0} in the formula (to avoid integer division mistakes).
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item What is the output of \texttt{System.out.println(5/2);}?\; \textbf{Answer:} \texttt{2}.
+  \item How to get \texttt{2.5} from 5 and 2?\; \textbf{Answer:} \texttt{5/2.0} or \texttt{(double)5/2}.
+  \item If you run \texttt{java Demo A B}, what is \texttt{args.length}?\; \textbf{Answer:} 2.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Write a program \texttt{SumArgs} that sums integer command line arguments.
+  \item Write a program that reads a line and prints: (a) length, (b) first character, (c) uppercase version.
+  \item Create 5 expressions and predict results using precedence; then verify by running Java.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} Why is \texttt{Scanner.nextLine()} tricky after \texttt{nextInt()}?\par
+\textbf{Sample answer:} \texttt{nextInt()} leaves the newline in the input buffer, so the next \texttt{nextLine()} may read the leftover newline and return an empty string. We can consume the newline by calling \texttt{nextLine()} once after reading the number.
+
+\vspace{0.6em}
+\textbf{Q2.} Why is \texttt{5/2} not 2.5 in Java?\par
+\textbf{Sample answer:} Both operands are integers, so Java performs integer division and discards the fractional part. If either operand is \texttt{double}, it performs floating-point division.
+
+\end{document}

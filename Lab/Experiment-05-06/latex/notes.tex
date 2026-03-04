@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-05\&06: Arrays + String Handling (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is a \textbf{pre-submission} handout.
+It specifies what to implement and what to submit.
+
+\section{Experiment 05 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To work with one-dimensional and two-dimensional arrays.
+  \item \textbf{Problem Statement:} Develop Java programs to perform operations on arrays.
+  \item \textbf{Expected Outcome:} Students will be able to store and process data using arrays.
+\end{itemize}
+
+\section{Experiment 06 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To perform string manipulation using Java String classes.
+  \item \textbf{Problem Statement:} Implement string operations using built-in Java methods.
+  \item \textbf{Expected Outcome:} Students will be able to manipulate textual data.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- Array operations (Exp-05)}
+\begin{enumerate}[leftmargin=*]
+  \item Create \texttt{MarksAnalysis.java}:
+  \begin{itemize}[leftmargin=*]
+    \item read \texttt{n} and then \texttt{n} marks into an \texttt{int[]},
+    \item print min, max, sum, average,
+    \item print \texttt{passCount} where marks $\ge 40$.
+  \end{itemize}
+
+  \item Create \texttt{MatrixAdd.java}:
+  \begin{itemize}[leftmargin=*]
+    \item read rows \texttt{r} and cols \texttt{c},
+    \item read matrix \texttt{A} and matrix \texttt{B} of size \texttt{r x c},
+    \item print \texttt{A + B} (element-wise sum).
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Task B --- String toolkit + palindrome (Exp-06)}
+Create \texttt{StringToolkitDemo.java} and demonstrate:
+\begin{enumerate}[leftmargin=*]
+  \item \texttt{==} vs \texttt{equals()} using:
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{new String("upes")}
+    \item string literals like \texttt{"java"}
+  \end{itemize}
+
+  \item Immutability:
+  \begin{itemize}[leftmargin=*]
+    \item show that calling \texttt{toUpperCase()} does not change the original string unless stored.
+  \end{itemize}
+
+  \item Palindrome checker:
+  \begin{itemize}[leftmargin=*]
+    \item read a full line (sentence),
+    \item ignore spaces and case,
+    \item print whether it is a palindrome.
+  \end{itemize}
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Average should be computed using \texttt{sum / (double) n} (avoid integer division).
+  \item For 2D arrays: \texttt{a.length} is number of rows; \texttt{a[i].length} is number of columns in row \texttt{i}.
+  \item Use \texttt{equals()} for value comparison of strings; \texttt{==} checks references.
+  \item Use \texttt{StringBuilder} when repeatedly appending in a loop.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{MarksAnalysis.java}
+  \item \texttt{MatrixAdd.java}
+  \item \texttt{StringToolkitDemo.java}
+  \item sample output for all programs
+  \item observations (5--10 lines): what you learned about arrays and string comparison
+\end{itemize}
+
+\notesources{\OOPSUnitISources}
+\end{document}

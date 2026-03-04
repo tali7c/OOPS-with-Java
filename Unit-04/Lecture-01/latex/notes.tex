@@ -1,0 +1,149 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 01 Notes\\Generics Fundamentals (Generic Classes)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+Generics help you write reusable code without losing type safety.
+The main idea is simple:
+\begin{quote}
+Write a class/method once, and let the compiler enforce the types for each use.
+\end{quote}
+In this lecture we focus on \textbf{generic classes} like \texttt{Box<T>} and learn why raw types are dangerous.
+\notesources{\OOPSUnitIVSources}
+
+\section{Syllabus Alignment (Unit 04)}
+\textbf{Unit 04:} Generics fundamentals; generic classes
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Explain the motivation of generics (type safety + reuse) with a small example.
+  \item Create and use a generic class such as \texttt{Box<T>}.
+  \item Identify raw-type usage and explain why it can cause runtime errors.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Generic}: code with a type parameter (e.g., \texttt{<T>}).
+  \item \textbf{Type parameter}: placeholder type name like \texttt{T}, \texttt{K}, \texttt{V}.
+  \item \textbf{Parameterized type}: using a generic with a specific type, e.g., \texttt{Box<String>}.
+  \item \textbf{Raw type}: using a generic without type arguments, e.g., \texttt{Box} (unsafe).
+  \item \textbf{Type erasure (idea)}: generics are mainly compile-time; runtime types are erased (advanced detail).
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Why generics? (the problem without generics)}
+Before generics (or when you avoid them), you often use \texttt{Object}:
+\begin{itemize}
+  \item You can store anything in \texttt{Object}.
+  \item But you lose type information and must cast back.
+  \item Wrong casts fail at runtime with \texttt{ClassCastException}.
+\end{itemize}
+
+\textbf{What generics give you:}
+\begin{itemize}
+  \item compile-time checking (errors caught earlier),
+  \item no (or less) casting,
+  \item clearer code: \texttt{List<String>} tells you what the list contains.
+\end{itemize}
+
+\subsection{Generic classes: \texttt{Box<T>}}
+A generic class has a type parameter:
+\begin{itemize}
+  \item \texttt{class Box<T> \{ ... \}}
+\end{itemize}
+\texttt{T} can represent any reference type (like \texttt{String}, \texttt{Student}, \texttt{Integer}).
+
+\paragraph{Naming convention.}
+\begin{itemize}
+  \item \texttt{T} = Type,\;\; \texttt{E} = Element,\;\; \texttt{K/V} = Key/Value.
+\end{itemize}
+
+\subsection{Avoiding raw types (common mistakes)}
+Raw type means you wrote \texttt{Box} instead of \texttt{Box<T>}. It compiles with warnings but is unsafe.
+
+\textbf{Safer alternative:}
+\begin{itemize}
+  \item If you truly do not know the type, use \texttt{Box<?>} rather than raw \texttt{Box}.
+\end{itemize}
+
+\textbf{Common mistakes:}
+\begin{itemize}
+  \item Using raw collections: \texttt{List list = new ArrayList();}
+  \item Mixing types inside one list, then casting incorrectly.
+  \item Confusing generics with primitives: use \texttt{Integer} not \texttt{int} in \texttt{List<int>} (not allowed).
+  \item Thinking generics exist at runtime the same way: due to type erasure, some runtime checks are not possible (advanced).
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Worked Example: \texttt{Box<T>} + raw type danger}
+\subsection*{Generic class}
+\begin{lstlisting}
+class Box<T> {
+    private final T value;
+    Box(T value) { this.value = value; }
+    T get() { return value; }
+}
+\end{lstlisting}
+
+\subsection*{Safe usage (compile-time checks)}
+\begin{lstlisting}
+public class DemoSafe {
+    public static void main(String[] args) {
+        Box<String> b1 = new Box<>("UPES");
+        String s = b1.get(); // no cast
+
+        Box<Integer> b2 = new Box<>(10);
+        int x = b2.get(); // auto-unboxing
+        System.out.println(s + " " + x);
+    }
+}
+\end{lstlisting}
+
+\subsection*{Unsafe raw type (runtime failure risk)}
+\begin{lstlisting}
+public class DemoRaw {
+    public static void main(String[] args) {
+        Box raw = new Box(123);  // raw type: warning
+        String s = (String) raw.get(); // ClassCastException at runtime
+        System.out.println(s);
+    }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Why is \texttt{Box} (raw type) unsafe?\par
+  \textbf{Answer:} it loses type checking and can lead to wrong casts at runtime.
+
+  \item What does \texttt{Box<String>} mean?\par
+  \textbf{Answer:} a box that can hold only \texttt{String} values (type-safe).
+
+  \item Can we write \texttt{List<int>}?\par
+  \textbf{Answer:} no, generics use reference types; use \texttt{List<Integer>}.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Create a generic class \texttt{Pair<K,V>} with getters.
+  \item Write a program that stores \texttt{Student} objects in \texttt{List<Student>} and prints them.
+  \item Find one example of raw type in your old code and refactor it to a parameterized type.
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} What problem do generics solve?\par
+\textbf{Sample answer:} Generics provide compile-time type safety for reusable code. They reduce casts and prevent runtime \texttt{ClassCastException} caused by mixing types.
+
+\vspace{0.6em}
+\textbf{Q2.} Why should we avoid raw types?\par
+\textbf{Sample answer:} Raw types disable generic type checking and allow unsafe operations, which can cause runtime failures and reduce code readability.
+
+\end{document}

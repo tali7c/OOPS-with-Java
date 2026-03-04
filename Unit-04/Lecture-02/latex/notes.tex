@@ -1,0 +1,150 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 02 Notes\\Generic Methods + Bounds + Wildcards}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+In the previous lecture you learned generic classes like \texttt{Box<T>}.
+Now we learn three ideas that appear frequently in real Java code:
+\begin{itemize}
+  \item \textbf{generic methods}: \texttt{<T>} methods that work for many types,
+  \item \textbf{bounds}: restricting which types are allowed (\texttt{extends}),
+  \item \textbf{wildcards}: flexible method parameters for collections (\texttt{? extends}, \texttt{? super}).
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Syllabus Alignment (Unit 04)}
+\textbf{Unit 04:} generic methods; bounded types; wildcards
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Write a generic method and explain why it reduces duplication.
+  \item Apply bounded type parameters (intro level) to restrict allowed types.
+  \item Use wildcards with collections for common patterns in real code.
+\end{itemize}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Generic method}: method with its own type parameter, e.g., \texttt{static <T> T first(List<T> list)}.
+  \item \textbf{Bound}: restriction on type parameter, e.g., \texttt{<T extends Number>}.
+  \item \textbf{Wildcard}: unknown type parameter, e.g., \texttt{List<?>}.
+  \item \textbf{Upper-bounded wildcard}: \texttt{? extends Type} (read/produce).
+  \item \textbf{Lower-bounded wildcard}: \texttt{? super Type} (write/consume).
+  \item \textbf{Invariance}: \texttt{List<Integer>} is not a subtype of \texttt{List<Number>}.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Generic methods}
+Sometimes only one method needs to be generic (not the whole class).
+Example: a method that prints any array.
+
+\textbf{Syntax:}
+\begin{itemize}
+  \item type parameter list comes before return type: \texttt{public static <T> void print(T[] a)}.
+\end{itemize}
+
+\subsection{Bounds (restrict allowed types)}
+Without bounds, \texttt{T} can be any reference type.
+With bounds, you restrict it:
+\begin{itemize}
+  \item \texttt{<T extends Number>} means \texttt{T} must be \texttt{Number} or a subclass (\texttt{Integer}, \texttt{Double}, ...).
+  \item Common pattern: \texttt{<T extends Comparable<T>>} to support comparisons.
+\end{itemize}
+
+\subsection{Wildcards: making collection parameters flexible}
+The key beginner confusion is:
+\begin{itemize}
+  \item \texttt{List<Integer>} is \textbf{not} a \texttt{List<Number>} (invariance).
+\end{itemize}
+So how do we write a method that can accept \texttt{List<Integer>} \emph{or} \texttt{List<Double>}?
+We use wildcards.
+
+\subsubsection{\texttt{? extends T} (producer/read)}
+If a method only needs to \textbf{read} from a list, use \texttt{? extends}.
+Example: sum of numbers:
+\begin{itemize}
+  \item \texttt{List<? extends Number>} accepts \texttt{List<Integer>}, \texttt{List<Double>}, ...
+\end{itemize}
+\textbf{Limitation:} you cannot safely add new elements (except \texttt{null}) because the exact subtype is unknown.
+
+\subsubsection{\texttt{? super T} (consumer/write)}
+If a method needs to \textbf{add} elements of type \texttt{T} to a list, use \texttt{? super T}.
+Example: add integers to a list that can store integers or any of their supertypes.
+
+\paragraph{PECS (memory trick).} Producer Extends, Consumer Super.
+\notesources{\OOPSUnitIVSources}
+
+\section{Worked Example: generic methods + bounds + wildcards}
+\subsection*{Generic method (print array)}
+\begin{lstlisting}
+public class GenericDemo {
+    public static <T> void printArray(T[] a) {
+        for (T x : a) System.out.print(x + " ");
+        System.out.println();
+    }
+}
+\end{lstlisting}
+
+\subsection*{Bounded type parameter (max)}
+\begin{lstlisting}
+public static <T extends Comparable<T>> T max(T a, T b) {
+    return (a.compareTo(b) >= 0) ? a : b;
+}
+\end{lstlisting}
+
+\subsection*{Upper-bounded wildcard (sum)}
+\begin{lstlisting}
+import java.util.List;
+
+public static double sum(List<? extends Number> list) {
+    double s = 0.0;
+    for (Number n : list) s += n.doubleValue();
+    return s;
+}
+\end{lstlisting}
+
+\subsection*{Lower-bounded wildcard (add)}
+\begin{lstlisting}
+import java.util.List;
+
+public static void addOnes(List<? super Integer> list, int count) {
+    for (int i = 0; i < count; i++) list.add(1);
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item Why is \texttt{List<Integer>} not a subtype of \texttt{List<Number>}?\par
+  \textbf{Answer:} generics are invariant in Java; allowing it would break type safety (you could add a \texttt{Double} into a \texttt{List<Integer>} through a \texttt{List<Number>} reference).
+
+  \item If you only need to read from a list, which wildcard is common: \texttt{extends} or \texttt{super}?\par
+  \textbf{Answer:} \texttt{? extends ...}.
+
+  \item What is the PECS rule?\par
+  \textbf{Answer:} Producer Extends, Consumer Super.
+\end{enumerate}
+
+\section{Self-Study Practice (no solutions)}
+\begin{enumerate}
+  \item Write a generic method \texttt{swap(T[] a, int i, int j)}.
+  \item Write \texttt{min} using \texttt{<T extends Comparable<T>>}.
+  \item Write a method that copies from one list to another using wildcards (hint: one produces, one consumes).
+\end{enumerate}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} When do you use \texttt{? extends T}?\par
+\textbf{Sample answer:} Use \texttt{? extends T} when your method only needs to read values of type \texttt{T} from a structure and doesn't need to add elements, because it can accept multiple subtype lists safely.
+
+\vspace{0.6em}
+\textbf{Q2.} What does a bound like \texttt{<T extends Number>} mean?\par
+\textbf{Sample answer:} It means the type parameter \texttt{T} must be \texttt{Number} or a subclass of \texttt{Number}, so you can safely use \texttt{Number}-level operations inside the method/class.
+
+\end{document}

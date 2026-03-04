@@ -1,0 +1,219 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 03 -- Lecture 04: Java I/O Streams + FileReader/FileWriter}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain stream model; choose byte vs character streams.
+    \item Read/write text files with \texttt{FileReader}/\texttt{FileWriter} and buffering.
+    \item Use \texttt{try-with-resources} for exception-safe I/O code.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 03: Nested Classes, Exceptions, Multithreading \& IO Streams}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Java I/O Streams + FileReader/FileWriter
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Stream model; byte streams vs character streams
+    \item File I/O with `FileReader` / `FileWriter` (+ buffering)
+    \item Exception-safe code via `try-with-resources` and good error messages
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Stream model (big picture)}
+  \begin{itemize}[<+->]
+    \item Stream = sequence of data flowing from source to destination.
+    \item Input stream reads; output stream writes.
+    \item Streams can be chained (file stream wrapped with buffer).
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Byte vs character streams}
+  \begin{itemize}[<+->]
+    \item Byte streams: \texttt{InputStream}/\texttt{OutputStream} (binary: images, PDFs).
+    \item Character streams: \texttt{Reader}/\texttt{Writer} (text files).
+  \end{itemize}
+  \begin{block}{Rule of thumb}
+    Use \texttt{Reader/Writer} for text; use \texttt{InputStream/OutputStream} for binary.
+  \end{block}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Text file I/O: \texttt{FileReader}/\texttt{FileWriter}}
+  \begin{itemize}[<+->]
+    \item \texttt{FileReader}: reads characters from a file.
+    \item \texttt{FileWriter}: writes characters to a file.
+    \item Wrap with buffering for performance and convenience.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Buffering: why it matters}
+  \begin{itemize}[<+->]
+    \item Disk I/O is slow; reading/writing character-by-character is inefficient.
+    \item \texttt{BufferedReader} reads chunks and gives \texttt{readLine()}.
+    \item \texttt{BufferedWriter} writes efficiently and provides \texttt{newLine()}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{\texttt{try-with-resources} (safe cleanup)}
+  \begin{itemize}[<+->]
+    \item Ensures files are closed even if an exception occurs.
+    \item Syntax: \texttt{try (BufferedReader br = ...)\{...\}}
+    \item Cleaner than manual \texttt{close()} in \texttt{finally}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Common beginner issue: file not found}
+  \begin{itemize}[<+->]
+    \item Paths are relative to the working directory (where you run \texttt{java}).
+    \item Check spelling, extension, and location.
+    \item Use absolute path if needed during debugging.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Working directory + Windows path strings}
+  \begin{itemize}[<+->]
+    \item Print working directory when debugging:
+      \begin{lstlisting}
+System.out.println(new java.io.File(".").getAbsolutePath());
+      \end{lstlisting}
+    \item Windows paths in Java strings need escaping:
+      \begin{itemize}
+        \item wrong: \verb|"D:\data\marks.txt"|
+        \item correct: \verb|"D:\\data\\marks.txt"| or \verb|"D:/data/marks.txt"|
+      \end{itemize}
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example (1/2): read + compute (safe I/O)}
+\begin{lstlisting}
+import java.io.*;
+
+public class MarksReport {
+  public static void main(String[] args) {
+    try (BufferedReader br = new BufferedReader(new FileReader("marks.txt"));
+         BufferedWriter bw = new BufferedWriter(new FileWriter("report.txt"))) {
+
+      int sum = 0, max = Integer.MIN_VALUE, count = 0;
+      String line;
+      while ((line = br.readLine()) != null) {
+        line = line.trim();
+        if (line.isEmpty()) continue;
+        int x = Integer.parseInt(line);
+        sum += x; if (x > max) max = x; count++;
+      }
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}[fragile]{Example (2/2): write report + handle errors}
+\begin{lstlisting}
+      double avg = (count == 0) ? 0.0 : (sum / (double) count);
+      bw.write("Count=" + count); bw.newLine();
+      bw.write("Max=" + max);     bw.newLine();
+      bw.write(String.format("Avg=%.2f", avg)); bw.newLine();
+    }
+    catch (IOException e) {
+      System.out.println("I/O error: " + e.getMessage());
+    }
+    catch (NumberFormatException e) {
+      System.out.println("Bad number in file: " + e.getMessage());
+    }
+  }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Text file: byte stream or character stream?
+    \item Why is buffering useful?
+    \item What does \texttt{try-with-resources} guarantee?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Streams model I/O; choose byte vs character based on data type.
+    \item Use buffering for efficiency and line-based reading.
+    \item Use \texttt{try-with-resources} for safe closing and cleaner code.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item When do you choose \texttt{InputStream} over \texttt{Reader}?
+    \item Why do we prefer \texttt{BufferedReader} for reading lines?
+    \item What is the working directory and why does it matter for file paths?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\begin{frame}{Next Unit Preview}
+  \textbf{Next:} Unit 04 -- Generics Fundamentals (Generic Classes)
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will learn type-safe reusable code using \texttt{<T>}.
+  \end{itemize}
+  \slidesources{\OOPSUnitIIISources}
+\end{frame}
+
+\end{document}

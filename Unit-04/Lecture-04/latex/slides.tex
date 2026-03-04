@@ -1,0 +1,187 @@
+\documentclass{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
+\subtitle{Unit 04 -- Lecture 04: Swing Basics (Components, Containers, Layouts)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[fragile]
+  \titlepage
+  \vspace{0.5em}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:overview}{\beamerbutton{Overview}}\hspace{0.6em}
+  \hyperlink{sec:concepts}{\beamerbutton{Key Topics}}\hspace{0.6em}
+  \hyperlink{sec:demo}{\beamerbutton{Demo}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Overview}
+\label{sec:overview}
+
+\begin{frame}{Learning Outcomes}
+  \begin{itemize}[<+->]
+    \item Explain Swing component model: \texttt{JFrame}, \texttt{JPanel}, components vs containers.
+    \item Use layout managers (Flow/Border/Grid) to structure a UI.
+    \item Build and run a small multi-panel UI skeleton.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\section{Key Topics}
+\label{sec:concepts}
+
+\begin{frame}{Unit 04: Generics, Lambdas, GUI Swing \& Database Connectivity}
+  \begin{itemize}[<+->]
+    \item Lecture focus: Swing Basics (Components, Containers, Layouts)
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Today: Roadmap}
+  \begin{itemize}[<+->]
+    \item Swing overview; `JFrame`, `JPanel`, components vs containers
+    \item Layout managers (Flow/Border/Grid) and UI composition
+    \item Building a small multi-panel UI skeleton
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Components vs containers}
+  \begin{itemize}[<+->]
+    \item Components: \texttt{JLabel}, \texttt{JButton}, \texttt{JTextField}, \texttt{JTable}, ...
+    \item Containers: \texttt{JPanel}, \texttt{JFrame} content pane
+    \item Compose UI by nesting panels and adding components inside them.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Layout managers (quick)}
+  \begin{itemize}[<+->]
+    \item \texttt{FlowLayout}: left-to-right (good for button rows)
+    \item \texttt{BorderLayout}: NORTH/SOUTH/EAST/WEST/CENTER (good for screens)
+    \item \texttt{GridLayout}: rows/cols (good for simple forms)
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{A common UI composition pattern}
+  \begin{itemize}[<+->]
+    \item Root panel: \texttt{BorderLayout}
+    \item NORTH: title / header
+    \item CENTER: main panel (form/table)
+    \item SOUTH: action buttons
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+
+\section{Demo / Example}
+\label{sec:demo}
+
+\begin{frame}[fragile]{Example: multi-panel skeleton (1/3)}
+\begin{lstlisting}
+import javax.swing.*;
+import java.awt.*;
+
+public class SimpleFormUI {
+  public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> {
+      JFrame f = new JFrame("CRM Skeleton");
+      f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      JPanel root = new JPanel(new BorderLayout(10, 10));
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: multi-panel skeleton (2/3)}
+\begin{lstlisting}
+// continued...
+      root.add(new JLabel("Add Resource", SwingConstants.CENTER),
+               BorderLayout.NORTH);
+
+      JPanel form = new JPanel(new GridLayout(2, 2, 8, 8));
+      form.add(new JLabel("Name:"));
+      form.add(new JTextField());
+      form.add(new JLabel("Type:"));
+      form.add(new JTextField());
+      root.add(form, BorderLayout.CENTER);
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Example: multi-panel skeleton (3/3)}
+\begin{lstlisting}
+// continued...
+      JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      actions.add(new JButton("Save"));
+      actions.add(new JButton("Exit"));
+      root.add(actions, BorderLayout.SOUTH);
+
+      f.setContentPane(root);
+      f.pack();
+      f.setLocationRelativeTo(null);
+      f.setVisible(true);
+    });
+  }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Mini Exercises (2--3 mins)}
+  \begin{enumerate}[<+->]
+    \item Which is a container: \texttt{JPanel} or \texttt{JButton}?
+    \item Which layout is best for header + body + footer screens?
+    \item Why prefer \texttt{pack()} over fixed \texttt{setSize()} (often)?
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Key Takeaways}
+  \begin{itemize}[<+->]
+    \item Swing UI = components inside containers.
+    \item Layout managers create robust UIs without hard-coded positions.
+    \item Multi-panel composition scales better than one giant panel.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint Questions}
+  \begin{enumerate}[<+->]
+    \item What is the difference between a component and a container?
+    \item Name 3 layout managers and one use case for each.
+    \item Describe one UI screen using the NORTH/CENTER/SOUTH pattern.
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Next Lecture Preview}
+  \textbf{Next:} Swing event handling + JDBC (persistence)
+  \vspace{0.6em}
+  \begin{itemize}[<+->]
+    \item We will connect buttons to actions and store data in a database.
+  \end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\end{document}

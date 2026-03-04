@@ -1,0 +1,257 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 03 Notes\\Multithreading + Synchronization}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Syllabus Alignment (Unit 03)}
+\textbf{Unit 03:} threads, priorities, synchronization
+
+\section{Prerequisites}
+You should already be comfortable with:
+\begin{itemize}
+  \item classes/objects and methods,
+  \item loops and basic debugging,
+  \item the idea of shared variables and side-effects.
+\end{itemize}
+
+\section{Learning Outcomes}
+After this lecture, you should be able to:
+\begin{itemize}
+  \item Create threads using \texttt{Thread} and \texttt{Runnable} and explain \texttt{start()} vs \texttt{run()}.
+  \item Describe the thread lifecycle and understand what thread priority means (and doesn't mean).
+  \item Identify race conditions and fix them using \texttt{synchronized}.
+\end{itemize}
+
+\section{Lecture Overview}
+Multithreading allows a Java program to do multiple tasks at the same time (or appear to do so).
+You need threads when you care about:
+\begin{itemize}
+  \item \textbf{responsiveness}: UI apps should not freeze while doing I/O or long work,
+  \item \textbf{throughput}: servers handle many requests concurrently,
+  \item \textbf{parallelism}: CPUs have multiple cores that can run tasks in parallel.
+\end{itemize}
+\textbf{Big warning:} threads make programs harder to reason about. Most bugs come from shared mutable data.
+This lecture focuses on the core ideas required by the syllabus: creating threads, priorities, and synchronization.
+\notesources{\OOPSUnitIIISources}
+
+\section{Key Terms (Quick)}
+\begin{itemize}
+  \item \textbf{Concurrency}: managing multiple tasks that overlap in time.
+  \item \textbf{Parallelism}: tasks literally running at the same time on different cores.
+  \item \textbf{Thread}: lightweight unit of execution within a process.
+  \item \textbf{Race condition}: outcome depends on timing/interleaving of threads.
+  \item \textbf{Critical section}: code that must not be executed by multiple threads at once.
+  \item \textbf{Lock/monitor}: mechanism used by \texttt{synchronized}.
+\end{itemize}
+
+\section{Detailed Notes}
+\subsection{Concurrency vs parallelism (quick intuition)}
+\begin{itemize}
+  \item \textbf{Concurrency}: tasks overlap in time (switching between tasks).
+  \item \textbf{Parallelism}: tasks run at the same time on different cores.
+\end{itemize}
+You can have concurrency on a single-core CPU (by switching), and you can have parallelism on multi-core CPUs.
+
+\subsection{Threads in Java: \texttt{Thread} and \texttt{Runnable}}
+Two common ways to create threads:
+\begin{itemize}
+  \item extend \texttt{Thread} and override \texttt{run()},
+  \item implement \texttt{Runnable} and pass it to a \texttt{Thread} (preferred in many designs).
+\end{itemize}
+
+\paragraph{Most important rule: \texttt{start()} vs \texttt{run()}.}
+\begin{itemize}
+  \item \texttt{start()} creates a \textbf{new OS-level thread} and then calls \texttt{run()} on that new thread.
+  \item \texttt{run()} called directly is just a normal method call (no new thread).
+\end{itemize}
+
+\paragraph{Thread naming helps debugging.}
+\begin{lstlisting}
+Thread t = new Thread(task);
+t.setName("worker-1");
+t.start();
+\end{lstlisting}
+
+\subsection{Thread lifecycle (simplified)}
+\begin{itemize}
+  \item \textbf{New}: thread object created, not started.
+  \item \textbf{Runnable/Running}: eligible to run or currently running.
+  \item \textbf{Blocked/Waiting}: sleeping, waiting for lock, or waiting for I/O.
+  \item \textbf{Terminated}: finished \texttt{run()}.
+\end{itemize}
+
+\subsection{Thread priorities (what they mean and what they do not)}
+\textbf{Priority is a hint} to the scheduler. It is not a guarantee.
+On many systems it may have little visible effect.
+Do not rely on priority for correctness.
+
+\subsection{The real problem: shared mutable state}
+If each thread works on its own local variables, life is easy.
+Bugs start when threads share and modify the same object/variable.
+
+\paragraph{Race condition.}
+A race condition happens when the outcome depends on timing/interleaving.
+The classic example is \texttt{value++}:
+\begin{itemize}
+  \item read \texttt{value},
+  \item add 1,
+  \item write back.
+\end{itemize}
+If two threads interleave those steps, an increment can be lost.
+
+\subsection{Synchronization with \texttt{synchronized} (core tool)}
+\texttt{synchronized} protects a \textbf{critical section} using a lock (monitor).
+Only one thread at a time can execute synchronized code guarded by the same lock.
+
+\paragraph{Two forms you must know.}
+\begin{itemize}
+  \item synchronized instance method: locks on \texttt{this}.
+  \item synchronized block: locks on a specific object (\texttt{synchronized(lock)\{...\}}).
+\end{itemize}
+
+\paragraph{Lock scope tip.}
+Keep the synchronized part as small as possible, but large enough to keep shared state consistent.
+
+\subsection{Deadlock (common pitfall)}
+Deadlock occurs when:
+\begin{itemize}
+  \item thread A holds lock 1 and waits for lock 2,
+  \item thread B holds lock 2 and waits for lock 1.
+\end{itemize}
+\textbf{Prevention rule:} always acquire multiple locks in a consistent order.
+
+\notesources{\OOPSUnitIIISources}
+
+\section{Worked Example (tutorial): see a race condition and fix it}
+We will build a tiny counter and run two threads on it.
+
+\subsection*{Step 1: Unsafe counter (race condition)}
+\begin{lstlisting}
+class Counter {
+    private int value = 0;
+    void inc() { value++; } // not thread-safe
+    int get() { return value; }
+}
+\end{lstlisting}
+
+\subsection*{Step 2: Safe counter using \texttt{synchronized}}
+\begin{lstlisting}
+class SafeCounter {
+    private int value = 0;
+    synchronized void inc() { value++; }
+    synchronized int get() { return value; }
+}
+\end{lstlisting}
+
+\subsection*{Step 3: Run two threads and wait using \texttt{join()}}
+\begin{lstlisting}
+public class Demo {
+    public static void main(String[] args) throws InterruptedException {
+        SafeCounter c = new SafeCounter();
+
+        Runnable task = new Runnable() {
+            @Override public void run() {
+                for (int i = 0; i < 100000; i++) c.inc();
+            }
+        };
+
+        Thread t1 = new Thread(task);
+        Thread t2 = new Thread(task);
+        t1.start(); t2.start();
+        t1.join(); t2.join();
+
+        System.out.println(c.get()); // expected 200000
+    }
+}
+\end{lstlisting}
+\textbf{Why \texttt{join()}?} It makes the main thread wait until worker threads finish.
+Without join, main may print the result too early.
+
+\subsection{Another worked example: bank account withdrawal (classic)}
+This example shows why checks and updates must be atomic (together).
+
+\subsection*{Unsafe version (can go negative or allow double-withdraw)}
+\begin{lstlisting}
+class BankAccount {
+    private int balance = 100;
+
+    void withdraw(int amount) {
+        if (amount <= 0) throw new IllegalArgumentException("amount");
+
+        if (balance >= amount) {
+            // force a context switch to make the bug easier to see
+            try { Thread.sleep(1); } catch (InterruptedException ignored) {}
+            balance -= amount;
+        }
+    }
+
+    int getBalance() { return balance; }
+}
+\end{lstlisting}
+Two threads can both pass the check before either subtracts.
+
+\subsection*{Safe version (synchronized critical section)}
+\begin{lstlisting}
+class SafeBankAccount {
+    private int balance = 100;
+
+    synchronized void withdraw(int amount) {
+        if (amount <= 0) throw new IllegalArgumentException("amount");
+        if (balance >= amount) balance -= amount;
+    }
+
+    synchronized int getBalance() { return balance; }
+}
+\end{lstlisting}
+
+\section{In-Class Exercises (with brief solutions)}
+\begin{enumerate}
+  \item What is the difference between concurrency and parallelism?\par
+  \textbf{Answer:} concurrency is overlapping tasks; parallelism is simultaneous execution on multiple cores.
+
+  \item Which method starts a new thread: \texttt{start()} or \texttt{run()}?\par
+  \textbf{Answer:} \texttt{start()}.
+
+  \item Why is \texttt{value++} unsafe without synchronization?\par
+  \textbf{Answer:} it's a read-modify-write sequence; interleaving can lose updates.
+\end{enumerate}
+
+\section{Self-Study Practice (with hints)}
+\begin{enumerate}
+  \item Write a program that runs two threads printing numbers 1--10 with thread names.
+  \textbf{Hint:} use \texttt{Thread.currentThread().getName()}.
+
+  \item Modify the counter example: remove \texttt{synchronized} and run 5 times; record outputs.
+  \textbf{Hint:} race bugs may not appear every time.
+
+  \item Create a shared bank account and two threads withdrawing money; prevent negative balance using synchronization.
+  \textbf{Hint:} the check and update must be inside the same synchronized block/method.
+
+  \item Try changing thread priorities and observe (note that results may vary).
+\end{enumerate}
+
+\section{Summary (what to remember)}
+\begin{itemize}
+  \item Use \texttt{start()} to run code in a new thread; \texttt{run()} is just a method call.
+  \item Use \texttt{join()} when one thread must wait for another to finish.
+  \item Race conditions happen with shared mutable state.
+  \item \texttt{synchronized} protects critical sections using a lock (monitor).
+  \item Priority is not a correctness tool; it is only a hint.
+\end{itemize}
+
+\section{Checkpoint Questions (with sample answers)}
+\textbf{Q1.} What is a race condition?\par
+\textbf{Sample answer:} A race condition happens when multiple threads access shared mutable state without proper synchronization, so the outcome depends on timing/interleaving.
+
+\vspace{0.6em}
+\textbf{Q2.} Why does \texttt{synchronized} help?\par
+\textbf{Sample answer:} It ensures only one thread at a time can execute the protected critical section, preventing lost updates and inconsistent states.
+
+\end{document}
