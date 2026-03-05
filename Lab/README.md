@@ -24,7 +24,8 @@ All experiments are provided as **paired lab handouts** (two experiments per han
 2. Experiment-03&04 (`Experiment-03-04/notes.pdf`)
 3. Experiment-05&06 (`Experiment-05-06/notes.pdf`)
 4. Experiment-07&08 (`Experiment-07-08/notes.pdf`)
+5. Experiment-09&10 (`Experiment-09-10/notes.pdf`)
 
 ## Remaining experiments
 
-The remaining paired experiments (Experiment-09&10 onwards) are maintained locally and are **not included** in this public GitHub repository.
+The remaining paired experiments (Experiment-11&12 onwards) are maintained locally and are **not included** in this public GitHub repository.

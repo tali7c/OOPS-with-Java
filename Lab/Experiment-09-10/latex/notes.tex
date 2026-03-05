@@ -1,0 +1,84 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-09\&10: Inheritance + Abstraction (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This handout describes what to implement for inheritance, overriding, abstract classes, and interfaces.
+It intentionally avoids giving full code.
+
+\section{Experiment 09 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To implement inheritance and runtime polymorphism.
+  \item \textbf{Problem Statement:} Create base and derived classes demonstrating inheritance.
+  \item \textbf{Expected Outcome:} Students will understand code reusability.
+\end{itemize}
+
+\section{Experiment 10 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To implement abstraction using abstract classes and interfaces.
+  \item \textbf{Problem Statement:} Design programs using abstract classes and interfaces.
+  \item \textbf{Expected Outcome:} Students will understand abstraction and multiple inheritance.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- Inheritance + overriding (Exp-09)}
+Create \texttt{InheritanceDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Create base class \texttt{Employee} with fields (\texttt{id}, \texttt{name}) and method \texttt{double calculatePay()}.
+  \item Create derived classes:
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{SalariedEmployee extends Employee} (monthly salary)
+    \item \texttt{ContractEmployee extends Employee} (hourlyRate $\times$ hours)
+  \end{itemize}
+  \item Override \texttt{calculatePay()} in derived classes and use \texttt{@Override}.
+  \item Demonstrate runtime polymorphism:
+  \begin{itemize}[leftmargin=*]
+    \item store mixed objects in an \texttt{Employee[]} array,
+    \item call \texttt{calculatePay()} in a loop and print results.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Task B --- Abstract class + interface (Exp-10)}
+Create \texttt{AbstractInterfaceDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Abstract class part}
+  \begin{itemize}[leftmargin=*]
+    \item Create abstract class \texttt{EmployeeBase} with an abstract method \texttt{double calculateSalary()}.
+    \item Create at least two subclasses (example: \texttt{FullTimeEmployee}, \texttt{InternEmployee}) and implement salary logic.
+  \end{itemize}
+
+  \item \textbf{Interface part}
+  \begin{itemize}[leftmargin=*]
+    \item Create interface \texttt{Payable} with method \texttt{double amountDue()}.
+    \item Implement it in two classes (example: \texttt{Invoice} and \texttt{SalarySlip}).
+    \item Store objects in a \texttt{Payable[]} array and compute total due.
+  \end{itemize}
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Overriding happens when method name + parameters match and the subclass provides a new implementation.
+  \item Use \texttt{@Override} to avoid accidental signature mismatches.
+  \item Prefer interfaces to model capabilities; use abstract classes when you need shared state + partial implementation.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{InheritanceDemo.java}
+  \item \texttt{AbstractInterfaceDemo.java}
+  \item sample output for both programs
+  \item observations (5--10 lines): dynamic dispatch; when to prefer interface vs abstract class
+\end{itemize}
+
+\notesources{\OOPSUnitIISources}
+\end{document}
