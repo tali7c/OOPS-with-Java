@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 03 Notes\\I/O + Command Line + Types + Operators}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Introduction to OOPs and Java Fundamentals
+  \item \textbf{Main new ideas:} Console I/O: \texttt{Scanner} (most common for beginners), Console I/O: \texttt{BufferedReader} (fast, line-oriented), Output formatting
+  \item \textbf{Course thread:} Use I/O + Command Line + Types + Operators to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\end{itemize}
+\notesources{\OOPSUnitISources}
 
 \section{Lecture Overview}
 This lecture focuses on the day-to-day basics you need to write useful Java programs:
@@ -20,17 +25,32 @@ This lecture focuses on the day-to-day basics you need to write useful Java prog
 \end{itemize}
 \notesources{\OOPSUnitISources}
 
-\section{Syllabus Alignment (Unit 01)}
-\textbf{Unit 01:} I/O statements, command line arguments, data types, variables, operators
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Program structure}: You already know where execution starts in Java; this lecture fills that structure with input and expressions. Main reference: \texttt{Unit 01 / Lecture 02 slides/notes}.
+  \item \textbf{Basic data handling}: The C prerequisite gives the intuition for values and operators; Java adds stronger typing rules. Main reference: Programming in C prerequisite.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Read console input using \texttt{Scanner} and (at a basic level) \texttt{BufferedReader}.
-  \item Use \texttt{System.out.println} and \texttt{System.out.printf} for formatted output.
-  \item Use \texttt{String[] args} to accept command line inputs and parse simple values.
-  \item Choose correct primitive types and apply operators with correct precedence and casting.
+  \item Read input using \texttt{Scanner} and print formatted output.
+  \item Use command line arguments (\texttt{args}) for simple programs.
+  \item Apply primitive types, operators, precedence, and casting correctly.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Console I/O: \texttt{Scanner} (most common for beginners)} $\rightarrow$ \textit{Console I/O: \texttt{BufferedReader} (fast, line-oriented)} $\rightarrow$ \textit{Output formatting} $\rightarrow$ \textit{Command line arguments} $\rightarrow$ \textit{Data types, operators, precedence, casting}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -94,15 +114,32 @@ You often parse numbers using:
 \begin{itemize}
   \item \textbf{Integer division:} \texttt{5/2 == 2} (not 2.5). Use \texttt{5/2.0} or cast: \texttt{(double)5/2}.
   \item \textbf{Overflow:} \texttt{int} can overflow silently.\par
-  Example: \texttt{int x = 2\_000\_000\_000; x = x + 1\_000\_000\_000;} (wraps around).
+  Example: start with \texttt{int x = 2\_000\_000\_000}; then add another billion and observe the wrap-around result.
   \item \textbf{Short-circuit logic:} \texttt{\&\&} and \texttt{||} may skip evaluating the right side.\par
-  This is useful for null checks: \texttt{s != null \&\& s.length() > 0}.
-  \item \textbf{Precedence:} multiplication happens before addition. Use parentheses when teaching/learning.
+  This is useful for null checks. First test \texttt{s != null}. Only then check whether the string length is greater than zero.
+  \item \textbf{Precedence:} multiplication happens before addition. Use parentheses when teaching or learning.
 \end{itemize}
 
 \subsubsection{Casting}
 \textbf{Widening} (safe) happens automatically: \texttt{int} $\rightarrow$ \texttt{double}.
 \textbf{Narrowing} may lose data and requires explicit cast: \texttt{double} $\rightarrow$ \texttt{int}.
+
+\section{Running Project Connection}
+Use I/O + Command Line + Types + Operators to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Mixing numeric and line-based input without understanding Scanner behavior.
+  \item Ignoring operator precedence and misreading the result.
+  \item Expecting Java to convert unrelated types automatically.
+\end{itemize}
+\notesources{\OOPSUnitISources}
 
 \section{Worked Example: Args + Scanner + Formatting}
 \begin{lstlisting}
@@ -137,7 +174,16 @@ public class InputDemo {
 \end{itemize}
 \notesources{\OOPSUnitISources}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Console I/O: \texttt{Scanner} (most common for beginners)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item What is the output of \texttt{System.out.println(5/2);}?\; \textbf{Answer:} \texttt{2}.
   \item How to get \texttt{2.5} from 5 and 2?\; \textbf{Answer:} \texttt{5/2.0} or \texttt{(double)5/2}.
@@ -151,12 +197,25 @@ public class InputDemo {
   \item Create 5 expressions and predict results using precedence; then verify by running Java.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why is \texttt{Scanner.nextLine()} tricky after \texttt{nextInt()}?\par
 \textbf{Sample answer:} \texttt{nextInt()} leaves the newline in the input buffer, so the next \texttt{nextLine()} may read the leftover newline and return an empty string. We can consume the newline by calling \texttt{nextLine()} once after reading the number.
 
 \vspace{0.6em}
 \textbf{Q2.} Why is \texttt{5/2} not 2.5 in Java?\par
 \textbf{Sample answer:} Both operands are integers, so Java performs integer division and discards the fractional part. If either operand is \texttt{double}, it performs floating-point division.
+
+\vspace{0.6em}
+\textbf{Q3.} When should you cast explicitly in Java?\par
+\textbf{Sample answer:} When Java cannot prove the conversion is safe or when narrowing may lose information.
 
 \end{document}

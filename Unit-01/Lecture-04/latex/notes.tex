@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 04 Notes\\Control Flow + Arrays + Strings}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Introduction to OOPs and Java Fundamentals
+  \item \textbf{Main new ideas:} Program control statements (selection + loops), Arrays (1D/2D), types of arrays, common patterns, Strings and \texttt{StringBuilder}
+  \item \textbf{Course thread:} Use Control Flow + Arrays + Strings to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\end{itemize}
+\notesources{\OOPSUnitISources}
 
 \section{Lecture Overview}
 This lecture teaches you how to \textbf{control program flow} (decisions + loops) and work with two core data structures:
@@ -17,16 +22,32 @@ This lecture teaches you how to \textbf{control program flow} (decisions + loops
 These three topics appear in almost every lab/program you will write.
 \notesources{\OOPSUnitISources}
 
-\section{Syllabus Alignment (Unit 01)}
-\textbf{Unit 01:} Control statements, arrays, and strings
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Types and operators}: Conditions, loop bounds, indices, and string logic depend on the previous lecture. Main reference: \texttt{Unit 01 / Lecture 03 slides/notes}.
+  \item \textbf{Program flow}: Control statements only make sense once you already know the default top-to-bottom execution order. Main reference: \texttt{Unit 01 / Lecture 02 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Use selection statements (\texttt{if/else}, \texttt{switch}) and loops (\texttt{for/while/do-while}).
-  \item Create and traverse 1D/2D arrays and solve common array problems (sum, max, search).
-  \item Explain why \texttt{String} is immutable and when to use \texttt{StringBuilder}.
+  \item Use \texttt{if/else}, \texttt{switch}, and loops to control program flow.
+  \item Create/traverse 1D and 2D arrays and solve simple array problems.
+  \item Explain \texttt{String} immutability and use \texttt{StringBuilder} when needed.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Program control statements (selection + loops)} $\rightarrow$ \textit{Arrays (1D/2D), types of arrays, common patterns} $\rightarrow$ \textit{Strings and \texttt{StringBuilder}}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -111,6 +132,23 @@ Use:
 If you build a string repeatedly (especially in a loop), use \texttt{StringBuilder} and \texttt{append()}.
 \notesources{\OOPSUnitISources}
 
+\section{Running Project Connection}
+Use Control Flow + Arrays + Strings to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Writing off-by-one loop boundaries.
+  \item Comparing String values with == instead of an equality method.
+  \item Treating String as mutable and expecting in-place updates.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
 \section{Worked Example: Grades (control flow + arrays + strings)}
 \begin{lstlisting}
 import java.util.Scanner;
@@ -153,7 +191,16 @@ public class GradeStats {
   \item Casting for average: \texttt{sum / (double)n} to avoid integer division.
 \end{itemize}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Program control statements (selection + loops)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item What is the last valid index of an array of length 10?\; \textbf{Answer:} 9.
   \item Should we use \texttt{==} or \texttt{equals} to compare strings by content?\; \textbf{Answer:} \texttt{equals}.
@@ -167,12 +214,25 @@ public class GradeStats {
   \item Create a 2D matrix and compute row-wise sums.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why is \texttt{String} immutable and why does it matter?\par
 \textbf{Sample answer:} Immutability makes strings safe to share and helps with security and caching. It also means operations create new objects, so repeated concatenation in loops can be inefficient.
 
 \vspace{0.6em}
 \textbf{Q2.} How do you avoid off-by-one errors in array loops?\par
 \textbf{Sample answer:} Remember Java arrays are 0-based and the last index is \texttt{length - 1}. Use loop conditions like \texttt{i < a.length} rather than \texttt{i <= a.length}.
+
+\vspace{0.6em}
+\textbf{Q3.} Why is String immutability useful?\par
+\textbf{Sample answer:} It makes String values safer to share and easier to reason about across APIs and larger programs.
 
 \end{document}

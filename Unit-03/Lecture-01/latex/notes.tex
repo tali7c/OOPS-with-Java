@@ -3,19 +3,21 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 01 Notes\\Nested Classes (Types + Practical Use-Cases)}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
 
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Nested Classes, Exceptions, Multithreading, and I/O
+  \item \textbf{Main new ideas:} Nested classes at a glance, Motivation: scope and encapsulation, Types of nested classes (with intuition)
+  \item \textbf{Course thread:} Use Nested Classes (Types + Use-cases) to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
 \section{How to use these notes (self-study)}
 Read in order. Try the tiny code snippets mentally first, then run the worked example.
 For each section, answer the checkpoint questions before you move on.
-
-\section{Syllabus Alignment (Unit 03)}
-\textbf{Unit 03:} nested classes and their types
 
 \section{Prerequisites}
 You should already be comfortable with:
@@ -28,9 +30,9 @@ You should already be comfortable with:
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Explain why nested classes exist and when they improve design.
+  \item Explain why nested classes improve encapsulation in some designs.
   \item Differentiate static nested, inner, local, and anonymous classes.
-  \item Recognize common use cases like helpers and callbacks/listeners.
+  \item Recognize use cases: helpers and callbacks/listeners (Swing later).
 \end{itemize}
 
 \section{Lecture Overview}
@@ -42,6 +44,15 @@ Nested classes let you:
   \item hide implementation details (encapsulation),
   \item implement small callbacks/listeners without creating many separate files.
 \end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Class structure}: Nested classes still depend on the class-object model from Unit 02. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+  \item \textbf{Interfaces and callbacks}: Anonymous and local classes make more sense once contract-based behavior is familiar. Main reference: \texttt{Unit 02 / Lecture 05 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
 \notesources{\OOPSUnitIIISources}
 
 \section{Key Terms (Quick)}
@@ -59,16 +70,18 @@ Nested classes let you:
 \subsection{Nested classes at a glance}
 Use this table when you are unsure which kind you need:
 
-\begin{tabular}{@{}p{0.26\linewidth}p{0.20\linewidth}p{0.48\linewidth}@{}}
+\small
+\begin{tabular}{@{}l l p{0.50\linewidth}@{}}
 \toprule
 \textbf{Type} & \textbf{Needs outer object?} & \textbf{Typical use-case} \\
 \midrule
-Static nested & No & helper tied to a concept (e.g., \texttt{Builder}, \texttt{Entry}, \texttt{Node}) \\
-Inner (member) & Yes & helper that needs outer state (iterator, view, controller) \\
-Local (in method) & No (but can capture) & short helper for one method, but named \\
-Anonymous & No (but can capture) & one-time callback/listener implementation \\
+Static nested & No & helper type tied to the outer concept, such as a builder or node \\
+Inner (member) & Yes & helper that needs outer state, such as an iterator or controller \\
+Local (in method) & No (but can capture) & short named helper used inside one method only \\
+Anonymous & No (but can capture) & one-time callback or listener implementation \\
 \bottomrule
 \end{tabular}
+\normalsize
 
 \subsection{Motivation: scope and encapsulation}
 Sometimes a helper type is only meaningful inside one class.
@@ -165,6 +178,23 @@ So \texttt{private} is still respected at the source-code level, but nested/oute
   \textbf{Fix:} if you do not need outer instance data, make it \texttt{static}.
 \end{enumerate}
 
+\section{Running Project Connection}
+Use Nested Classes (Types + Use-cases) to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Confusing static nested classes with true inner classes.
+  \item Overusing anonymous classes when the logic is too large to read.
+  \item Scattering tiny helper types across many files without need.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
 \section{Worked Example (tutorial): one outer type using all 4 kinds}
 We will build a small \texttt{IntBag} container and use nested classes for iteration, helpers, and filtering.
 
@@ -239,7 +269,7 @@ public class Demo {
         System.out.println();
 
         // LOCAL class (named helper inside a method)
-        final int threshold = 3; // effectively final
+        final int threshold = 3; // explicitly final
         class GreaterThan implements IntPredicate {
             public boolean test(int x) { return x > threshold; }
         }
@@ -255,7 +285,16 @@ public class Demo {
 \end{lstlisting}
 Later in Unit 04 you will replace many anonymous classes like the even-check with a lambda, but the idea (passing behavior) remains the same.
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Nested classes at a glance} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Which nested type has an implicit reference to the outer object?\; \textbf{Answer:} inner class.
   \item Which nested type is often used for callbacks/listeners?\; \textbf{Answer:} anonymous class.
@@ -282,12 +321,25 @@ Later in Unit 04 you will replace many anonymous classes like the even-check wit
   \item Use an \textbf{anonymous class} for one-time callbacks (often replaced by lambdas later).
 \end{itemize}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why do nested classes help encapsulation?\par
 \textbf{Sample answer:} They keep helper types close to where they are used and reduce the public API. This prevents accidental use from unrelated code and improves readability.
 
 \vspace{0.6em}
 \textbf{Q2.} What is the difference between a static nested class and an inner class?\par
 \textbf{Sample answer:} A static nested class does not have an implicit outer reference and can be created without an outer object. An inner class has an implicit reference to an outer instance and can access its instance members.
+
+\vspace{0.6em}
+\textbf{Q3.} What problem do nested classes solve that packages alone do not?\par
+\textbf{Sample answer:} They keep helper behavior tightly scoped to one outer type and reduce unnecessary visibility.
 
 \end{document}

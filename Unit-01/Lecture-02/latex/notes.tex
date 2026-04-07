@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 02 Notes\\Java Overview + Program Structure + Features}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Introduction to OOPs and Java Fundamentals
+  \item \textbf{Main new ideas:} Java ecosystem: JDK vs JRE vs JVM, Bytecode and the compile/run flow, Basic program structure: class + \texttt{main}
+  \item \textbf{Course thread:} Use Java Overview + Program Structure + Features to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\end{itemize}
+\notesources{\OOPSUnitISources}
 
 \section{Lecture Overview}
 This lecture makes you comfortable with the Java ``toolchain'' and the minimum you need to compile and run Java programs.
@@ -20,17 +25,32 @@ By the end, you should clearly understand:
 \end{itemize}
 \notesources{\OOPSUnitISources}
 
-\section{Syllabus Alignment (Unit 01)}
-\textbf{Unit 01:} Introduction to OOPs (Java overview + features)
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{OOP vocabulary}: The previous lecture introduced objects, classes, and modelling; this lecture connects them to the Java platform. Main reference: \texttt{Unit 01 / Lecture 01 slides/notes}.
+  \item \textbf{Problem to program flow}: Once the model is clear, the next question is how Java compiles and runs it. Main reference: \texttt{Unit 01 / Lecture 01 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Explain the Java ecosystem: JDK vs JRE vs JVM, and what bytecode is.
-  \item Compile and run a Java program using \texttt{javac} and \texttt{java}.
-  \item Identify whether an error is compile-time (during \texttt{javac}) or runtime (during \texttt{java}).
-  \item List core features of Java and what they imply in practice.
+  \item Explain JDK vs JRE vs JVM and what bytecode is.
+  \item Compile and run a Java program; recognize compile-time vs runtime errors.
+  \item List key features of Java and their practical meaning.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Java ecosystem: JDK vs JRE vs JVM} $\rightarrow$ \textit{Bytecode and the compile/run flow} $\rightarrow$ \textit{Basic program structure: class + \texttt{main}} $\rightarrow$ \textit{Compile-time vs runtime errors} $\rightarrow$ \textit{Features of Java (what they mean in practice)}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -101,6 +121,23 @@ Example: \texttt{public class Hello} must be in \texttt{Hello.java}.
 \end{itemize}
 \notesources{\OOPSUnitISources}
 
+\section{Running Project Connection}
+Use Java Overview + Program Structure + Features to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Using JDK, JRE, and JVM as interchangeable terms.
+  \item Forgetting that a public class name must match the file name.
+  \item Mixing compile-time errors with runtime failures.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
 \section{Worked Example: Compile \& Run + Observe Errors}
 \subsection*{A minimal program}
 \begin{lstlisting}
@@ -132,7 +169,16 @@ public class DivideDemo {
 If you write \texttt{System.out.println("Hi")} without a semicolon, \texttt{javac} will stop and show an error.
 This is a compile-time error: the program never runs.
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Java ecosystem: JDK vs JRE vs JVM} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item \textbf{JDK/JRE/JVM:} Which one contains \texttt{javac}? \textbf{Answer:} JDK.
   \item \textbf{File naming:} What should the file name be if you write \texttt{public class Student}? \textbf{Answer:} \texttt{Student.java}.
@@ -146,12 +192,25 @@ This is a compile-time error: the program never runs.
   \item Install the JDK and run \texttt{java -version} and \texttt{javac -version}. Note the output.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why does Java use bytecode instead of compiling directly to machine code?\par
 \textbf{Sample answer:} Bytecode makes the compiled program portable. The same \texttt{.class} can run on different operating systems because the JVM translates/executes bytecode for the current platform.
 
 \vspace{0.6em}
 \textbf{Q2.} What is the difference between a compile-time error and a runtime exception?\par
 \textbf{Sample answer:} Compile-time errors are detected by \texttt{javac} before execution; runtime exceptions occur while the program is running after compilation succeeds.
+
+\vspace{0.6em}
+\textbf{Q3.} Why can one .class file run on multiple operating systems?\par
+\textbf{Sample answer:} Because Java compiles to platform-neutral bytecode and each platform provides its own JVM to execute it.
 
 \end{document}

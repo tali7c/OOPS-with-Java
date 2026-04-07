@@ -3,15 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 04 Notes\\Java I/O Streams + FileReader/FileWriter}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
 
-\section{Syllabus Alignment (Unit 03)}
-\textbf{Unit 03:} Java I/O streams; \texttt{FileReader}, \texttt{FileWriter}
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Nested Classes, Exceptions, Multithreading, and I/O
+  \item \textbf{Main new ideas:} Stream model (big picture), Byte streams vs character streams, Text file I/O with \texttt{FileReader}/\texttt{FileWriter}
+  \item \textbf{Course thread:} Use Java I/O Streams + FileReader/FileWriter to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
 
 \section{Prerequisites}
 You should already know:
@@ -24,10 +26,20 @@ You should already know:
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Explain the stream model and choose between byte streams and character streams.
-  \item Read and write text files using \texttt{FileReader}/\texttt{FileWriter} with buffering.
-  \item Write exception-safe I/O code using \texttt{try-with-resources} and meaningful error messages.
+  \item Explain stream model; choose byte vs character streams.
+  \item Read/write text files with \texttt{FileReader}/\texttt{FileWriter} and buffering.
+  \item Use \texttt{try-with-resources} for exception-safe I/O code.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Stream model (big picture)} $\rightarrow$ \textit{Byte streams vs character streams} $\rightarrow$ \textit{Text file I/O with \texttt{FileReader}/\texttt{FileWriter}} $\rightarrow$ \textit{Reading patterns (three common styles)} $\rightarrow$ \textit{Exception-safe I/O: \texttt{try-with-resources}}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIIISources}
 
 \section{Lecture Overview}
 In almost every real application you must read/write data:
@@ -37,7 +49,16 @@ In almost every real application you must read/write data:
   \item write reports/logs,
   \item store results for later use.
 \end{itemize}
-Java provides a stream-based I/O model. In this lecture we focus on text files using \texttt{FileReader}/\texttt{FileWriter} and buffering, and we learn how to avoid the most common beginner mistakes (wrong path, not closing files, confusing exceptions).
+Java provides a stream-based I/O model. In this lecture we focus on text files with \texttt{FileReader}, \texttt{FileWriter}, and buffering. We also address common beginner mistakes such as wrong paths, unclosed files, and exception confusion.
+\notesources{\OOPSUnitIIISources}
+
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Exceptions}: File work is one of the most common places where exceptions matter. Main reference: \texttt{Unit 03 / Lecture 02 slides/notes}.
+  \item \textbf{Strings and loops}: Reading and writing files still depends on iterating and representing text correctly. Main reference: \texttt{Unit 01 / Lecture 04 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
 \notesources{\OOPSUnitIIISources}
 
 \section{Key Terms (Quick)}
@@ -143,6 +164,23 @@ new FileWriter("log.txt", true); // append=true
 \end{lstlisting}
 \notesources{\OOPSUnitIIISources}
 
+\section{Running Project Connection}
+Use Java I/O Streams + FileReader/FileWriter to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Forgetting to close streams or readers.
+  \item Using byte streams when character streams fit text better.
+  \item Reporting vague file errors with no recovery hint.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
 \section{Worked Example (tutorial): read marks and write a report}
 \subsection*{Goal}
 Read integer marks from \texttt{marks.txt} (one mark per line), compute sum/avg/max, and write a report to \texttt{report.txt}.
@@ -155,7 +193,7 @@ Read integer marks from \texttt{marks.txt} (one mark per line), compute sum/avg/
 
 88
 \end{lstlisting}
-Blank lines are allowed; we will ignore them.
+Blank lines are allowed; we will ignore them. If the file has no numeric rows, report the maximum as \texttt{N/A} instead of printing a fake value.
 
 \subsection*{Code}
 \begin{lstlisting}
@@ -170,7 +208,7 @@ public class MarksReport {
         String inPath = "marks.txt";
         String outPath = "report.txt";
 
-        int sum = 0, max = Integer.MIN_VALUE, count = 0;
+        int sum = 0, max = 0, count = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(inPath))) {
             String line;
@@ -179,8 +217,8 @@ public class MarksReport {
                 if (line.isEmpty()) continue;
 
                 int x = Integer.parseInt(line);
+                if (count == 0 || x > max) max = x;
                 sum += x;
-                if (x > max) max = x;
                 count++;
             }
         } catch (IOException e) {
@@ -198,7 +236,7 @@ public class MarksReport {
             bw.newLine();
             bw.write("Sum: " + sum);
             bw.newLine();
-            bw.write("Max: " + max);
+            bw.write("Max: " + (count == 0 ? "N/A" : max));
             bw.newLine();
             bw.write(String.format("Avg: %.2f", avg));
             bw.newLine();
@@ -224,6 +262,15 @@ public class MarksReport {
   \item Write results in a CSV format if needed.
 \end{itemize}
 
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Stream model (big picture)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
 \section{Mini tutorial: copy a text file}
 Copying is a great exercise because it uses both reading and writing.
 \begin{lstlisting}
@@ -247,7 +294,7 @@ public class CopyTextFile {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Which should be used for text files: byte stream or character stream?\par
   \textbf{Answer:} character stream (\texttt{Reader/Writer}).
@@ -265,7 +312,7 @@ public class CopyTextFile {
   \textbf{Hint:} the copy tutorial above is the solution pattern.
 
   \item Write a program that counts lines and words in a file.
-  \textbf{Hint:} count lines with \texttt{readLine}; count words with \texttt{split("\\\\s+")}.
+  \textbf{Hint:} count lines with \texttt{readLine()} and count words with \path|split("\\s+")|.
 
   \item Modify the worked example to ignore marks outside 0--100 and count how many were invalid.
   \textbf{Hint:} after parsing, check range and continue.
@@ -285,12 +332,25 @@ public class CopyTextFile {
   \item Exp-13: File Handling using I/O streams (based on this lecture)
 \end{itemize}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why is \texttt{try-with-resources} preferred?\par
 \textbf{Sample answer:} It automatically closes resources even if an exception occurs, preventing resource leaks and reducing boilerplate code.
 
 \vspace{0.6em}
 \textbf{Q2.} When do you choose byte streams instead of character streams?\par
 \textbf{Sample answer:} Use byte streams for binary data like images or PDFs. Use character streams for text data.
+
+\vspace{0.6em}
+\textbf{Q3.} Why is try-with-resources preferred for file work?\par
+\textbf{Sample answer:} It closes resources automatically and keeps the success path easier to read.
 
 \end{document}

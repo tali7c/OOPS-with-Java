@@ -3,15 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 02 Notes\\Exception Handling (Core)}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
 
-\section{Syllabus Alignment (Unit 03)}
-\textbf{Unit 03:} exception handling and exception handlers
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Nested Classes, Exceptions, Multithreading, and I/O
+  \item \textbf{Main new ideas:} Exceptions vs Errors, What happens when an exception occurs? (stack unwinding), How to read a stack trace (very important skill)
+  \item \textbf{Course thread:} Use Exception Handling (Core) to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
 
 \section{Prerequisites}
 You should already know:
@@ -24,11 +26,20 @@ You should already know:
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Distinguish exceptions vs errors; checked vs unchecked.
-  \item Write \texttt{try/catch/finally} with multiple catch blocks.
-  \item Explain \texttt{throw} vs \texttt{throws} and apply them correctly.
-  \item Create a basic custom exception and use it for validation.
+  \item Distinguish exception vs error; checked vs unchecked.
+  \item Write \texttt{try/catch/finally} and use \texttt{throw} vs \texttt{throws}.
+  \item Design a small custom exception for validation.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Exceptions vs Errors} $\rightarrow$ \textit{What happens when an exception occurs? (stack unwinding)} $\rightarrow$ \textit{How to read a stack trace (very important skill)} $\rightarrow$ \textit{Checked vs unchecked exceptions (when to use which?)} $\rightarrow$ \textit{\texttt{try/catch/finally} and multiple catch}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIIISources}
 
 \section{Lecture Overview}
 Exceptions are Java's structured way to report \textbf{abnormal situations} without immediately crashing a program.
@@ -39,6 +50,15 @@ Instead of returning special values like \texttt{-1} everywhere, Java can:
   \item and still clean up resources reliably.
 \end{itemize}
 In this lecture you will learn what exceptions are, how to handle them, and how to create simple custom exceptions for clearer programs.
+\notesources{\OOPSUnitIIISources}
+
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Control flow}: try, catch, and finally are still flow-control ideas for abnormal situations. Main reference: \texttt{Unit 01 / Lecture 04 slides/notes}.
+  \item \textbf{Validation design}: Encapsulated objects should reject invalid state changes in a disciplined way. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
 \notesources{\OOPSUnitIIISources}
 
 \section{Key Terms (Quick)}
@@ -82,14 +102,16 @@ When you see a stack trace, do this:
 Do not panic: stack traces are your friend.
 
 \subsection{Checked vs unchecked exceptions (when to use which?)}
-\begin{tabular}{@{}p{0.29\linewidth}p{0.67\linewidth}@{}}
+\small
+\begin{tabular}{@{}p{0.24\linewidth}p{0.68\linewidth}@{}}
 \toprule
 \textbf{Category} & \textbf{Typical meaning} \\
 \midrule
-Checked (\texttt{Exception}) & Caller is expected to handle it; condition is reasonably recoverable (e.g., \texttt{IOException}). \\
-Unchecked (\texttt{RuntimeException}) & Programming mistake or invalid argument; often not recoverable at runtime (e.g., \texttt{NullPointerException}). \\
+Checked (\texttt{Exception}) & {\raggedright Caller should handle it when recovery is realistic, e.g., \texttt{IOException}.} \\
+Unchecked (\texttt{RuntimeException}) & {\raggedright Usually a programming mistake or invalid argument.\newline Runtime recovery is rare, e.g., \texttt{NullPointerException}.} \\
 \bottomrule
 \end{tabular}
+\normalsize
 
 \paragraph{Practical guideline.}
 \begin{itemize}
@@ -277,7 +299,7 @@ static int divide(int a, int b) {
   \item The method exits immediately; the \texttt{return} line is skipped.
   \item Control jumps to the nearest matching \texttt{catch} (if any), otherwise the program terminates with a stack trace.
 \end{itemize}
-\textbf{When to use this pattern:} for invalid arguments and broken assumptions (\texttt{IllegalArgumentException} is common).
+\textbf{When to use this pattern:} for invalid arguments and broken assumptions (\path|IllegalArgumentException| is common).
 
 \subsubsection*{Example B: \texttt{throws} (declaring a checked exception)}
 \textbf{Goal:} let the caller decide what to do if the operation fails.
@@ -330,6 +352,23 @@ Good custom exceptions:
 \begin{itemize}
   \item Use \textbf{unchecked} (\texttt{extends RuntimeException}) for validation and invalid arguments.
   \item Use \textbf{checked} (\texttt{extends Exception}) when callers should be forced to handle/recover.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Running Project Connection}
+Use Exception Handling (Core) to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Using exceptions for normal control flow.
+  \item Swallowing an exception silently.
+  \item Showing raw technical exception details to end users.
 \end{itemize}
 \notesources{\OOPSUnitIIISources}
 
@@ -397,6 +436,15 @@ public class Demo {
 \end{lstlisting}
 This is a clean pattern: validate/throw in low-level methods, and handle at the boundary (UI/CLI layer) where you can show messages.
 
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Exceptions vs Errors} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
 \section{Worked Example: custom checked exception (recoverable case)}
 \begin{lstlisting}
 class InsufficientFundsException extends Exception {
@@ -435,7 +483,16 @@ public class Demo {
 \end{lstlisting}
 Here the caller can decide an alternate action: deposit more money, withdraw less, or show a message. That makes a checked exception reasonable.
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Exceptions vs Errors} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Name one checked and one unchecked exception.\par
   \textbf{Answer:} checked: \texttt{IOException}; unchecked: \texttt{NullPointerException}.
@@ -471,12 +528,25 @@ Here the caller can decide an alternate action: deposit more money, withdraw les
   \item Learn to read stack traces: find your code line and the root cause.
 \end{itemize}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why should we catch specific exceptions instead of \texttt{Exception}?\par
 \textbf{Sample answer:} Catching specific exceptions helps you handle known cases correctly and avoids hiding unrelated bugs. Catching \texttt{Exception} broadly can swallow errors and make debugging hard.
 
 \vspace{0.6em}
 \textbf{Q2.} What does checked exception mean?\par
 \textbf{Sample answer:} A checked exception must be handled (caught) or declared with \texttt{throws}; otherwise the code will not compile.
+
+\vspace{0.6em}
+\textbf{Q3.} Why does Java separate checked and unchecked exceptions?\par
+\textbf{Sample answer:} It distinguishes recoverable handled cases from bugs and invalid assumptions.
 
 \end{document}

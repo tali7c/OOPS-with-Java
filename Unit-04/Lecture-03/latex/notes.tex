@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 03 Notes\\Lambdas + Functional Interfaces}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Generics, Lambdas, Swing, and JDBC
+  \item \textbf{Main new ideas:} Functional interfaces (concept), Target typing (how lambdas get a type), \texorpdfstring{Anonymous class $\rightarrow$ lambda}{Anonymous class -> lambda}
+  \item \textbf{Course thread:} Use Lambdas + Functional Interfaces to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
 
 \section{Lecture Overview}
 Lambdas are a short way to write ``behavior as a value'' in Java.
@@ -22,16 +27,32 @@ This is useful for:
 \end{itemize}
 \notesources{\OOPSUnitIVSources}
 
-\section{Syllabus Alignment (Unit 04)}
-\textbf{Unit 04:} lambdas and functional interfaces
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Interfaces}: A lambda only works when a target functional interface defines exactly one abstract method. Main reference: \texttt{Unit 02 / Lecture 05 slides/notes}.
+  \item \textbf{Anonymous classes}: Lambdas are easier to appreciate once a more verbose callback style is already known. Main reference: \texttt{Unit 03 / Lecture 01 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIVSources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Identify functional interfaces and explain target typing (how lambda type is inferred).
+  \item Identify functional interfaces and explain target typing.
   \item Write lambdas for common patterns (comparators, callbacks, runnable tasks).
-  \item Apply basic readability rules for when to use a lambda vs a named method/class.
+  \item Apply basic readability rules for when to use lambdas.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Functional interfaces (concept)} $\rightarrow$ \textit{Target typing (how lambdas get a type)} $\rightarrow$ \textit{\texorpdfstring{Anonymous class $\rightarrow$ lambda}{Anonymous class -> lambda}} $\rightarrow$ \textit{Lambda syntax (common forms)} $\rightarrow$ \textit{Common patterns}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIVSources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -69,6 +90,14 @@ They get a type from where they are used:
   \item method argument: \texttt{button.addActionListener(e -> ...)}
 \end{itemize}
 If the context expects a functional interface, the lambda is converted to that interface.
+
+\subsection{\texorpdfstring{Anonymous class $\rightarrow$ lambda}{Anonymous class -> lambda}}
+Think of a lambda as the short form of a one-method anonymous class.
+\begin{itemize}
+  \item Anonymous class: write the interface name, the method header, and the body.
+  \item Lambda: keep only the parameters and the body because the functional interface already gives the method name.
+  \item Use this shortcut only when the behavior is small enough to stay readable.
+\end{itemize}
 
 \subsection{Lambda syntax (common forms)}
 \begin{itemize}
@@ -108,6 +137,23 @@ Prefer a named method/class when:
 \end{itemize}
 \notesources{\OOPSUnitIVSources}
 
+\section{Running Project Connection}
+Use Lambdas + Functional Interfaces to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Assuming any interface can be used as a lambda target.
+  \item Packing too much business logic into one lambda.
+  \item Ignoring the target type and getting confused about the method being implemented.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
 \section{Worked Example: sorting with lambda}
 \begin{lstlisting}
 import java.util.ArrayList;
@@ -132,13 +178,22 @@ public class Demo {
         list.sort((a, b) -> Double.compare(b.getCgpa(), a.getCgpa())); // desc
         System.out.println(list);
 
-        list.sort(Comparator.comparing(Student::getCgpa)); // asc (method ref)
+        list.sort((a, b) -> Double.compare(a.getCgpa(), b.getCgpa())); // asc
         System.out.println(list);
     }
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Functional interfaces (concept)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item What is a functional interface?\par
   \textbf{Answer:} an interface with exactly one abstract method (SAM).
@@ -157,12 +212,25 @@ public class Demo {
   \item Replace a complex lambda in your code with a named method and explain why it is clearer.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} What is target typing?\par
 \textbf{Sample answer:} Target typing is how the compiler infers a lambda's type from the expected functional interface in the context (assignment or method parameter).
 
 \vspace{0.6em}
 \textbf{Q2.} When should you avoid using a lambda?\par
 \textbf{Sample answer:} Avoid lambdas when the logic becomes long or complex, because it hurts readability and reuse. Prefer a named method/class in that case.
+
+\vspace{0.6em}
+\textbf{Q3.} Why must a functional interface contain exactly one abstract method?\par
+\textbf{Sample answer:} Because the lambda expression needs one unambiguous behavior contract to implement.
 
 \end{document}

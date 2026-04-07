@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 02 Notes\\Generic Methods + Bounds + Wildcards}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Generics, Lambdas, Swing, and JDBC
+  \item \textbf{Main new ideas:} Generic methods, Bounds (restrict allowed types), Wildcards: making collection parameters flexible
+  \item \textbf{Course thread:} Use Generic Methods + Bounds + Wildcards to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
 
 \section{Lecture Overview}
 In the previous lecture you learned generic classes like \texttt{Box<T>}.
@@ -20,16 +25,32 @@ Now we learn three ideas that appear frequently in real Java code:
 \end{itemize}
 \notesources{\OOPSUnitIVSources}
 
-\section{Syllabus Alignment (Unit 04)}
-\textbf{Unit 04:} generic methods; bounded types; wildcards
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Generic classes}: This lecture extends the first generics lecture from type declarations to more flexible operations. Main reference: \texttt{Unit 04 / Lecture 01 slides/notes}.
+  \item \textbf{Inheritance}: Bounds and wildcards only make sense if subtype relationships are already familiar. Main reference: \texttt{Unit 02 / Lecture 04 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIVSources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
   \item Write a generic method and explain why it reduces duplication.
-  \item Apply bounded type parameters (intro level) to restrict allowed types.
-  \item Use wildcards with collections for common patterns in real code.
+  \item Use bounds (\texttt{extends}) to restrict allowed types.
+  \item Use wildcards (\texttt{? extends}, \texttt{? super}) with collections.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Generic methods} $\rightarrow$ \textit{Bounds (restrict allowed types)} $\rightarrow$ \textit{Wildcards: making collection parameters flexible}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIVSources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -82,6 +103,23 @@ Example: add integers to a list that can store integers or any of their supertyp
 \paragraph{PECS (memory trick).} Producer Extends, Consumer Super.
 \notesources{\OOPSUnitIVSources}
 
+\section{Running Project Connection}
+Use Generic Methods + Bounds + Wildcards to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Using a wildcard when a named type parameter would be clearer.
+  \item Overengineering beginner APIs with too many bounds.
+  \item Assuming List<Child> is automatically a List<Parent>.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
 \section{Worked Example: generic methods + bounds + wildcards}
 \subsection*{Generic method (print array)}
 \begin{lstlisting}
@@ -120,7 +158,16 @@ public static void addOnes(List<? super Integer> list, int count) {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Generic methods} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Why is \texttt{List<Integer>} not a subtype of \texttt{List<Number>}?\par
   \textbf{Answer:} generics are invariant in Java; allowing it would break type safety (you could add a \texttt{Double} into a \texttt{List<Integer>} through a \texttt{List<Number>} reference).
@@ -139,12 +186,25 @@ public static void addOnes(List<? super Integer> list, int count) {
   \item Write a method that copies from one list to another using wildcards (hint: one produces, one consumes).
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} When do you use \texttt{? extends T}?\par
 \textbf{Sample answer:} Use \texttt{? extends T} when your method only needs to read values of type \texttt{T} from a structure and doesn't need to add elements, because it can accept multiple subtype lists safely.
 
 \vspace{0.6em}
 \textbf{Q2.} What does a bound like \texttt{<T extends Number>} mean?\par
 \textbf{Sample answer:} It means the type parameter \texttt{T} must be \texttt{Number} or a subclass of \texttt{Number}, so you can safely use \texttt{Number}-level operations inside the method/class.
+
+\vspace{0.6em}
+\textbf{Q3.} What problem do bounds solve in generic APIs?\par
+\textbf{Sample answer:} They restrict allowed types so the compiler can guarantee valid operations inside the API.
 
 \end{document}

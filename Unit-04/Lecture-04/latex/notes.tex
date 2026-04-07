@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 04 Notes\\Swing Basics (Components, Containers, Layouts)}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Generics, Lambdas, Swing, and JDBC
+  \item \textbf{Main new ideas:} Swing overview: \texttt{JFrame}, \texttt{JPanel}, components vs containers, Layout managers (Flow/Border/Grid), UI composition: multi-panel skeleton
+  \item \textbf{Course thread:} Use Swing Basics (Components, Containers, Layouts) to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
 
 \section{Lecture Overview}
 Swing is Java's GUI toolkit for building desktop applications.
@@ -21,16 +26,32 @@ In this lecture we learn the minimum you need to build a clean UI skeleton:
 \end{itemize}
 \notesources{\OOPSUnitIVSources}
 
-\section{Syllabus Alignment (Unit 04)}
-\textbf{Unit 04:} GUI panel development using Swing (basics)
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Classes and packages}: Swing applications still depend on clear classes and package boundaries. Main reference: \texttt{Unit 02 / Lecture 03 slides/notes}.
+  \item \textbf{Nested helpers}: GUI code often uses callback and helper patterns introduced earlier. Main reference: \texttt{Unit 03 / Lecture 01 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIVSources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Explain the Swing component model: components vs containers; \texttt{JFrame} vs \texttt{JPanel}.
-  \item Use layout managers (\texttt{FlowLayout}, \texttt{BorderLayout}, \texttt{GridLayout}) to build UI structure.
-  \item Build a small multi-panel UI skeleton and run it successfully.
+  \item Explain Swing component model: \texttt{JFrame}, \texttt{JPanel}, components vs containers.
+  \item Use layout managers (Flow/Border/Grid) to structure a UI.
+  \item Build and run a small multi-panel UI skeleton.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Swing overview: \texttt{JFrame}, \texttt{JPanel}, components vs containers} $\rightarrow$ \textit{Layout managers (Flow/Border/Grid)} $\rightarrow$ \textit{UI composition: multi-panel skeleton}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIVSources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -88,6 +109,23 @@ A very common pattern for beginners:
 \end{itemize}
 \notesources{\OOPSUnitIVSources}
 
+\section{Running Project Connection}
+Use Swing Basics (Components, Containers, Layouts) to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Putting every control directly on one JFrame without structure.
+  \item Hardcoding coordinates instead of using layout managers intentionally.
+  \item Mixing UI code with business logic too early.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
 \section{Worked Example: a multi-panel form skeleton}
 \begin{lstlisting}
 import javax.swing.*;
@@ -133,7 +171,16 @@ public class SimpleFormUI {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Swing overview: \texttt{JFrame}, \texttt{JPanel}, components vs containers} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item What is the difference between a component and a container?\par
   \textbf{Answer:} a component is a UI element; a container holds components.
@@ -152,12 +199,25 @@ public class SimpleFormUI {
   \item Create a second screen panel (e.g., \texttt{List Resources}) and switch panels (hint: \texttt{CardLayout}).
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why is \texttt{pack()} often preferred over \texttt{setSize()}?\par
 \textbf{Sample answer:} \texttt{pack()} sizes the window based on preferred sizes of components and layout, producing a more consistent UI across systems.
 
 \vspace{0.6em}
 \textbf{Q2.} What is the role of \texttt{JPanel}?\par
 \textbf{Sample answer:} \texttt{JPanel} is a container used to group and layout components. It helps structure the UI into manageable parts.
+
+\vspace{0.6em}
+\textbf{Q3.} Why do layout managers matter more than pixel coordinates in most Swing code?\par
+\textbf{Sample answer:} Layouts adapt better to resizing, platform differences, and maintenance.
 
 \end{document}

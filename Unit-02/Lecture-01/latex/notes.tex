@@ -3,30 +3,49 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 01 Notes\\Classes, Objects, and Encapsulation (Basics)}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Classes, Inheritance, Packages, and Interfaces
+  \item \textbf{Main new ideas:} Class fundamentals: fields, methods, state vs behavior, Objects and reference semantics (mental model), Encapsulation: protect invariants
+  \item \textbf{Course thread:} Use Classes, Objects, and Encapsulation (Basics) to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
 
 \section{Lecture Overview}
 In Unit 01 we wrote programs using variables, control flow, arrays, and strings.
 Now we start writing \textbf{real OOP code}: we will create classes and objects and learn how encapsulation makes programs safer.
 \notesources{\OOPSUnitIISources}
 
-\section{Syllabus Alignment (Unit 02)}
-\textbf{Unit 02:} Classes, Inheritance, Packages and Interfaces\par
-\textbf{Today:} classes/objects + encapsulation basics
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Encapsulation principle}: Unit 01 introduced encapsulation conceptually; this lecture turns it into actual Java class design. Main reference: \texttt{Unit 01 / Lecture 01 slides/notes}.
+  \item \textbf{Java class syntax}: You already saw the minimum class structure and now reuse it for reusable domain models. Main reference: \texttt{Unit 01 / Lecture 02 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Identify fields vs methods and explain ``state vs behavior'' for a class.
-  \item Explain object references in Java (aliasing) using a small example.
+  \item Identify fields vs methods and explain state vs behavior.
+  \item Explain references and aliasing using a small example.
   \item Apply encapsulation using \texttt{private} fields and validation methods.
-  \item State at least one invariant for a class and protect it in code.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Class fundamentals: fields, methods, state vs behavior} $\rightarrow$ \textit{Objects and reference semantics (mental model)} $\rightarrow$ \textit{Encapsulation: protect invariants}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -82,6 +101,23 @@ If fields are public, any code can set invalid values.
 \end{itemize}
 \notesources{\OOPSUnitIISources}
 
+\section{Running Project Connection}
+Use Classes, Objects, and Encapsulation (Basics) to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Making every field public for convenience.
+  \item Confusing an object reference with a copy of the object state.
+  \item Thinking classes matter only inside main.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
 \section{Worked Example: \texttt{Student} (encapsulation + references)}
 \subsection*{Code}
 \begin{lstlisting}
@@ -124,7 +160,16 @@ public class Demo {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Class fundamentals: fields, methods, state vs behavior} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Two references \texttt{a} and \texttt{b} point to the same object. If \texttt{b} modifies it, does \texttt{a} see the change?\par
   \textbf{Answer:} yes (aliasing).
@@ -143,12 +188,25 @@ public class Demo {
   \item Refactor a ``public fields'' class into an encapsulated design with validation methods.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} What is encapsulation and why do we use it?\par
 \textbf{Sample answer:} Encapsulation means keeping internal data private and changing it only through methods. It helps protect invariants and prevents accidental misuse, making code easier to maintain.
 
 \vspace{0.6em}
 \textbf{Q2.} What is aliasing?\par
 \textbf{Sample answer:} Aliasing happens when two references point to the same object. Updates through one reference are visible through the other.
+
+\vspace{0.6em}
+\textbf{Q3.} What problem does encapsulation solve beyond hiding fields?\par
+\textbf{Sample answer:} It protects invariants and controls how state changes through a safer public interface.
 
 \end{document}

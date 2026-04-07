@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-13\&14: File I/O + Generics (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This handout specifies the required programs for file handling and generics.
+Write and test your own implementation.
+
+\section{Experiment 13 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To perform file operations using Java I/O streams.
+  \item \textbf{Problem Statement:} Develop programs using \texttt{FileReader} and \texttt{FileWriter}.
+  \item \textbf{Expected Outcome:} Students will handle persistent data.
+\end{itemize}
+
+\section{Experiment 14 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To implement generic classes and methods.
+  \item \textbf{Problem Statement:} Design programs using generics.
+  \item \textbf{Expected Outcome:} Students will understand type safety.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- File I/O (Exp-13)}
+Create \texttt{FileIOStreamsDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Write 3 lines to \texttt{input.txt} using \texttt{FileWriter}.
+  \item Read and print the file contents using \texttt{FileReader}.
+  \item Copy \texttt{input.txt} to \texttt{copy.txt} using a character buffer.
+  \item Print how many characters were copied.
+  \item Use try-with-resources and handle \texttt{IOException}.
+\end{enumerate}
+
+\subsection{Task B --- Generics basics (Exp-14)}
+Create \texttt{GenericsDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Create a generic class \texttt{Box<T>} that stores a single value and returns it via \texttt{get()}.
+  \item Create a generic method \texttt{printTwice(T x)} and call it with different types.
+  \item Demonstrate at least:
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{Box<Integer>}
+    \item \texttt{Box<String>}
+  \end{itemize}
+  \item Optional: create a generic \texttt{Pair<K,V>} and print it.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Use try-with-resources to auto-close \texttt{Reader/Writer}.
+  \item Relative file paths are resolved from your program's working directory (often your project folder).
+  \item Generics prevent many \texttt{ClassCastException} issues by enforcing type checks at compile time.
+  \item Avoid raw types (use \texttt{Box<String>} instead of \texttt{Box}).
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{FileIOStreamsDemo.java}
+  \item \texttt{GenericsDemo.java}
+  \item sample output for both programs
+  \item observations (5--10 lines): what try-with-resources does; where generics helped
+\end{itemize}
+
+\notesources{\OOPSUnitIIISources\ \OOPSUnitIVSources}
+\end{document}

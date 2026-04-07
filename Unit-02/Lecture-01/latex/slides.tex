@@ -4,10 +4,6 @@
 
 \title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
 \subtitle{Unit 02 -- Lecture 01: Classes, Objects, and Encapsulation (Basics)}
-\author{Tofik Ali}
-\institute{School of Computer Science, UPES Dehradun}
-\date{\today}
-
 \begin{document}
 
 \begin{frame}[fragile]
@@ -33,6 +29,23 @@
 \section{Overview}
 \label{sec:overview}
 
+\begin{frame}{Lecture Snapshot}
+\begin{itemize}[<+->]
+  \item \textbf{Unit focus:} Classes, Inheritance, Packages, and Interfaces
+  \item \textbf{Course thread:} Use Classes, Objects, and Encapsulation (Basics) to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Recall Before You Start}
+\begin{itemize}[<+->]
+  \item \textbf{Encapsulation principle}: Unit 01 introduced encapsulation conceptually; this lecture turns it into actual Java class design. Main reference: \texttt{Unit 01 / Lecture 01 slides/notes}.
+  \item \textbf{Java class syntax}: You already saw the minimum class structure and now reuse it for reusable domain models. Main reference: \texttt{Unit 01 / Lecture 02 slides/notes}.
+\end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
 \begin{frame}{Learning Outcomes}
   \begin{itemize}[<+->]
     \item Identify fields vs methods and explain state vs behavior.
@@ -41,6 +54,36 @@
   \end{itemize}
   \slidesources{\OOPSUnitIISources}
 \end{frame}
+
+\begin{frame}{Key Terms to Know}
+\small
+\begin{columns}[t]
+\column{0.48\textwidth}
+\begin{itemize}
+  \item \textbf{Field}: data stored inside an object (state).
+  \item \textbf{Method}: behavior (operations) of an object.
+  \item \textbf{Reference}: a variable that points to an object (not the object itself).
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}
+  \item \textbf{Aliasing}: two references pointing to the same object.
+  \item \textbf{Encapsulation}: keeping fields private and changing state through methods.
+  \item \textbf{Access modifier}: \texttt{private}, default, \texttt{protected}, \texttt{public} (controls visibility).
+\end{itemize}
+\end{columns}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Study Flow for This Lecture}
+\begin{enumerate}[<+->]
+  \item Refresh the prerequisite bridge before reading new ideas in isolation.
+  \item Study the main build in this order: \textit{Class fundamentals: fields, methods, state vs behavior} $\rightarrow$ \textit{Objects and reference semantics (mental model)} $\rightarrow$ \textit{Encapsulation: protect invariants}.
+  \item Trace the worked example and connect each line back to one concept frame.
+  \item Attempt the mini exercises before moving to the recap and exit check.
+\end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
 
 \section{Key Topics}
 \label{sec:concepts}
@@ -94,11 +137,20 @@
   \slidesources{\OOPSUnitIISources}
 \end{frame}
 
+\begin{frame}{Checkpoint and Reflection}
+\begin{block}{Reflection prompt}
+Where would \textit{Classes, Objects, and Encapsulation (Basics)} matter most in Campus Resource Manager, and which design choice would you justify using this lecture's ideas?
+\end{block}
+\begin{block}{Quick self-check}
+Which part needs one more example before you move on: \textit{Class fundamentals: fields, methods, state vs behavior}, \textit{Objects and reference semantics (mental model)}, the worked example, or the recap?
+\end{block}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
 
 \section{Demo / Example}
 \label{sec:demo}
 
-\begin{frame}[fragile]{Example: \texttt{Student} (encapsulation) (1/2)}
+\begin{frame}[fragile,shrink=8]{Example: \texttt{Student} (encapsulation) (1/2)}
 \begin{lstlisting}
 public class Student {
     private final String rollNo;
@@ -155,6 +207,14 @@ public class Demo {
   \slidesources{\OOPSUnitIISources}
 \end{frame}
 
+\begin{frame}{Watch-outs}
+\begin{itemize}[<+->]
+  \item Making every field public for convenience.
+  \item Confusing an object reference with a copy of the object state.
+  \item Thinking classes matter only inside main.
+\end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
 
 \section{Summary}
 \label{sec:summary}
@@ -174,6 +234,16 @@ public class Demo {
     \item What is aliasing and why can it be risky?
     \item What is an invariant? Give one example.
   \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Next Study Steps}
+\begin{itemize}[<+->]
+  \item Revisit the recall references if any older idea still feels weak.
+  \item Rework the lecture example without looking at the notes first.
+  \item Attempt the self-study practice and then answer the exit questions in full sentences.
+  \item Apply the idea once inside Campus Resource Manager to make the concept stick.
+\end{itemize}
   \slidesources{\OOPSUnitIISources}
 \end{frame}
 

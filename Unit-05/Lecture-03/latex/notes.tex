@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 05 -- Lecture 03 Notes\\Wrapped Collections + `Collections` Utilities + Wrappers}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Collections Framework and Wrapper Classes
+  \item \textbf{Main new ideas:} \texttt{Collections} utilities (common ones), Wrapped collections (why/when), Wrapper classes + autoboxing pitfalls
+  \item \textbf{Course thread:} Use Wrapped Collections + `Collections` Utilities + Wrappers to manage in-memory project data more cleanly and predictably inside Campus Resource Manager.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
 
 \section{Lecture Overview}
 This lecture collects three practical topics that show up in day-to-day Java code:
@@ -20,17 +25,32 @@ This lecture collects three practical topics that show up in day-to-day Java cod
 We also briefly introduce the class loading idea from the syllabus.
 \notesources{\OOPSUnitVSources}
 
-\section{Syllabus Alignment (Unit 05)}
-\textbf{Unit 05:} \texttt{Collections} utilities; wrapped collections; wrapper classes; class loading basics
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Collection interfaces}: Utilities and wrappers only make sense once List, Set, and Map roles are already clear. Main reference: \texttt{Unit 05 / Lecture 01 slides/notes}.
+  \item \textbf{Primitive and object types}: Wrapper classes connect directly to the type-conversion ideas from Unit 01. Main reference: \texttt{Unit 01 / Lecture 03 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitVSources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Use common \texttt{Collections} utilities: sort, min/max, shuffle, reverse.
-  \item Explain why wrapped collections exist and use unmodifiable/synchronized/checked wrappers.
-  \item Explain wrapper classes and avoid common autoboxing/unboxing mistakes.
-  \item State the basic idea of class loading and \texttt{Class.forName} (intro level).
+  \item Use common \texttt{Collections} utilities (sort, min/max, shuffle, reverse).
+  \item Use wrapped collections (unmodifiable/synchronized/checked) appropriately.
+  \item Avoid common wrapper/autoboxing pitfalls (and know class loading basics).
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{\texttt{Collections} utilities (common ones)} $\rightarrow$ \textit{Wrapped collections (why/when)} $\rightarrow$ \textit{Wrapper classes + autoboxing pitfalls} $\rightarrow$ \textit{Class loading basics (intro)}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitVSources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -83,8 +103,25 @@ Wrapper classes are needed because generics work with reference types, not primi
 
 \subsection{Class loading basics (intro)}
 The JVM loads classes when they are needed (first time referenced).
-\texttt{Class.forName("com.mysql.cj.jdbc.Driver")} is sometimes used to load a JDBC driver explicitly (older pattern).
+\path|Class.forName("com.mysql.cj.jdbc.Driver")| is sometimes used to load a JDBC driver explicitly (older pattern).
 If a class is missing, you may see \texttt{ClassNotFoundException}.
+\notesources{\OOPSUnitVSources}
+
+\section{Running Project Connection}
+Use Wrapped Collections + `Collections` Utilities + Wrappers to manage in-memory project data more cleanly and predictably inside Campus Resource Manager.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Assuming wrapper objects behave exactly like primitives in every context.
+  \item Treating synchronized wrappers as a full concurrency design.
+  \item Forgetting that an unmodifiable view can still reflect external changes to the backing collection.
+\end{itemize}
 \notesources{\OOPSUnitVSources}
 
 \section{Worked Example: utilities + wrappers + autoboxing}
@@ -111,7 +148,16 @@ public class Demo {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{\texttt{Collections} utilities (common ones)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item What exception occurs if you try to add to an unmodifiable list?\par
   \textbf{Answer:} \texttt{UnsupportedOperationException}.
@@ -127,7 +173,7 @@ public class Demo {
 \begin{enumerate}
   \item Shuffle a list of integers and print the result.
   \item Create an unmodifiable view of a list and test which operations fail.
-  \item Write a program that reads integers into \texttt{List<Integer>} and finds min/max using \texttt{Collections}.
+  \item Write a program that reads integers into a \texttt{List<Integer>} and then finds min/max using \texttt{Collections}.
 \end{enumerate}
 
 \section{Lab Alignment (recommended)}
@@ -136,12 +182,25 @@ public class Demo {
   \item Exp-19: Wrapper Classes
 \end{itemize}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} What is the difference between \texttt{Collections} and \texttt{Collection}?\par
 \textbf{Sample answer:} \texttt{Collection} is an interface representing a group of elements. \texttt{Collections} is a utility class containing static helper methods for working with collections.
 
 \vspace{0.6em}
-\textbf{Q2.} Why can \texttt{int y = Integer x} crash?\par
-\textbf{Sample answer:} If \texttt{x} is null, unboxing tries to convert null to a primitive, causing \texttt{NullPointerException}.
+\textbf{Q2.} Why can unboxing a null \texttt{Integer} crash?\par
+\textbf{Sample answer:} If \texttt{x} is null, converting it to a primitive triggers \texttt{NullPointerException}.
+
+\vspace{0.6em}
+\textbf{Q3.} What risk appears when autoboxing meets null values?\par
+\textbf{Sample answer:} Java may try to unbox null into a primitive, which throws a NullPointerException at runtime.
 
 \end{document}

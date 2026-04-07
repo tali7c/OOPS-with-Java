@@ -4,10 +4,6 @@
 
 \title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
 \subtitle{Unit 04 -- Lecture 01: Generics Fundamentals (Generic Classes)}
-\author{Tofik Ali}
-\institute{School of Computer Science, UPES Dehradun}
-\date{\today}
-
 \begin{document}
 
 \begin{frame}[fragile]
@@ -33,14 +29,43 @@
 \section{Overview}
 \label{sec:overview}
 
+\begin{frame}{Lecture Snapshot}
+\begin{itemize}[<+->]
+  \item \textbf{Unit focus:} Generics, Lambdas, Swing, and JDBC
+  \item \textbf{Course thread:} Use Generics Fundamentals (Generic Classes) to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Recall Before You Start}
+\begin{itemize}[<+->]
+  \item \textbf{Classes and methods}: A generic class is still a class; generics only add type parameters to familiar structures. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+  \item \textbf{Type relationships}: Generic type safety is easier to read once basic inheritance intuition is already clear. Main reference: \texttt{Unit 02 / Lecture 04 slides/notes}.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+
 \begin{frame}{Learning Outcomes}
   \begin{itemize}[<+->]
-    \item Explain why generics improve type safety and reuse.
-    \item Create and use a generic class like \texttt{Box<T>}.
-    \item Identify raw-type usage and explain why it is unsafe.
+    \item Explain why generic classes are better than duplicated classes or \texttt{Object}-only designs.
+    \item Read and write a generic class such as \texttt{ResourceHolder<T>}.
+    \item Distinguish \textbf{type parameter}, \textbf{type argument}, and \textbf{parameterized type}.
+    \item Identify raw-type usage and explain why it weakens type safety.
   \end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
+
+\begin{frame}{Study Flow for This Lecture}
+\begin{enumerate}[<+->]
+  \item Refresh the prerequisite bridge before reading new ideas in isolation.
+  \item Study the main build in this order: \textit{Why this topic exists} $\rightarrow$ \textit{Attempt 1: separate classes for every type} $\rightarrow$ \textit{Attempt 2: use one class with \texttt{Object}} $\rightarrow$ \textit{Why \texttt{Object} is unsafe}.
+  \item Trace the worked example and connect each line back to one concept frame.
+  \item Attempt the mini exercises before moving to the recap and exit check.
+\end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
 
 \section{Key Topics}
 \label{sec:concepts}
@@ -52,76 +77,251 @@
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
-\begin{frame}{Today: Roadmap}
+\begin{frame}{Today: Teaching Path}
+  \begin{enumerate}[<+->]
+    \item Same problem solved with many separate classes
+    \item Same problem solved with one \texttt{Object}-based class
+    \item Same problem solved with one generic class
+    \item Correct usage, raw-type mistakes, and a small project connection
+  \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Start with the problem}
   \begin{itemize}[<+->]
-    \item Why generics (type safety, reuse)
-    \item Generic classes (`Box<T>`) and basic usage
-    \item Avoiding raw types; common mistakes
+    \item Suppose the project stores different campus resources: books, laptops, and lab keys.
+    \item A beginner often creates a separate holder class for each type.
+    \item That works, but the class logic becomes repeated with only the data type changing.
   \end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
-\begin{frame}{Motivation: the problem without generics}
+\begin{frame}[fragile]{Repeated classes: works, but duplicates logic}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{lstlisting}
+class BookHolder {
+    private Book item;
+    void set(Book item) {
+        this.item = item;
+    }
+    Book get() {
+        return item;
+    }
+}
+\end{lstlisting}
+\column{0.48\textwidth}
+\begin{lstlisting}
+class LaptopHolder {
+    private Laptop item;
+    void set(Laptop item) {
+        this.item = item;
+    }
+    Laptop get() {
+        return item;
+    }
+}
+\end{lstlisting}
+\end{columns}
+\vspace{0.4em}
+\begin{itemize}[<+->]
+  \item Structure is the same; only the type changes.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{The first improvement many students try}
   \begin{itemize}[<+->]
-    \item If you store values as \texttt{Object}, you lose type information.
-    \item You must cast back to the expected type.
-    \item Wrong cast $\rightarrow$ \texttt{ClassCastException} at runtime.
+    \item ``Why not store everything as \texttt{Object}?'' 
+    \item This removes duplication because one class can hold any reference type.
+    \item But now the compiler no longer knows the real type stored inside.
   \end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
-\begin{frame}{What generics give you}
-  \begin{itemize}[<+->]
-    \item Compile-time type checking (errors caught early).
-    \item Less casting and cleaner code.
-    \item Better readability: \texttt{List<String>} clearly states element type.
-  \end{itemize}
+\begin{frame}[fragile]{One \texttt{Object}-based class: less duplication, more risk}
+\begin{lstlisting}
+class ResourceHolder {
+    private Object item;
+
+    void set(Object item) { this.item = item; }
+    Object get() { return item; }
+}
+\end{lstlisting}
+\begin{itemize}[<+->]
+  \item You can store a \texttt{Book}, \texttt{Laptop}, or \texttt{LabKey}.
+  \item But \texttt{get()} returns \texttt{Object}, so the caller must cast.
+\end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
-\begin{frame}{Generic class idea}
-  \begin{itemize}[<+->]
-    \item Write a class once: \texttt{Box<T>}
-    \item Use it many times: \texttt{Box<String>}, \texttt{Box<Integer>}, \texttt{Box<Student>}
-    \item The compiler enforces types for each use.
-  \end{itemize}
+\begin{frame}[fragile]{Why \texttt{Object} becomes unsafe}
+\begin{lstlisting}
+ResourceHolder holder = new ResourceHolder();
+holder.set(new Laptop("L-14"));
+
+Book b = (Book) holder.get();   // compiles
+\end{lstlisting}
+\begin{itemize}[<+->]
+  \item The cast compiles.
+  \item The data is actually a \texttt{Laptop}, not a \texttt{Book}.
+  \item Error appears at runtime as \texttt{ClassCastException}.
+\end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
-\begin{frame}{Raw types (avoid)}
-  \begin{itemize}[<+->]
-    \item Raw type: \texttt{Box} instead of \texttt{Box<T>}.
-    \item Compiles with warnings but removes type safety.
-    \item Prefer \texttt{Box<?>} when type is unknown.
-  \end{itemize}
+\begin{frame}{Generics solve both sides of the problem}
+\begin{itemize}[<+->]
+  \item We still want \textbf{one reusable class}.
+  \item We also want \textbf{compile-time type checking}.
+  \item A generic class gives both: reuse \textit{and} safety.
+\end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
+\begin{frame}[fragile]{Generic class design}
+\begin{lstlisting}
+class ResourceHolder<T> {
+    private T item;
+
+    void set(T item) { this.item = item; }
+    T get() { return item; }
+}
+\end{lstlisting}
+\begin{itemize}[<+->]
+  \item \texttt{T} is a type parameter.
+  \item Inside the class, \texttt{T} behaves like ``the type we will decide later''.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{How to read the syntax}
+\begin{itemize}[<+->]
+  \item \texttt{class ResourceHolder<T>} means ``define a class that works for some type \texttt{T}''.
+  \item \texttt{ResourceHolder<Book>} means ``this particular holder stores \texttt{Book} objects''.
+  \item \texttt{T} is the \textbf{type parameter}; \texttt{Book} is the \textbf{type argument}.
+  \item After substitution, \texttt{ResourceHolder<Book>} is a \textbf{parameterized type}.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Using the same class with different resource types}
+\begin{lstlisting}
+ResourceHolder<Book> bookHolder = new ResourceHolder<>();
+ResourceHolder<Laptop> laptopHolder = new ResourceHolder<>();
+ResourceHolder<LabKey> keyHolder = new ResourceHolder<>();
+\end{lstlisting}
+\begin{itemize}[<+->]
+  \item Same class definition
+  \item Different type-safe usages
+  \item No repeated holder classes
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{What the compiler now protects}
+\begin{itemize}[<+->]
+  \item A \texttt{ResourceHolder<Book>} accepts \texttt{Book} values, not \texttt{Laptop} values.
+  \item \texttt{get()} returns \texttt{Book}, so no cast is needed.
+  \item Many mistakes move from runtime to compile time.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Important rule: primitives are not type arguments}
+\begin{itemize}[<+->]
+  \item \texttt{ResourceHolder<int>} is invalid.
+  \item Generics need reference types.
+  \item Use wrapper classes such as \texttt{Integer}, \texttt{Double}, and \texttt{Character}.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Raw types: old style, unsafe style}
+\begin{itemize}[<+->]
+  \item Raw type means writing \texttt{ResourceHolder} instead of \texttt{ResourceHolder<Book>} or another parameterized type.
+  \item Java allows it for backward compatibility with pre-generics code.
+  \item But you lose most compile-time type checking.
+  \item In modern code, warnings about raw types should usually be treated as design problems.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Where you will meet generic classes again}
+\begin{itemize}[<+->]
+  \item Java library classes use the same idea: collections, maps, queues, optional wrappers, and more.
+  \item In your own project, generic classes are useful for reusable containers, response wrappers, repositories, and helper utilities.
+  \item This lecture only builds the foundation; the next lecture extends it to methods, bounds, and wildcards.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Checkpoint and Reflection}
+\begin{block}{Reflection prompt}
+Where would \textit{Generics Fundamentals (Generic Classes)} matter most in Campus Resource Manager, and which design choice would you justify using this lecture's ideas?
+\end{block}
+\begin{block}{Quick self-check}
+Which part needs one more example before you move on: \textit{Why this topic exists}, \textit{Attempt 1: separate classes for every type}, the worked example, or the recap?
+\end{block}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
 
 \section{Demo / Example}
 \label{sec:demo}
 
-\begin{frame}[fragile]{Example: generic class}
-\begin{lstlisting}
-class Box<T> {
-    private final T value;
-    Box(T value) { this.value = value; }
-    T get() { return value; }
+\begin{frame}[fragile]{Worked example: sample domain classes}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+class Book {
+    String title;
+    Book(String title) { this.title = title; }
+}
+
+class LabKey {
+    String roomCode;
+    LabKey(String roomCode) { this.roomCode = roomCode; }
 }
 \end{lstlisting}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
-\begin{frame}[fragile]{Example usage}
-\begin{lstlisting}
-public class Demo {
-    public static void main(String[] args) {
-        Box<String> b1 = new Box<>("UPES");
-        String s = b1.get(); // no cast
+\begin{frame}[fragile]{Worked example: generic holder}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+class ResourceHolder<T> {
+    private final T item;
+    ResourceHolder(T item) { this.item = item; }
+    T get() { return item; }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
 
-        Box<Integer> b2 = new Box<>(10);
-        int x = b2.get();
-        System.out.println(s + " " + x);
+\begin{frame}[fragile]{Safe usage: one class, different types}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+public class DemoSafe {
+    public static void main(String[] args) {
+        ResourceHolder<Book> b =
+            new ResourceHolder<>(new Book("Clean Code"));
+        ResourceHolder<LabKey> k =
+            new ResourceHolder<>(new LabKey("LAB-2"));
+
+        Book book = b.get();
+        LabKey key = k.get();
+        System.out.println(book.title + " / " + key.roomCode);
+    }
+}
+\end{lstlisting}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}[fragile]{Unsafe usage: raw type removes the benefit}
+\begin{lstlisting}
+public class DemoRaw {
+    public static void main(String[] args) {
+        ResourceHolder raw =
+            new ResourceHolder(new LabKey("LAB-2"));
+
+        Book wrong = (Book) raw.get(); // runtime risk
+        System.out.println(wrong.title);
     }
 }
 \end{lstlisting}
@@ -130,10 +330,19 @@ public class Demo {
 
 \begin{frame}{Mini Exercises (2--3 mins)}
   \begin{enumerate}[<+->]
-    \item Why is raw \texttt{Box} unsafe?
-    \item Can we write \texttt{List<int>}? If not, what is the correct type?
-    \item Give one real use case of generics in Java collections.
+    \item Why is a single \texttt{Object}-based class better than duplicated classes, but still not the best final design?
+    \item What is the difference between \texttt{T} in \texttt{ResourceHolder<T>} and \texttt{Book} in \texttt{ResourceHolder<Book>}?
+    \item Why do we write \texttt{ResourceHolder<Integer>} instead of \texttt{ResourceHolder<int>}?
   \end{enumerate}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
+\begin{frame}{Watch-outs}
+\begin{itemize}[<+->]
+  \item Treating generic type parameters as if they were inheritance declarations.
+  \item Falling back to raw types and losing type safety.
+  \item Expecting primitive types to work directly as generic arguments.
+\end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
@@ -142,27 +351,38 @@ public class Demo {
 
 \begin{frame}{Key Takeaways}
   \begin{itemize}[<+->]
-    \item Generics provide type-safe reuse.
-    \item \texttt{Box<T>} shows how type parameters work.
-    \item Avoid raw types to prevent runtime casting errors.
+    \item Separate classes for each type cause duplication.
+    \item A single \texttt{Object}-based class removes duplication but pushes errors to runtime.
+    \item A generic class such as \texttt{ResourceHolder<T>} gives reuse with compile-time checking.
+    \item Raw types weaken the protection that generics are meant to provide.
   \end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
 \begin{frame}{Checkpoint Questions}
   \begin{enumerate}[<+->]
-    \item What problem do generics solve compared to using \texttt{Object}?
-    \item What is the meaning of \texttt{Box<String>}?
-    \item Why should we avoid raw types?
+    \item What design problem leads us toward generic classes?
+    \item What is the meaning of \texttt{ResourceHolder<Book>}?
+    \item Why is raw \texttt{ResourceHolder} unsafe compared with \texttt{ResourceHolder<Book>}?
   \end{enumerate}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}
 
+\begin{frame}{Next Study Steps}
+\begin{itemize}[<+->]
+  \item Revisit the recall references if any older idea still feels weak.
+  \item Rework the lecture example without looking at the notes first.
+  \item Attempt the self-study practice and then answer the exit questions in full sentences.
+  \item Apply the idea once inside Campus Resource Manager to make the concept stick.
+\end{itemize}
+  \slidesources{\OOPSUnitIVSources}
+\end{frame}
+
 \begin{frame}{Next Lecture Preview}
-  \textbf{Next:} Generic methods + bounds + wildcards
+  \textbf{Next:} Generic methods, bounded type parameters, and wildcards
   \vspace{0.6em}
   \begin{itemize}[<+->]
-    \item We will write \texttt{<T>} methods and learn how to restrict types using bounds.
+    \item We will move from generic classes to methods and then learn how to restrict acceptable types.
   \end{itemize}
   \slidesources{\OOPSUnitIVSources}
 \end{frame}

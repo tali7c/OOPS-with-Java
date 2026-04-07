@@ -3,15 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 03 -- Lecture 03 Notes\\Multithreading + Synchronization}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
 
-\section{Syllabus Alignment (Unit 03)}
-\textbf{Unit 03:} threads, priorities, synchronization
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Nested Classes, Exceptions, Multithreading, and I/O
+  \item \textbf{Main new ideas:} Concurrency vs parallelism (quick intuition), Threads in Java: \texttt{Thread} and \texttt{Runnable}, Thread lifecycle (simplified)
+  \item \textbf{Course thread:} Use Multithreading + Synchronization to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
 
 \section{Prerequisites}
 You should already be comfortable with:
@@ -24,10 +26,20 @@ You should already be comfortable with:
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Create threads using \texttt{Thread} and \texttt{Runnable} and explain \texttt{start()} vs \texttt{run()}.
-  \item Describe the thread lifecycle and understand what thread priority means (and doesn't mean).
-  \item Identify race conditions and fix them using \texttt{synchronized}.
+  \item Create threads using \texttt{Thread} and \texttt{Runnable}.
+  \item Describe thread lifecycle and understand priority limitations.
+  \item Identify race conditions and fix them with \texttt{synchronized}.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Concurrency vs parallelism (quick intuition)} $\rightarrow$ \textit{Threads in Java: \texttt{Thread} and \texttt{Runnable}} $\rightarrow$ \textit{Thread lifecycle (simplified)} $\rightarrow$ \textit{Thread priorities (what they mean and what they do not)} $\rightarrow$ \textit{The real problem: shared mutable state}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIIISources}
 
 \section{Lecture Overview}
 Multithreading allows a Java program to do multiple tasks at the same time (or appear to do so).
@@ -39,6 +51,15 @@ You need threads when you care about:
 \end{itemize}
 \textbf{Big warning:} threads make programs harder to reason about. Most bugs come from shared mutable data.
 This lecture focuses on the core ideas required by the syllabus: creating threads, priorities, and synchronization.
+\notesources{\OOPSUnitIIISources}
+
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Runnable as a contract}: Threading builds on the same interface-based behavior style already seen earlier. Main reference: \texttt{Unit 02 / Lecture 05 slides/notes}.
+  \item \textbf{Failure handling}: Concurrent tasks still need clear handling when something goes wrong. Main reference: \texttt{Unit 03 / Lecture 02 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
 \notesources{\OOPSUnitIIISources}
 
 \section{Key Terms (Quick)}
@@ -129,6 +150,23 @@ Deadlock occurs when:
 
 \notesources{\OOPSUnitIIISources}
 
+\section{Running Project Connection}
+Use Multithreading + Synchronization to make Campus Resource Manager safer, more modular, and easier to recover when something goes wrong.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Assuming threads execute in a fixed order every run.
+  \item Treating thread priority as a correctness guarantee.
+  \item Synchronizing everything blindly.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
 \section{Worked Example (tutorial): see a race condition and fix it}
 We will build a tiny counter and run two threads on it.
 
@@ -211,7 +249,16 @@ class SafeBankAccount {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Concurrency vs parallelism (quick intuition)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item What is the difference between concurrency and parallelism?\par
   \textbf{Answer:} concurrency is overlapping tasks; parallelism is simultaneous execution on multiple cores.
@@ -246,12 +293,25 @@ class SafeBankAccount {
   \item Priority is not a correctness tool; it is only a hint.
 \end{itemize}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} What is a race condition?\par
 \textbf{Sample answer:} A race condition happens when multiple threads access shared mutable state without proper synchronization, so the outcome depends on timing/interleaving.
 
 \vspace{0.6em}
 \textbf{Q2.} Why does \texttt{synchronized} help?\par
 \textbf{Sample answer:} It ensures only one thread at a time can execute the protected critical section, preventing lost updates and inconsistent states.
+
+\vspace{0.6em}
+\textbf{Q3.} What is the main reason for synchronization?\par
+\textbf{Sample answer:} It protects shared mutable state from inconsistent updates when multiple threads use it.
 
 \end{document}

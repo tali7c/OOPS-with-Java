@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 03 Notes\\Access Modifiers + Packages + Interface Intro}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Classes, Inheritance, Packages, and Interfaces
+  \item \textbf{Main new ideas:} Access control (what each means), Packages: why and how, Interface intro: contract view
+  \item \textbf{Course thread:} Use Access Modifiers + Packages + Interface Intro to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
 
 \section{Lecture Overview}
 As your codebase grows, you need two things:
@@ -19,16 +24,32 @@ As your codebase grows, you need two things:
 We also introduce the \textbf{interface} idea as a contract to reduce coupling.
 \notesources{\OOPSUnitIISources}
 
-\section{Syllabus Alignment (Unit 02)}
-\textbf{Unit 02:} access modifiers, packages, interfaces (intro)
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Encapsulation}: Access modifiers are the concrete mechanism for the encapsulation idea. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+  \item \textbf{Class organization}: Packages are easier to understand once class members and static utilities are familiar. Main reference: \texttt{Unit 02 / Lecture 02 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Explain \texttt{private}, default (package-private), \texttt{protected}, \texttt{public}.
-  \item Create a package using \texttt{package} and use \texttt{import} correctly.
-  \item Explain interfaces as contracts and write a basic user-defined interface.
+  \item Choose correct access modifiers to protect a class design.
+  \item Organize code using packages and imports.
+  \item Explain interfaces as contracts and write a basic interface example.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Access control (what each means)} $\rightarrow$ \textit{Packages: why and how} $\rightarrow$ \textit{Interface intro: contract view}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -88,6 +109,23 @@ This allows you to program to an interface (a contract), not to a concrete class
 We will cover interfaces deeply later (multiple files, design decisions, and real use cases).
 \notesources{\OOPSUnitIISources}
 
+\section{Running Project Connection}
+Use Access Modifiers + Packages + Interface Intro to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Using public as a shortcut whenever code fails to compile.
+  \item Creating packages with no responsibility boundary.
+  \item Treating an interface as just a weaker class.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
 \section{Worked Example: packages + interface (small)}
 \subsection*{File 1: \texttt{com/upes/demo/pay/Payable.java}}
 \begin{lstlisting}
@@ -103,7 +141,7 @@ public interface Payable {
 package com.upes.demo.pay;
 
 public class Invoice implements Payable {
-    private final double total;
+    private double total;
 
     public Invoice(double total) {
         if (total < 0) throw new IllegalArgumentException("total");
@@ -131,8 +169,18 @@ public class Main {
     }
 }
 \end{lstlisting}
+The line \texttt{Payable p = new Invoice(...)} is used here only to show the \textbf{contract view}: the caller depends on \texttt{amountDue()}, not on invoice internals. The runtime dispatch explanation comes in Lecture 04.
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Access control (what each means)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Which access modifier should be used for most fields?\; \textbf{Answer:} \texttt{private}.
   \item If a member has no access modifier, where is it visible?\; \textbf{Answer:} within the same package.
@@ -146,12 +194,25 @@ public class Main {
   \item Make a helper class package-private and observe where it can/can't be used.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} What is the difference between \texttt{private} and package-private?\par
 \textbf{Sample answer:} \texttt{private} is visible only inside the same class. Package-private (default) is visible to any class in the same package.
 
 \vspace{0.6em}
 \textbf{Q2.} Why are interfaces useful?\par
 \textbf{Sample answer:} Interfaces define a contract and reduce coupling. Code written against an interface can work with multiple implementations without changing the caller.
+
+\vspace{0.6em}
+\textbf{Q3.} Why do packages matter even in a small project?\par
+\textbf{Sample answer:} They control visibility, communicate architecture, and reduce naming collisions.
 
 \end{document}

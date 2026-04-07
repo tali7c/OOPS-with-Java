@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 05 -- Lecture 01 Notes\\Collections Framework Overview + Iteration + List}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Collections Framework and Wrapper Classes
+  \item \textbf{Main new ideas:} Core interfaces: \texttt{Iterable}, \texttt{Collection}, \texttt{Iterator}, List: ArrayList vs LinkedList, Sorting: Comparable vs Comparator
+  \item \textbf{Course thread:} Use Collections Framework Overview + Iteration + List to manage in-memory project data more cleanly and predictably inside Campus Resource Manager.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
 
 \section{Lecture Overview}
 The Collections Framework gives you standard, reusable data structures in Java.
@@ -21,16 +26,32 @@ Instead of creating arrays manually and writing custom logic, you use:
 This lecture focuses on \textbf{lists}, \textbf{iteration}, and \textbf{sorting}.
 \notesources{\OOPSUnitVSources}
 
-\section{Syllabus Alignment (Unit 05)}
-\textbf{Unit 05:} Collections, iteration, Collection interface; List; sorting
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Generics}: Collections are safer and clearer once typed containers are already familiar. Main reference: \texttt{Unit 04 / Lecture 01 slides/notes}.
+  \item \textbf{Comparison logic}: Sorting becomes easier once small comparison behavior is familiar. Main reference: \texttt{Unit 04 / Lecture 03 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitVSources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
   \item Explain \texttt{Iterable}, \texttt{Collection}, and \texttt{Iterator}.
   \item Choose \texttt{ArrayList} vs \texttt{LinkedList} for common use cases.
-  \item Sort a list using \texttt{Comparable} and \texttt{Comparator} (including lambdas).
+  \item Sort a list using \texttt{Comparable} and \texttt{Comparator} (with lambdas).
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Core interfaces: \texttt{Iterable}, \texttt{Collection}, \texttt{Iterator}} $\rightarrow$ \textit{List: ArrayList vs LinkedList} $\rightarrow$ \textit{Sorting: Comparable vs Comparator}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitVSources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -54,7 +75,7 @@ After this lecture, you should be able to:
   \item Use iterator when you need to remove elements while looping.
 \end{itemize}
 
-\paragraph{Common pitfall.} Removing from a list inside a for-each loop can throw \texttt{ConcurrentModificationException}. Use an \texttt{Iterator} instead.
+\paragraph{Common pitfall.} Removing from a list inside a for-each loop can throw \path|ConcurrentModificationException|. If removal is required, switch to an \texttt{Iterator}.
 
 \subsection{List: ArrayList vs LinkedList}
 \textbf{ArrayList:}
@@ -84,6 +105,23 @@ After this lecture, you should be able to:
 \begin{itemize}
   \item separate ordering logic, reusable and flexible.
   \item example: sort students by CGPA descending.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Running Project Connection}
+Use Collections Framework Overview + Iteration + List to manage in-memory project data more cleanly and predictably inside Campus Resource Manager.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Ignoring generics and using raw collections.
+  \item Changing a collection unsafely while iterating.
+  \item Choosing a List when the real requirement is uniqueness.
 \end{itemize}
 \notesources{\OOPSUnitVSources}
 
@@ -125,7 +163,16 @@ public class Demo {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Core interfaces: \texttt{Iterable}, \texttt{Collection}, \texttt{Iterator}} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Why do we use \texttt{Iterator.remove()} instead of \texttt{list.remove(...)} inside a for-each loop?\par
   \textbf{Answer:} to avoid concurrent modification issues; iterator removal is safe during traversal.
@@ -144,12 +191,25 @@ public class Demo {
   \item Implement \texttt{Comparable} in a class \texttt{Book} to sort by title.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitVSources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why does Java provide a Collections Framework?\par
 \textbf{Sample answer:} It provides standard, reusable data structures and algorithms, reducing bugs and improving productivity compared to writing custom structures every time.
 
 \vspace{0.6em}
 \textbf{Q2.} When should you prefer \texttt{Comparator} over \texttt{Comparable}?\par
 \textbf{Sample answer:} Prefer \texttt{Comparator} when you need multiple sorting orders or when you cannot/should not modify the class to define natural ordering.
+
+\vspace{0.6em}
+\textbf{Q3.} What decides between ArrayList and LinkedList in practice?\par
+\textbf{Sample answer:} Access patterns, update patterns, readability, and real measured needs decide the choice.
 
 \end{document}

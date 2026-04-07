@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 05 Notes\\Abstract Classes, `final`, and Interfaces (Design Choices)}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Classes, Inheritance, Packages, and Interfaces
+  \item \textbf{Main new ideas:} Abstract classes and methods, \texttt{final} keyword (design intent), Interfaces: built-in + user-defined
+  \item \textbf{Course thread:} Use Abstract Classes, `final`, and Interfaces (Design Choices) to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
 
 \section{Lecture Overview}
 By now you have seen basic classes, inheritance, and an interface intro.
@@ -20,16 +25,32 @@ This lecture answers the practical design questions:
 \end{itemize}
 \notesources{\OOPSUnitIISources}
 
-\section{Syllabus Alignment (Unit 02)}
-\textbf{Unit 02:} abstract classes, \texttt{final}, interfaces (built-in + user-defined)
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Inheritance}: Abstract classes extend inheritance by allowing an incomplete but shared parent design. Main reference: \texttt{Unit 02 / Lecture 04 slides/notes}.
+  \item \textbf{Interface idea}: You already saw interfaces as contracts; this lecture compares them with abstract classes in more depth. Main reference: \texttt{Unit 02 / Lecture 03 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Create an abstract class and implement abstract methods in subclasses.
-  \item Explain the design intent of \texttt{final} variables/methods/classes.
-  \item Write and use interfaces, including built-in \texttt{Comparable} and \texttt{Runnable}.
+  \item Use abstract classes for shared code + required methods.
+  \item Explain \texttt{final} for variables/methods/classes.
+  \item Use interfaces (including \texttt{Comparable}, \texttt{Runnable}) as contracts.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Abstract classes and methods} $\rightarrow$ \textit{\texttt{final} keyword (design intent)} $\rightarrow$ \textit{Interfaces: built-in + user-defined}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -87,6 +108,23 @@ Use an interface when:
 \end{itemize}
 \notesources{\OOPSUnitIISources}
 
+\section{Running Project Connection}
+Use Abstract Classes, `final`, and Interfaces (Design Choices) to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Trying to instantiate an abstract class directly.
+  \item Marking too many classes or methods final too early.
+  \item Choosing an interface even when shared state or shared code is central.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
 \section{Worked Example: \texttt{Comparable} for sorting}
 \begin{lstlisting}
 import java.util.Arrays;
@@ -125,7 +163,16 @@ public class Demo {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Abstract classes and methods} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Can we create an object of an abstract class?\; \textbf{Answer:} No.
   \item What does \texttt{final class} mean?\; \textbf{Answer:} cannot be extended.
@@ -139,12 +186,25 @@ public class Demo {
   \item Implement \texttt{Runnable} in a class \texttt{HelloTask} and print a message in \texttt{run()} (we will start threads in Unit 03).
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} When do you prefer an interface over an abstract class?\par
 \textbf{Sample answer:} Prefer an interface when you want a contract that many unrelated classes can implement and you want flexibility and low coupling. Use abstract class when you also want to share code and common state.
 
 \vspace{0.6em}
 \textbf{Q2.} What is the meaning of \texttt{final} in different contexts?\par
 \textbf{Sample answer:} A final variable cannot be reassigned, a final method cannot be overridden, and a final class cannot be extended.
+
+\vspace{0.6em}
+\textbf{Q3.} When is an interface better than an abstract class?\par
+\textbf{Sample answer:} When you want a loose contract, multiple implementations, and no required shared state.
 
 \end{document}

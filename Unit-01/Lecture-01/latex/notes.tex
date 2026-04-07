@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 01 -- Lecture 01 Notes\\OOP Paradigm + Principles + Modelling}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Introduction to OOPs and Java Fundamentals
+  \item \textbf{Main new ideas:} Why OOP? (vs procedural), The 4 OOP principles (with intuition), How to model a real-world entity
+  \item \textbf{Course thread:} Use OOP Paradigm + Principles + Modelling to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\end{itemize}
+\notesources{\OOPSUnitISources}
 
 \section{Lecture Overview}
 This lecture starts the course with two questions:
@@ -19,21 +24,32 @@ This lecture starts the course with two questions:
 We will connect ideas to simple, beginner-friendly Java examples (no advanced syntax yet).
 \notesources{\OOPSUnitISources}
 
-\section{Syllabus Alignment (Unit 01)}
-\textbf{Unit 01:} Introduction to OOPs
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
 \begin{itemize}
-  \item OOP history and evolution
-  \item OOP principles
-  \item Modelling a real-world entity
+  \item \textbf{Programming basics}: Variables, loops, and functions from C still matter; OOP changes how they are organized. Main reference: Programming in C prerequisite.
+  \item \textbf{Problem decomposition}: OOP still depends on breaking problems into clear responsibilities before coding. Main reference: Programming in C prerequisite.
 \end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Explain (in your own words) why OOP became popular for large software systems.
-  \item Define and differentiate \textbf{abstraction}, \textbf{encapsulation}, \textbf{inheritance}, and \textbf{polymorphism}.
-  \item Convert a short problem statement into a small class design (classes, fields, methods, responsibilities).
+  \item Explain why OOP became popular for large software systems.
+  \item Define: abstraction, encapsulation, inheritance, polymorphism (with a small example).
+  \item Convert a short problem statement into a small class design (classes + responsibilities).
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Why OOP? (vs procedural)} $\rightarrow$ \textit{The 4 OOP principles (with intuition)} $\rightarrow$ \textit{How to model a real-world entity}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -117,6 +133,23 @@ One practical step-by-step method:
 \textbf{C}lass name, \textbf{R}esponsibilities, and \textbf{C}ollaborators.
 This simple technique prevents one class from doing everything.
 
+\section{Running Project Connection}
+Use OOP Paradigm + Principles + Modelling to make the first text-based version of Campus Resource Manager easier to reason about before the full object model arrives.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Treating a class as only a data bucket with no behavior.
+  \item Confusing one object instance with the class blueprint.
+  \item Using inheritance before the responsibilities are understood.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
 \section{Worked Example: \texttt{BankAccount} (Encapsulation + Invariants)}
 \subsection*{Goal}
 Model a bank account so that the invariant \texttt{balance >= 0} is always true.
@@ -162,10 +195,23 @@ public class BankAccount {
 \end{itemize}
 \notesources{\OOPSUnitISources}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Why OOP? (vs procedural)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item \textbf{Model a \texttt{Student} entity.} Identify 3 fields and 3 methods.\par
-  \textbf{Sample:} fields = \texttt{rollNo, name, cgpa}; methods = \texttt{updateCgpa(), enrollCourse(), printTranscript()}.
+  \textbf{Sample:}
+  \begin{itemize}
+    \item Fields: \texttt{rollNo}, \texttt{name}, \texttt{cgpa}
+    \item Methods: \texttt{updateCgpa()}, \texttt{enrollCourse()}, \texttt{printTranscript()}
+  \end{itemize}
 
   \item \textbf{Find the invariant.} For each, write one invariant:\par
   \textbf{(a)} Rectangle \textbf{(b)} Inventory item \textbf{(c)} Booking.\par
@@ -183,7 +229,16 @@ public class BankAccount {
   \item Modify \texttt{BankAccount} to add \texttt{transferTo(BankAccount other, double amount)}.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why do we keep fields private in OOP?\par
 \textbf{Sample answer:} Private fields prevent external code from putting an object into an invalid state. Changes happen only through methods, so we can validate inputs and preserve invariants.
 

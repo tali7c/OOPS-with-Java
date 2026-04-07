@@ -4,10 +4,6 @@
 
 \title[OOPS with Java]{Object Oriented Programming (CSEG1044)}
 \subtitle{Unit 02 -- Lecture 03: Access Modifiers + Packages + Interface Intro}
-\author{Tofik Ali}
-\institute{School of Computer Science, UPES Dehradun}
-\date{\today}
-
 \begin{document}
 
 \begin{frame}[fragile]
@@ -33,6 +29,23 @@
 \section{Overview}
 \label{sec:overview}
 
+\begin{frame}{Lecture Snapshot}
+\begin{itemize}[<+->]
+  \item \textbf{Unit focus:} Classes, Inheritance, Packages, and Interfaces
+  \item \textbf{Course thread:} Use Access Modifiers + Packages + Interface Intro to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Recall Before You Start}
+\begin{itemize}[<+->]
+  \item \textbf{Encapsulation}: Access modifiers are the concrete mechanism for the encapsulation idea. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+  \item \textbf{Class organization}: Packages are easier to understand once class members and static utilities are familiar. Main reference: \texttt{Unit 02 / Lecture 02 slides/notes}.
+\end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+
 \begin{frame}{Learning Outcomes}
   \begin{itemize}[<+->]
     \item Choose correct access modifiers to protect a class design.
@@ -41,6 +54,28 @@
   \end{itemize}
   \slidesources{\OOPSUnitIISources}
 \end{frame}
+
+\begin{frame}{Key Terms to Know}
+\begin{itemize}[<+->]
+  \item \textbf{Package}: namespace that groups related classes (also maps to folder structure).
+  \item \textbf{Package-private (default)}: visible only inside the same package.
+  \item \textbf{Protected}: visible in same package and in subclasses (even in other packages).
+  \item \textbf{Public API}: the classes/methods you intentionally expose for others to use.
+  \item \textbf{Coupling}: how strongly one part of code depends on another.
+\end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Study Flow for This Lecture}
+\begin{enumerate}[<+->]
+  \item Refresh the prerequisite bridge before reading new ideas in isolation.
+  \item Study the main build in this order: \textit{Access control (what each means)} $\rightarrow$ \textit{Packages: why and how} $\rightarrow$ \textit{Interface intro: contract view}.
+  \item Trace the worked example and connect each line back to one concept frame.
+  \item Attempt the mini exercises before moving to the recap and exit check.
+\end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
 
 \section{Key Topics}
 \label{sec:concepts}
@@ -98,6 +133,15 @@
   \slidesources{\OOPSUnitIISources}
 \end{frame}
 
+\begin{frame}{Checkpoint and Reflection}
+\begin{block}{Reflection prompt}
+Where would \textit{Access Modifiers + Packages + Interface Intro} matter most in Campus Resource Manager, and which design choice would you justify using this lecture's ideas?
+\end{block}
+\begin{block}{Quick self-check}
+Which part needs one more example before you move on: \textit{Access control (what each means)}, \textit{Packages: why and how}, the worked example, or the recap?
+\end{block}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
 
 \section{Demo / Example}
 \label{sec:demo}
@@ -109,7 +153,7 @@ public interface Payable {
 }
 
 public class Invoice implements Payable {
-    private final double total;
+    private double total;
     public Invoice(double total) { this.total = total; }
     @Override public double amountDue() { return total; }
 }
@@ -126,6 +170,14 @@ public class Invoice implements Payable {
   \slidesources{\OOPSUnitIISources}
 \end{frame}
 
+\begin{frame}{Watch-outs}
+\begin{itemize}[<+->]
+  \item Using public as a shortcut whenever code fails to compile.
+  \item Creating packages with no responsibility boundary.
+  \item Treating an interface as just a weaker class.
+\end{itemize}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
 
 \section{Summary}
 \label{sec:summary}
@@ -145,6 +197,16 @@ public class Invoice implements Payable {
     \item What must match: package name and folder structure?
     \item In one sentence: why are interfaces useful?
   \end{enumerate}
+  \slidesources{\OOPSUnitIISources}
+\end{frame}
+
+\begin{frame}{Next Study Steps}
+\begin{itemize}[<+->]
+  \item Revisit the recall references if any older idea still feels weak.
+  \item Rework the lecture example without looking at the notes first.
+  \item Attempt the self-study practice and then answer the exit questions in full sentences.
+  \item Apply the idea once inside Campus Resource Manager to make the concept stick.
+\end{itemize}
   \slidesources{\OOPSUnitIISources}
 \end{frame}
 

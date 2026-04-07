@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 04 -- Lecture 05 Notes\\Swing Event Handling + JDBC (Persistence)}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Generics, Lambdas, Swing, and JDBC
+  \item \textbf{Main new ideas:} Swing event model (listeners), JDBC core flow (pattern you should memorize), \texttt{Statement} vs \texttt{PreparedStatement} vs \texttt{CallableStatement}
+  \item \textbf{Course thread:} Use Swing Event Handling + JDBC (Persistence) to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
 
 \section{Lecture Overview}
 In the last lecture we built a Swing UI skeleton.
@@ -19,17 +24,32 @@ Now we make it interactive and persistent:
 \end{itemize}
 \notesources{\OOPSUnitIVSources}
 
-\section{Syllabus Alignment (Unit 04)}
-\textbf{Unit 04:} Swing event handling; database connectivity using JDBC; basic CRUD
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Swing foundations}: You already know the component structure; now user actions and persistence are attached to that UI. Main reference: \texttt{Unit 04 / Lecture 04 slides/notes}.
+  \item \textbf{Failure handling}: JDBC and event code both need disciplined exception handling and user messages. Main reference: \texttt{Unit 03 / Lecture 02 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIVSources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Register Swing listeners (e.g., \texttt{ActionListener}) and handle common events safely.
-  \item Explain JDBC flow: connect $\rightarrow$ prepare statement $\rightarrow$ execute $\rightarrow$ read \texttt{ResultSet}.
-  \item Differentiate \texttt{Statement}, \texttt{PreparedStatement}, \texttt{CallableStatement}.
-  \item Implement basic CRUD operations and map rows to objects.
+  \item Connect Swing UI controls to actions using listeners.
+  \item Explain JDBC flow and choose between \texttt{Statement} and \texttt{PreparedStatement}.
+  \item Implement basic CRUD and read results using \texttt{ResultSet}.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Swing event model (listeners)} $\rightarrow$ \textit{JDBC core flow (pattern you should memorize)} $\rightarrow$ \textit{\texttt{Statement} vs \texttt{PreparedStatement} vs \texttt{CallableStatement}} $\rightarrow$ \textit{\texttt{ResultSet} traversal} $\rightarrow$ \textit{Persistent data design (UI vs DAO)}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIVSources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -99,6 +119,23 @@ Preferred structure:
   \item UI layer: reads fields, validates, shows messages.
   \item DAO layer: contains SQL and JDBC code.
   \item Model layer: \texttt{Resource} class that represents one row/entity.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Running Project Connection}
+Use Swing Event Handling + JDBC (Persistence) to move Campus Resource Manager toward a real desktop application with UI, callbacks, and persistence.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Building SQL strings directly from user input.
+  \item Running slow database work on the Event Dispatch Thread.
+  \item Mixing UI controls, validation, and DAO logic in one method.
 \end{itemize}
 \notesources{\OOPSUnitIVSources}
 
@@ -184,16 +221,21 @@ saveBtn.addActionListener(e -> {
         return;
     }
 
-    try {
-        dao.insert(new Resource(name, type, cap));
-        JOptionPane.showMessageDialog(f, "Saved!");
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(f, "DB error: " + ex.getMessage());
-    }
+    saveInBackground(name, type, cap);
 });
 \end{lstlisting}
+The listener validates input and delegates the JDBC work. The DB call should run in a background task. \texttt{SwingWorker} is a simple option that keeps the EDT responsive.
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Swing event model (listeners)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Which is safer for user input: \texttt{Statement} or \texttt{PreparedStatement}?\par
   \textbf{Answer:} \texttt{PreparedStatement}.
@@ -218,12 +260,25 @@ saveBtn.addActionListener(e -> {
   \item Exp-17: Database connectivity using JDBC
 \end{itemize}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIVSources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why is \texttt{PreparedStatement} preferred?\par
 \textbf{Sample answer:} It allows parameterized queries, prevents SQL injection for user input, and can be more efficient for repeated execution.
 
 \vspace{0.6em}
 \textbf{Q2.} What is the role of a DAO?\par
 \textbf{Sample answer:} A DAO separates database code from UI/business logic, making the application easier to maintain, test, and change.
+
+\vspace{0.6em}
+\textbf{Q3.} Why is PreparedStatement the default choice for CRUD forms?\par
+\textbf{Sample answer:} It supports parameterized queries and makes database operations safer and cleaner.
 
 \end{document}

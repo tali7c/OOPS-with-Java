@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 04 Notes\\Inheritance, `super`, Overriding, and Dynamic Dispatch}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Classes, Inheritance, Packages, and Interfaces
+  \item \textbf{Main new ideas:} Inheritance and types (conceptual), \texttt{super} usage, Overriding and dynamic dispatch
+  \item \textbf{Course thread:} Use Inheritance, `super`, Overriding, and Dynamic Dispatch to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
 
 \section{Lecture Overview}
 Inheritance and polymorphism are two core tools in OOP, but they must be used carefully.
@@ -20,16 +25,32 @@ This lecture focuses on:
 \end{itemize}
 \notesources{\OOPSUnitIISources}
 
-\section{Syllabus Alignment (Unit 02)}
-\textbf{Unit 02:} inheritance, \texttt{super}, overriding, runtime polymorphism
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Class design}: Inheritance helps only when the parent and child already have meaningful responsibilities. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+  \item \textbf{Constructors}: The rule for super(...) depends on the constructor logic from the previous lecture. Main reference: \texttt{Unit 02 / Lecture 02 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Decide whether a relationship is \textbf{is-a} (inheritance) or \textbf{has-a} (composition).
-  \item Use \texttt{super(...)} in constructors and \texttt{super.method()} when needed.
-  \item Override a method and explain why the executed method is chosen at runtime.
+  \item Decide is-a (inheritance) vs has-a (composition).
+  \item Use \texttt{super(...)} and \texttt{super.method()} correctly.
+  \item Override methods and explain dynamic dispatch with an example.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Inheritance and types (conceptual)} $\rightarrow$ \textit{\texttt{super} usage} $\rightarrow$ \textit{Overriding and dynamic dispatch}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -37,7 +58,7 @@ After this lecture, you should be able to:
   \item \textbf{Superclass/Subclass}: parent/child in inheritance hierarchy.
   \item \textbf{Overriding}: subclass provides its own implementation of a superclass method (same signature).
   \item \textbf{Dynamic dispatch}: method call resolved at runtime based on the actual object type.
-  \item \textbf{Upcasting}: treating a subclass object as a superclass reference (\texttt{Shape s = new Circle(...)}).
+  \item \textbf{Upcasting}: treating a subclass object as a superclass reference, for example \path|Shape s = new Circle(...)|.
   \item \textbf{Composition}: has-a relationship (\texttt{Car} has an \texttt{Engine}).
 \end{itemize}
 
@@ -77,8 +98,25 @@ Overriding rules (important ones):
   \item use \texttt{@Override} to catch mistakes.
 \end{itemize}
 
-\textbf{Dynamic dispatch:} if you have \texttt{Shape s = new Circle(...)} then \texttt{s.area()} calls \texttt{Circle.area()} at runtime.
+\textbf{Dynamic dispatch:} if you store a circle as \path|Shape s = new Circle(...)|, then calling \texttt{s.area()} still runs \texttt{Circle.area()} at runtime.
 This is the heart of runtime polymorphism.
+\notesources{\OOPSUnitIISources}
+
+\section{Running Project Connection}
+Use Inheritance, `super`, Overriding, and Dynamic Dispatch to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Choosing inheritance just to reduce code repetition quickly.
+  \item Forgetting that super(...) must run before subclass-specific initialization.
+  \item Confusing overriding with overloading.
+\end{itemize}
 \notesources{\OOPSUnitIISources}
 
 \section{Worked Example: \texttt{Shape} hierarchy}
@@ -116,7 +154,16 @@ public class Demo {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Inheritance and types (conceptual)} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item Is-a or has-a?\; \textbf{(a)} Student--IDCard \textbf{(b)} Manager--Employee\par
   \textbf{Answer:} (a) has-a, (b) is-a (in a simple model).
@@ -135,12 +182,25 @@ public class Demo {
   \item Write one example where you call \texttt{super.method()} from an overridden method.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why is inheritance sometimes risky?\par
 \textbf{Sample answer:} Inheritance creates strong coupling between parent and child. If the parent changes, many subclasses may break. Using inheritance only when the relationship is truly is-a helps avoid bad designs.
 
 \vspace{0.6em}
 \textbf{Q2.} What is dynamic dispatch?\par
 \textbf{Sample answer:} Dynamic dispatch is when the method that executes is chosen at runtime based on the actual object type, not the reference type.
+
+\vspace{0.6em}
+\textbf{Q3.} How does dynamic dispatch support extensible design?\par
+\textbf{Sample answer:} Client code can depend on a parent type while the correct overridden behavior is selected at runtime.
 
 \end{document}

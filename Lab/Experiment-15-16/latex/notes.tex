@@ -1,0 +1,83 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-15\&16: Lambdas + Swing GUI (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This handout specifies the required programs for lambda expressions and Swing GUI.
+Do the implementation yourself and include outputs/screenshots.
+
+\section{Experiment 15 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To use lambda expressions and functional interfaces.
+  \item \textbf{Problem Statement:} Implement lambda expressions in Java programs.
+  \item \textbf{Expected Outcome:} Students will understand functional programming.
+\end{itemize}
+
+\section{Experiment 16 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To design GUI applications using Swing.
+  \item \textbf{Problem Statement:} Develop GUI applications using Swing components.
+  \item \textbf{Expected Outcome:} Students will create interactive applications.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- Lambda practice (Exp-15)}
+Create \texttt{LambdaDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Define a custom \texttt{@FunctionalInterface} (example: \texttt{IntOp}) with method \texttt{apply(int a, int b)}.
+  \item Create lambdas:
+  \begin{itemize}[leftmargin=*]
+    \item addition
+    \item max/min
+  \end{itemize}
+  \item Create a \texttt{Runnable} using lambda and run it in a thread.
+  \item Sort a string array using a comparator lambda (case-insensitive).
+\end{enumerate}
+
+\subsection{Task B --- Swing UI with events (Exp-16)}
+Create \texttt{SwingDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Create a window with:
+  \begin{itemize}[leftmargin=*]
+    \item text field for name
+    \item button ``Greet''
+    \item label for output
+    \item button ``Reset''
+  \end{itemize}
+  \item On ``Greet'' click:
+  \begin{itemize}[leftmargin=*]
+    \item increment a click counter
+    \item update label: \texttt{Hello <name> (Clicks: X)}
+  \end{itemize}
+  \item On ``Reset'' click: set counter to 0 and clear the text field.
+  \item Use \texttt{SwingUtilities.invokeLater(...)} (EDT best practice).
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item A lambda can be used only where a functional interface is expected.
+  \item In Swing, create and update UI on the Event Dispatch Thread (EDT).
+  \item Use an action listener to handle button clicks.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{LambdaDemo.java}
+  \item \texttt{SwingDemo.java}
+  \item sample output for \texttt{LambdaDemo.java}
+  \item screenshot of the Swing UI running (or short recording)
+  \item observations (5--10 lines): where lambdas helped; what EDT is
+\end{itemize}
+
+\notesources{\OOPSUnitIVSources}
+\end{document}

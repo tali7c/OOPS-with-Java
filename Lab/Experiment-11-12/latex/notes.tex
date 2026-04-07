@@ -1,0 +1,80 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Object Oriented Programming Lab (CSEG1044)\\Experiment-11\&12: Exception Handling + Multithreading (Student Handout --- Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This handout describes the required programs for exceptions and multithreading.
+It provides requirements and common pitfalls, but not full solutions.
+
+\section{Experiment 11 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To handle runtime errors using exception handling mechanisms.
+  \item \textbf{Problem Statement:} Develop programs using try-catch-finally blocks.
+  \item \textbf{Expected Outcome:} Students will write robust programs.
+\end{itemize}
+
+\section{Experiment 12 (Syllabus)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Objective:} To implement multithreading in Java.
+  \item \textbf{Problem Statement:} Create threads using \texttt{Thread} class and \texttt{Runnable} interface.
+  \item \textbf{Expected Outcome:} Students will understand concurrent programming.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+
+\subsection{Task A --- Exception handling (Exp-11)}
+Create \texttt{ExceptionHandlingDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Read integers \texttt{a} and \texttt{b}, compute \texttt{a / b}.
+  \item Handle:
+  \begin{itemize}[leftmargin=*]
+    \item divide-by-zero (\texttt{ArithmeticException})
+    \item invalid numeric input (scanner mismatch or parse error)
+  \end{itemize}
+  \item Use \texttt{finally} to print \texttt{Done} (and close resources if any).
+  \item Create a custom checked exception \texttt{InvalidMarksException extends Exception}.
+  \item Write \texttt{validateMarks(int m) throws InvalidMarksException} and throw it for marks not in \texttt{0..100}.
+  \item Catch and print a friendly message.
+\end{enumerate}
+
+\subsection{Task B --- Multithreading + synchronization (Exp-12)}
+Create \texttt{ThreadSyncDemo.java}:
+\begin{enumerate}[leftmargin=*]
+  \item Create a shared \texttt{Counter} with:
+  \begin{itemize}[leftmargin=*]
+    \item \texttt{incUnsafe()} (no synchronization)
+    \item \texttt{incSafe()} (use \texttt{synchronized})
+  \end{itemize}
+  \item Create two threads that increment the same counter many times (example: 100000 each).
+  \item Use \texttt{start()} and \texttt{join()}.
+  \item Print final counter values for unsafe and safe runs.
+  \item Write a short explanation (2--4 lines): why unsafe output differs from expected.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item \texttt{finally} executes whether an exception occurs or not.
+  \item Checked exceptions must be handled or declared using \texttt{throws}.
+  \item Calling \texttt{run()} does not start a new thread; call \texttt{start()}.
+  \item \texttt{v++} is not atomic; \texttt{synchronized} protects the critical section.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{ExceptionHandlingDemo.java}
+  \item \texttt{ThreadSyncDemo.java}
+  \item sample output for both programs
+  \item observations (5--10 lines): try/catch/finally order; what race condition means
+\end{itemize}
+
+\notesources{\OOPSUnitIIISources}
+\end{document}

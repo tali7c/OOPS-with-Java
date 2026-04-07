@@ -3,12 +3,17 @@
 \input{../../../_shared/notes-common.tex}
 
 \title{Object Oriented Programming (CSEG1044)\\Unit 02 -- Lecture 02 Notes\\Constructors, `this`, Overloading, `static`, and GC Overview}
-\author{Tofik Ali}
-\date{\today}
-
 \begin{document}
 \maketitle
 \tableofcontents
+
+\section{Lecture Snapshot}
+\begin{itemize}
+  \item \textbf{Unit focus:} Classes, Inheritance, Packages, and Interfaces
+  \item \textbf{Main new ideas:} Constructors and constructor chaining, \texttt{this} vs \texttt{this(...)}, Method overloading (rules)
+  \item \textbf{Course thread:} Use Constructors, `this`, Overloading, `static`, and GC Overview to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
 
 \section{Lecture Overview}
 This lecture explains how objects are created and how to design classes cleanly:
@@ -21,18 +26,32 @@ This lecture explains how objects are created and how to design classes cleanly:
 \end{itemize}
 \notesources{\OOPSUnitIISources}
 
-\section{Syllabus Alignment (Unit 02)}
-\textbf{Unit 02:} constructors, \texttt{this}, overloading, \texttt{static}, garbage collection
+\section{Prerequisite Bridge}
+Before reading the new material in depth, do a fast recall of the older ideas listed below.
+\begin{itemize}
+  \item \textbf{Class state and behavior}: Constructors and overloading only make sense once fields and methods already mean something in one class. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+  \item \textbf{Reference semantics}: Constructors make object creation explicit, not just primitive assignment. Main reference: \texttt{Unit 02 / Lecture 01 slides/notes}.
+\end{itemize}
+This lecture only revisits those ideas briefly so that the main explanation can stay focused on the new concept sequence.
+\notesources{\OOPSUnitIISources}
 
 \section{Learning Outcomes}
 After this lecture, you should be able to:
 \begin{itemize}
-  \item Write default and parameterized constructors and use constructor chaining.
-  \item Use \texttt{this} to refer to the current object and resolve shadowing.
-  \item Overload methods correctly (and explain what is \emph{not} overloading).
-  \item Use \texttt{static} fields/methods for class-level data/behavior.
-  \item Explain what GC does and what it does \emph{not} guarantee.
+  \item Write constructors and use \texttt{this(...)} for constructor chaining.
+  \item Overload methods correctly and avoid common mistakes.
+  \item Use \texttt{static} for class-level state/behavior and explain GC basics.
 \end{itemize}
+
+\section{Suggested Reading Order}
+\begin{enumerate}
+  \item Read the \textbf{Prerequisite Bridge} first and confirm each recalled idea.
+  \item Study the central explanation in this order: \textit{Constructors and constructor chaining} $\rightarrow$ \textit{\texttt{this} vs \texttt{this(...)}} $\rightarrow$ \textit{Method overloading (rules)} $\rightarrow$ \textit{\texttt{static} keyword} $\rightarrow$ \textit{Garbage collection overview}.
+  \item Trace the worked example line by line before checking short answers.
+  \item Attempt the practice section without looking at the solution immediately.
+  \item Finish with the exit questions and further-study suggestions to confirm retention.
+\end{enumerate}
+\notesources{\OOPSUnitIISources}
 
 \section{Key Terms (Quick)}
 \begin{itemize}
@@ -110,7 +129,24 @@ Key points:
 \end{itemize}
 \notesources{\OOPSUnitIISources}
 
-\section{Worked Example: \texttt{Employee} (constructors + overloading + static)}
+\section{Running Project Connection}
+Use Constructors, `this`, Overloading, `static`, and GC Overview to strengthen the domain model, APIs, and access rules inside Campus Resource Manager.
+\begin{itemize}
+  \item Use Campus Resource Manager as the running case study, or map the same idea to your own project domain if you are using another example.
+  \item Ask where today's idea should live: model, service, DAO, UI, or team workflow.
+  \item Use the lecture example as a smaller version of the same design choice you will make in the capstone.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Common Mistakes and Confusions}
+\begin{itemize}
+  \item Using this and this() as if they solve the same problem.
+  \item Trying to overload by return type alone.
+  \item Putting per-object data inside a static field.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Worked Example: \texttt{Employee}}
 \begin{lstlisting}
 public class Employee {
     private static int nextId = 1;
@@ -146,7 +182,16 @@ public class Employee {
 }
 \end{lstlisting}
 
-\section{In-Class Exercises (with brief solutions)}
+\section{Demo / Observation Task}
+Use this block as a short reproducible demo or observation task.
+\begin{itemize}
+  \item Reproduce the lecture's main example around \textit{Constructors and constructor chaining} once without looking at the solution first.
+  \item Change one input, rule, or design choice in Campus Resource Manager and predict the result before checking it.
+  \item Record one success case, one edge case, and one failure case so the idea becomes observable instead of purely theoretical.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Practice Check (with brief solutions)}
 \begin{enumerate}
   \item What is the difference between \texttt{this} and \texttt{this(...)}?\par
   \textbf{Answer:} \texttt{this} refers to current object; \texttt{this(...)} calls another constructor.
@@ -165,12 +210,25 @@ public class Employee {
   \item Write a class-level counter using a static field and print how many objects were created.
 \end{enumerate}
 
-\section{Checkpoint Questions (with sample answers)}
+\section{Further Study}
+\begin{itemize}
+  \item Revisit the prerequisite references if any recall bullet still feels weak.
+  \item Rework the lecture example with one changed assumption, input, or design choice.
+  \item Read the textbook and documentation references listed in the source line for a second explanation of the same topic.
+  \item Apply the same idea once inside Campus Resource Manager so that the concept moves from theory to design practice.
+\end{itemize}
+\notesources{\OOPSUnitIISources}
+
+\section{Exit Questions (with sample answers)}
 \textbf{Q1.} Why do we use constructor chaining?\par
 \textbf{Sample answer:} It reduces duplicate initialization code. One constructor can call the main constructor that performs validation and sets fields consistently.
 
 \vspace{0.6em}
 \textbf{Q2.} What does garbage collection do?\par
 \textbf{Sample answer:} GC reclaims memory of objects that are no longer reachable. It does not guarantee immediate collection and does not automatically close external resources like files or DB connections.
+
+\vspace{0.6em}
+\textbf{Q3.} Why is constructor overloading useful?\par
+\textbf{Sample answer:} It supports multiple valid initialization paths while keeping one coherent class design.
 
 \end{document}
